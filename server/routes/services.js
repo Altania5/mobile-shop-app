@@ -1,7 +1,8 @@
 const router = require('express').Router();
 let Service = require('../models/service.model');
+let Booking = require('../models/booking.model');
 const adminAuth = require('../middleware/adminAuth');
-const { startOfDay, endOfDay } = require('date-fns');
+const { startOfDay, endOfDay, parseISO } = require('date-fns');
 
 // @route   GET /api/services
 // @desc    Get all services
@@ -35,8 +36,12 @@ router.get('/:id', async (req, res) => {
 // @access  Admin
 router.post('/', adminAuth, async (req, res) => {
   try {
-    const { name, description, price, duration } = req.body;
-    const newService = new Service({ name, description, price, duration });
+    // THE FIX: Add availableDays and availableTimes to the destructuring
+    const { name, description, price, duration, availableDays, availableTimes } = req.body;
+    
+    // Pass the new fields when creating the service
+    const newService = new Service({ name, description, price, duration, availableDays, availableTimes });
+    
     const savedService = await newService.save();
     res.status(201).json(savedService);
   } catch (err) {
@@ -70,6 +75,9 @@ router.delete('/:id', adminAuth, async (req, res) => {
   }
 });
 
+// @route   GET /api/services/:id/availability
+// @desc    Get available time slots for a service on a given date
+// @access  Public
 router.get('/:id/availability', async (req, res) => {
     try {
         const { date } = req.query;
@@ -82,18 +90,32 @@ router.get('/:id/availability', async (req, res) => {
             return res.status(404).json({ msg: 'Service not found.' });
         }
 
+        // 2. THIS IS THE FIX:
+        // parseISO correctly interprets a "yyyy-MM-dd" string as the start of that day in UTC.
+        // This removes all timezone ambiguity.
+        const selectedDate = parseISO(date);
+
+        const dayStart = startOfDay(selectedDate);
+        const dayEnd = endOfDay(selectedDate);
+        
+        // 3. Add console logs for debugging. You can check your server terminal to see these.
+        console.log(`Checking availability for service ${service.name} between ${dayStart.toISOString()} and ${dayEnd.toISOString()}`);
+
         const bookingsOnDate = await Booking.find({
             service: req.params.id,
-            date: new Date(date),
+            date: { $gte: dayStart, $lte: dayEnd },
         });
 
         const bookedTimes = bookingsOnDate.map(booking => booking.time);
-        
+        console.log(`Found ${bookedTimes.length} booked time(s):`, bookedTimes);
+
         const availableTimes = service.availableTimes.filter(time => !bookedTimes.includes(time));
+        console.log(`Returning ${availableTimes.length} available time(s):`, availableTimes);
 
         res.json(availableTimes);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Availability check error:", err);
+        res.status(500).json({ error: 'Server error while checking availability.' });
     }
 });
 
