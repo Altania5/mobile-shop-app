@@ -6,7 +6,7 @@ import AboutPage from '../pages/AboutPage';
 import ServiceHistoryPage from '../pages/ServiceHistoryPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
 import BlogPage from '../pages/BlogPage';     // 1. Import new pages
-import PostPage from '../pages/PostPage';
+import AdminPage from '../pages/AdminPage';
 
 
 export default function AppLayout({ user, onLogout }) {
@@ -22,7 +22,9 @@ export default function AppLayout({ user, onLogout }) {
       <nav className="dashboard-nav">
         <NavLink to="/" className="nav-brand">Mobile Shop</NavLink>
         <div className="nav-links">
-          {/* 3. Add the new NavLinks */}
+          {user.role === 'admin' && (
+            <NavLink to="/admin" className="nav-link">Admin</NavLink>
+          )}
           <NavLink to="/" className="nav-link">Services</NavLink>
           <NavLink to="/history" className="nav-link">My Service History</NavLink>
           <NavLink to="/blog" className="nav-link">Blog</NavLink>
@@ -40,6 +42,7 @@ export default function AppLayout({ user, onLogout }) {
           <Route path="/history" element={<ServiceHistoryPage />} /> 
           <Route path="/testimonials" element={<TestimonialsPage />} /> 
           <Route path="/blog" element={<BlogPage />} />
+          {user.role === 'admin' && <Route path="/admin" element={<AdminPage />} />}
         </Routes>
       </main>
     </div>

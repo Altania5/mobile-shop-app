@@ -30,9 +30,19 @@ function App() {
   const handleLoginSuccess = (token) => {
     localStorage.setItem('token', token);
     const decodedUser = jwtDecode(token);
-    setUser({ ...decodedUser, token });
-    navigate('/'); // Redirect to main page on login
+    setUser({ ...decodedUser, token, role: decodedUser.role }); 
+    navigate('/');
   };
+
+    useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedUser = jwtDecode(token);
+        setUser({ ...decodedUser, token, role: decodedUser.role }); 
+      } catch (error) { /* ... */ }
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
