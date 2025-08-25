@@ -31,10 +31,10 @@ function TestimonialCard({ testimonial, user }) {
     <div className="testimonial-card-v2">
       <div className="author-info">
         <img 
-          src={testimonial.profileImageUrl || '/default-avatar.png'} 
-          alt={testimonial.author ? `${testimonial.author.firstName}'s profile` : 'User profile'}
-          className="profile-pic"
-        />
+  src={testimonial.profileImageUrl || '/default-avatar.png'} 
+  alt={testimonial.author ? `${testimonial.author.firstName}'s profile` : 'User profile'}
+  className="profile-pic"
+/>
         <div>
           <span className="author-name">{testimonial.author ? `${testimonial.author.firstName} ${testimonial.author.lastName}` : 'Anonymous'}</span>
           <span className="testimonial-date">{new Date(testimonial.createdAt).toLocaleDateString()}</span>
