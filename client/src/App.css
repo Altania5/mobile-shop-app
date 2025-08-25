@@ -927,3 +927,395 @@ button:active {
     padding-left: 15px;
     margin: 0 0 20px;
 }
+
+/* --- Google Reviews Section --- */
+.section-divider {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 40px 0;
+}
+
+.google-reviews-container h3 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 30px;
+}
+
+.author-name.google {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+.author-name.google:hover {
+    text-decoration: underline;
+    color: var(--accent-color);
+}
+
+/* ================================== */
+/* ===   Advanced About Me Page   === */
+/* ================================== */
+
+.about-page-wrapper {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0;
+  background-color: transparent; /* Override generic page-container */
+  box-shadow: none;
+}
+
+/* --- Hero Section --- */
+.about-hero-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 20px;
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+}
+
+@media (min-width: 768px) {
+  .about-hero-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.about-hero-content h1 {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.about-hero-content p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-light-color);
+}
+
+.signature-image {
+  max-width: 200px;
+  margin-top: 20px;
+}
+
+.about-hero-image-container img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Core Values Section --- */
+.core-values-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 40px 0;
+  text-align: center;
+}
+
+.value-card {
+  background-color: var(--surface-color);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card h3 {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  margin: 0 0 10px;
+}
+
+/* --- Mission Section --- */
+.mission-section {
+  position: relative;
+  padding: 80px 40px;
+  border-radius: var(--border-radius);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Parallax effect */
+  color: white;
+  text-align: center;
+  overflow: hidden; /* For the overlay */
+}
+
+.mission-overlay {
+  background-color: rgba(10, 37, 64, 0.8); /* Semi-transparent dark blue */
+  padding: 40px;
+  border-radius: var(--border-radius);
+}
+
+.mission-overlay h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.mission-overlay p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* --- CTA Section --- */
+.cta-section {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.cta-section h2 {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+}
+
+.cta-button {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  margin-top: 20px;
+  background-color: var(--accent-color);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+/* ================================== */
+/* ===    Animations & Hovers     === */
+/* ================================== */
+
+/* --- Hover Effects --- */
+.hover-lift {
+  will-change: transform;
+}
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 25px rgba(0, 123, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+/* --- Keyframe Animations for Scrolling --- */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Animation Trigger Classes --- */
+/* For simplicity, these will trigger on page load. For scroll-triggered animations,
+   you would typically use a library like 'react-intersection-observer' to add
+   these classes dynamically when the element enters the viewport. */
+
+.fade-in-down {
+  animation: fadeInDown 0.8s ease-out forwards;
+}
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+.fade-in-right {
+  animation: fadeInRight 0.8s ease-out forwards;
+}
+
+/* Animation Delays */
+.delay-1 { animation-delay: 0.3s; }
+.delay-2 { animation-delay: 0.6s; }
+
+/* Set initial state for animations */
+.fade-in-down, .fade-in-up, .fade-in-right {
+  opacity: 0;
+}
+
+/* ================================== */
+/* === About Page Enhancements    === */
+/* ================================== */
+
+/* --- Testimonial Carousel --- */
+/* --- Testimonial Carousel --- */
+.testimonial-carousel-section {
+    padding: 60px 20px;
+}
+
+.testimonial-carousel-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative; /* Needed for positioning the new arrows */
+}
+
+.testimonial-carousel-wrapper h2 {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.testimonial-carousel {
+    overflow: hidden;
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.carousel-inner {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 40px 80px; /* Increased padding for a cleaner look */
+}
+
+.carousel-slide .quote {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-light-color);
+    min-height: 100px;
+}
+
+.carousel-slide .author {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-top: 20px;
+}
+
+/* --- New and Improved Arrow Styles --- */
+.carousel-control-v2 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(10, 37, 64, 0.5); /* Semi-transparent */
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 28px;
+    line-height: 45px; /* Vertically center the arrow icon */
+    color: white;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.testimonial-carousel-wrapper:hover .carousel-control-v2 {
+    opacity: 1; /* Show arrows on hover of the whole wrapper */
+}
+
+.carousel-control-v2:hover {
+    background-color: rgba(10, 37, 64, 0.8);
+}
+
+.carousel-control-v2.prev { left: 20px; }
+.carousel-control-v2.next { right: 20px; }
+
+
+/* --- Enhanced Scroll Animations --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* This class will be the trigger for our animations */
+.animate {
+  opacity: 0; /* Start hidden */
+  will-change: opacity, transform;
+}
+
+/* We use a staggered delay to make it feel like elements are loading as you scroll */
+.about-hero-section.animate {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+.core-values-section.animate {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+.testimonial-carousel-section.animate {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
+.mission-section.animate {
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+}
+.cta-section.animate {
+    animation: fadeInUp 0.8s ease-out 0.8s forwards;
+}
+
+/* ================================== */
+/* ===         Site Footer        === */
+/* ================================== */
+
+.site-footer {
+  background-color: var(--primary-color);
+  color: #a9b3c1; /* A lighter gray for better readability */
+  padding: 40px 20px;
+  margin-top: 40px; /* Give some space above the footer */
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    grid-template-columns: 2fr 1fr 1fr; /* 3-column layout on larger screens */
+  }
+}
+
+.footer-section h3 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.footer-section.about .footer-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.footer-section.links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section.links ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section.links a {
+  color: #a9b3c1;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-section.links a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.footer-section.contact p {
+  margin: 0 0 10px;
+}
+
+.footer-section.contact span {
+    font-weight: 600;
+    color: white;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #1a3c5e; /* A darker blue for the divider */
+  font-size: 0.9rem;
+}

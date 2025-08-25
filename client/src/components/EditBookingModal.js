@@ -11,7 +11,6 @@ function EditBookingModal({ booking, onClose, onUpdate }) {
   });
   const [error, setError] = useState('');
 
-  // When the modal opens, pre-fill the form with the booking's current data
   useEffect(() => {
     if (booking) {
       setFormData({
@@ -35,8 +34,8 @@ function EditBookingModal({ booking, onClose, onUpdate }) {
       const token = localStorage.getItem('token');
       const headers = { 'x-auth-token': token };
       await axios.put(`/api/bookings/${booking._id}`, formData, { headers });
-      onUpdate(); // This will refresh the service history list
-      onClose();   // This will close the modal
+      onUpdate();
+      onClose();
     } catch (err) {
       setError(err.response?.data?.msg || 'Failed to update booking.');
     }

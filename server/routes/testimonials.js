@@ -106,4 +106,23 @@ router.delete('/:id', adminAuth, async (req, res) => {
   }
 });
 
+// @route   GET /api/testimonials/featured
+// @desc    Get a few random, high-rated testimonials
+// @access  Public
+router.get('/featured', async (req, res) => {
+  try {
+    // Find testimonials with a rating of 4 or higher
+    const candidates = await Testimonial.find({ rating: { $gte: 4 } })
+                                        .populate('author', 'firstName lastName');
+    
+    // Shuffle the candidates and pick up to 3
+    const shuffled = candidates.sort(() => 0.5 - Math.random());
+    const featured = shuffled.slice(0, 3);
+    
+    res.json(featured);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

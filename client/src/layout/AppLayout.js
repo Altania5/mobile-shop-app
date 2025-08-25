@@ -9,6 +9,7 @@ import BlogPage from '../pages/BlogPage';
 import AdminPage from '../pages/AdminPage';
 import BookingFormPage from '../pages/BookingFormPage';
 import LeaveReviewPage from '../pages/LeaveReviewPage';
+import Footer from './Footer';
 
 
 export default function AppLayout({ user, onLogout }) {
@@ -49,6 +50,7 @@ export default function AppLayout({ user, onLogout }) {
           <Route path="/leave-review" element={<LeaveReviewPage />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }

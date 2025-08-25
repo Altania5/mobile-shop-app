@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TestimonialCard from '../components/TestimonialCard'; // 1. Import the new component
+import TestimonialCard from '../components/TestimonialCard';
+import GoogleReviews from '../components/GoogleReviews';
 
 function TestimonialsPage({ user }) { // Pass down the user prop
   const [testimonials, setTestimonials] = useState([]);
@@ -36,6 +37,8 @@ function TestimonialsPage({ user }) { // Pass down the user prop
           ))}
         </div>
       )}
+      <hr className="section-divider" />
+      <GoogleReviews />
     </div>
   );
 }
