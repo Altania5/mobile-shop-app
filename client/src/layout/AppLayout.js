@@ -5,6 +5,8 @@ import BookingPage from '../pages/BookingPage';
 import AboutPage from '../pages/AboutPage';
 import ServiceHistoryPage from '../pages/ServiceHistoryPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
+import BlogPage from '../pages/BlogPage';     // 1. Import new pages
+import PostPage from '../pages/PostPage';
 
 
 export default function AppLayout({ user, onLogout }) {
@@ -23,6 +25,7 @@ export default function AppLayout({ user, onLogout }) {
           {/* 3. Add the new NavLinks */}
           <NavLink to="/" className="nav-link">Services</NavLink>
           <NavLink to="/history" className="nav-link">My Service History</NavLink>
+          <NavLink to="/blog" className="nav-link">Blog</NavLink>
           <NavLink to="/testimonials" className="nav-link">Testimonials</NavLink>
           <NavLink to="/about" className="nav-link">About Us</NavLink>
           <span>Welcome, {user.firstName}!</span>
@@ -36,6 +39,7 @@ export default function AppLayout({ user, onLogout }) {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/history" element={<ServiceHistoryPage />} /> 
           <Route path="/testimonials" element={<TestimonialsPage />} /> 
+          <Route path="/blog" element={<BlogPage />} />
         </Routes>
       </main>
     </div>

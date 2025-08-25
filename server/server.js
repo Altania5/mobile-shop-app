@@ -34,6 +34,9 @@ app.use('/api/bookings', bookingsRouter);
 const testimonialsRouter = require('./routes/testimonials');
 app.use('/api/testimonials', testimonialsRouter);
 
+const postsRouter = require('./routes/posts');
+app.use('/api/posts', postsRouter);
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
