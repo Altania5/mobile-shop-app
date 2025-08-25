@@ -1,0 +1,65 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [responseMsg, setResponseMsg] = useState('');
+  const [isError, setIsError] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsError(false);
+    setResponseMsg('');
+    try {
+      const response = await axios.post('/api/contact', formData);
+      setResponseMsg(response.data.msg);
+      setFormData({ name: '', email: '', subject: '', message: '' }); // Clear form
+    } catch (err) {
+      setIsError(true);
+      setResponseMsg(err.response?.data?.msg || 'An error occurred. Please try again.');
+    }
+  };
+
+  return (
+    <div className="page-container">
+      <div className="contact-header">
+        <h2>Get In Touch</h2>
+        <p>Have a question or need a quote? Fill out the form below, and we'll get back to you as soon as possible.</p>
+      </div>
+      <div className="contact-wrapper">
+        <form onSubmit={handleSubmit} className="contact-form">
+          {responseMsg && (
+            <div className={isError ? 'error-message' : 'success-message'}>
+              {responseMsg}
+            </div>
+          )}
+          <div className="form-grid">
+            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Your Name" required />
+            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Your Email" required />
+          </div>
+          <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Subject" required />
+          <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Your Message" required />
+          <button type="submit">Send Message</button>
+        </form>
+        <div className="contact-info">
+          <h3>Contact Information</h3>
+          <p><strong>Email:</strong> contact@mobileshop.com</p>
+          <p><strong>Phone:</strong> (123) 456-7890</p>
+          <p><strong>Service Area:</strong> Your City, State</p>
+          <p><strong>Hours:</strong> Mon - Fri, 8:00 AM - 6:00 PM</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ContactPage;

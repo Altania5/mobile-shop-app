@@ -42,6 +42,9 @@ app.use('/api/posts', postsRouter);
 const googleReviewsRouter = require('./routes/googleReviews');
 app.use('/api/google-reviews', googleReviewsRouter);
 
+const contactRouter = require('./routes/contact');
+app.use('/api/contact', contactRouter);
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });

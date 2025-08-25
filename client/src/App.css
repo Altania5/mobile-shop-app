@@ -1319,3 +1319,66 @@ button:active {
   border-top: 1px solid #1a3c5e; /* A darker blue for the divider */
   font-size: 0.9rem;
 }
+
+/* ================================== */
+/* ===        Contact Page        === */
+/* ================================== */
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-header h2 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+}
+
+.contact-header p {
+  font-size: 1.1rem;
+  color: var(--text-light-color);
+  max-width: 600px;
+  margin: 10px auto 0;
+}
+
+.contact-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+@media (min-width: 992px) {
+  .contact-wrapper {
+    grid-template-columns: 2fr 1fr; /* Form takes up more space */
+  }
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  margin-bottom: 15px; /* Consistent spacing */
+}
+
+.contact-info {
+  background-color: var(--surface-color);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  border-left: 5px solid var(--accent-color);
+}
+
+.contact-info h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.contact-info p {
+  line-height: 1.8;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.contact-info p:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}

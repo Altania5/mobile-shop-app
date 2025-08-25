@@ -10,6 +10,7 @@ import AdminPage from '../pages/AdminPage';
 import BookingFormPage from '../pages/BookingFormPage';
 import LeaveReviewPage from '../pages/LeaveReviewPage';
 import Footer from './Footer';
+import ContactPage from '../pages/ContactPage';
 
 
 export default function AppLayout({ user, onLogout }) {
@@ -48,6 +49,7 @@ export default function AppLayout({ user, onLogout }) {
           <Route path="/blog" element={<BlogPage />} />
           {user.role === 'admin' && <Route path="/admin" element={<AdminPage />} />}
           <Route path="/leave-review" element={<LeaveReviewPage />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </main>
       <Footer />
