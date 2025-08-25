@@ -27,13 +27,11 @@ function TestimonialCard({ testimonial, user }) {
     }
   };
 
-  const serverUrl = 'http://localhost:5000'; // Define server URL for image paths
-
   return (
     <div className="testimonial-card-v2">
       <div className="author-info">
         <img 
-          src={testimonial.profileImageUrl ? `${serverUrl}/${testimonial.profileImageUrl.replace(/\\/g, '/')}` : '/default-avatar.png'} 
+          src={testimonial.profileImageUrl ? `/${testimonial.profileImageUrl.replace(/\\/g, '/')}` : '/default-avatar.png'} 
           alt={testimonial.author ? `${testimonial.author.firstName}'s profile` : 'User profile'}
           className="profile-pic"
         />
