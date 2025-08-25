@@ -22,8 +22,8 @@ router.get('/', async (req, res) => {
 // @desc    Create a new testimonial
 // @access  Admin
 router.post('/', auth, (req, res) => {
-  // Use the upload middleware
   upload(req, res, async (err) => {
+    
     if (err) {
       return res.status(400).json({ msg: err });
     }

@@ -31,7 +31,7 @@ function TestimonialCard({ testimonial, user }) {
     <div className="testimonial-card-v2">
       <div className="author-info">
         <img 
-          src={testimonial.profileImageUrl ? `/${testimonial.profileImageUrl.replace(/\\/g, '/')}` : '/default-avatar.png'} 
+          src={testimonial.profileImageUrl || '/default-avatar.png'} 
           alt={testimonial.author ? `${testimonial.author.firstName}'s profile` : 'User profile'}
           className="profile-pic"
         />

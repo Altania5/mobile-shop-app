@@ -1,38 +1,25 @@
+// In server/middleware/upload.js
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
-const path = require('path');
 
-// Set up storage engine for Multer
-const storage = multer.diskStorage({
-  destination: './uploads/',
-  filename: function(req, file, cb) {
-    // Create a unique filename: fieldname-timestamp.extension
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
+// Configure Cloudinary with your credentials
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Initialize upload variable
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1000000 }, // Limit file size to 1MB
-  fileFilter: function(req, file, cb) {
-    checkFileType(file, cb);
-  }
-}).single('profileImage'); // 'profileImage' is the name of the form field
+// Configure multer to use Cloudinary for storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'mobile-shop-testimonials', // A folder name in your Cloudinary account
+    allowed_formats: ['jpeg', 'jpg', 'png', 'gif'],
+    transformation: [{ width: 200, height: 200, crop: 'limit' }] // Optional: Resize images
+  },
+});
 
-// Check file type function
-function checkFileType(file, cb) {
-  // Allowed extensions
-  const filetypes = /jpeg|jpg|png|gif/;
-  // Check extension
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime type
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
+const upload = multer({ storage: storage }).single('profileImage');
 
 module.exports = upload;
