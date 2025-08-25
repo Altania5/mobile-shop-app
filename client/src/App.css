@@ -373,3 +373,41 @@ button:active {
 .status-confirmed { background-color: var(--accent-color); }
 .status-completed { background-color: var(--success-color); }
 .status-cancelled { background-color: var(--error-color); }
+
+/* Testimonials Page */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.testimonial-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-left: 5px solid var(--accent-color);
+  border-radius: var(--border-radius);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.star-rating {
+  color: #ffc107; /* A nice gold color for stars */
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.testimonial-quote {
+  font-style: italic;
+  color: var(--text-light-color);
+  flex-grow: 1;
+  margin-bottom: 20px;
+}
+
+.testimonial-author {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: right;
+  margin: 0;
+}

@@ -4,6 +4,8 @@ import MainPage from '../pages/MainPage';
 import BookingPage from '../pages/BookingPage';
 import AboutPage from '../pages/AboutPage';
 import ServiceHistoryPage from '../pages/ServiceHistoryPage';
+import TestimonialsPage from '../pages/TestimonialsPage';
+
 
 export default function AppLayout({ user, onLogout }) {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ export default function AppLayout({ user, onLogout }) {
           {/* 3. Add the new NavLinks */}
           <NavLink to="/" className="nav-link">Services</NavLink>
           <NavLink to="/history" className="nav-link">My Service History</NavLink>
+          <NavLink to="/testimonials" className="nav-link">Testimonials</NavLink>
           <NavLink to="/about" className="nav-link">About Us</NavLink>
           <span>Welcome, {user.firstName}!</span>
           <button onClick={handleLogout}>Logout</button>
@@ -31,7 +34,8 @@ export default function AppLayout({ user, onLogout }) {
           <Route path="/" element={<MainPage />} />
           <Route path="/book/:serviceId" element={<BookingPage user={user} />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/history" element={<ServiceHistoryPage />} /> {/* 4. Add the new route */}
+          <Route path="/history" element={<ServiceHistoryPage />} /> 
+          <Route path="/testimonials" element={<TestimonialsPage />} /> 
         </Routes>
       </main>
     </div>
