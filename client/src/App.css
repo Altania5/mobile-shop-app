@@ -538,3 +538,39 @@ button:active {
   margin-bottom: 15px;
   text-align: center;
 }
+
+/* Admin Page Layout */
+.admin-dashboard {
+    max-width: 1000px; /* Wider container for admin page */
+}
+
+/* Admin Booking Manager */
+.booking-admin-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+@media (min-width: 768px) {
+    .booking-admin-item {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.booking-info {
+    flex-grow: 1;
+}
+
+.booking-info span {
+    font-size: 0.9rem;
+    color: var(--text-light-color);
+}
+
+.status-select {
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    font-weight: 600;
+    color: white;
+}
