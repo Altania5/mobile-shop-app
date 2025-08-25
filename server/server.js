@@ -17,13 +17,19 @@ mongoose.connect(uri)
     console.log("MongoDB database connection established successfully");
   })
   .catch(err => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1); // Exit the process if we can't connect to the DB
+    console.error("!!! MongoDB connection error:", err);
+    process.exit(1);
   });
 
 // API Routes
 const usersRouter = require('./routes/users');
 app.use('/api/users', usersRouter);
+
+const servicesRouter = require('./routes/services');
+app.use('/api/services', servicesRouter);
+
+const bookingsRouter = require('./routes/bookings');
+app.use('/api/bookings', bookingsRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

@@ -2,37 +2,253 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* General Layouts */
+.dashboard, .login-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.login-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .login-page {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+/* Form Styling */
+.form-container {
+  background: var(--surface-color);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: var(--primary-color);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styling */
+button {
+  display: block;
+  width: 100%;
+  background-color: var(--accent-color);
   color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #0069d9;
+  transform: translateY(-1px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+button:active {
+  transform: translateY(1px);
+}
+
+/* Dashboard Navigation */
+.dashboard-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: var(--surface-color);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  margin-bottom: 30px;
+}
+
+.dashboard-nav span {
+  font-weight: 500;
+}
+
+.dashboard-nav button {
+  width: auto; /* Override full-width for nav buttons */
+  background-color: var(--primary-color);
+}
+
+.dashboard-nav button:hover {
+  background-color: #081c30;
+}
+
+/* Add these styles to the bottom of client/src/App.css */
+
+.hero-section {
+  padding: 60px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  border-radius: var(--border-radius);
+  margin-bottom: 40px;
+}
+
+.hero-section h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.services-container {
+  text-align: center;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  text-align: left;
+}
+
+.service-card {
+  background: var(--surface-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.service-description {
+  flex-grow: 1;
+  color: var(--text-light-color);
+  margin-bottom: 20px;
+}
+
+.service-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.service-price {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.service-duration {
+  color: var(--text-light-color);
+}
+
+.book-button {
+  background-color: var(--accent-color);
+}
+
+/* Layout and Nav */
+.app-main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-nav {
+  padding: 15px 30px;
+  background-color: var(--surface-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.nav-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Make link look like a button */
+.book-button-link {
+  text-decoration: none;
+}
+
+/* Booking Page */
+.booking-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .booking-layout {
+    grid-template-columns: 1fr 1fr;
   }
-  to {
-    transform: rotate(360deg);
-  }
+}
+
+.booking-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.calendar-container .react-calendar {
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
+}
+
+.booking-details {
+    background-color: var(--surface-color);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.booking-details h3 {
+    margin-top: 0;
+}
+
+.booking-message {
+    margin-top: 15px;
+    font-weight: 500;
 }
