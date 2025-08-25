@@ -5,8 +5,9 @@ import BookingPage from '../pages/BookingPage';
 import AboutPage from '../pages/AboutPage';
 import ServiceHistoryPage from '../pages/ServiceHistoryPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
-import BlogPage from '../pages/BlogPage';     // 1. Import new pages
+import BlogPage from '../pages/BlogPage';
 import AdminPage from '../pages/AdminPage';
+import BookingFormPage from '../pages/BookingFormPage';
 
 
 export default function AppLayout({ user, onLogout }) {
@@ -38,6 +39,7 @@ export default function AppLayout({ user, onLogout }) {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/book/:serviceId" element={<BookingPage user={user} />} />
+          <Route path="/book/:serviceId/details" element={<BookingFormPage user={user} />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/history" element={<ServiceHistoryPage />} /> 
           <Route path="/testimonials" element={<TestimonialsPage />} /> 

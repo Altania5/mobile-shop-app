@@ -574,3 +574,94 @@ button:active {
     font-weight: 600;
     color: white;
 }
+
+/* Booking Page - Time Slots */
+.time-slots-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.time-slot-btn {
+  background-color: var(--surface-color);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+}
+
+.time-slot-btn.selected, .time-slot-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.proceed-btn {
+  background-color: var(--success-color);
+}
+.proceed-btn:disabled {
+  background-color: var(--text-light-color);
+  cursor: not-allowed;
+}
+
+/* Booking Form Page */
+.booking-form {
+  margin-top: 30px;
+  text-align: left;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.terms-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+.terms-container input {
+    width: auto;
+    margin: 0;
+}
+
+/* Service History - Footer */
+.booking-card-footer {
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+.booking-card-footer button {
+    width: auto;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+/* Admin Service Manager - Checkboxes */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.checkbox-group input {
+    width: auto;
+    margin: 0;
+}
+.success-message {
+  color: var(--success-color);
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}

@@ -1,81 +1,109 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 function BookingPage({ user }) {
   const { serviceId } = useParams(); // Get serviceId from the URL
-  const location = useLocation();
+  const navigate = useNavigate();
 
   // We now have two states: one for the service object and one for the selected date
-  const [service, setService] = useState(location.state?.service || null);
+  const [service, setService] = useState(null);
   const [date, setDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState('');
+  const [availableTimes, setAvailableTimes] = useState([]);
 
   const [loading, setLoading] = useState(!service); // Be in a loading state if we don't have the service data yet
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // If the service data wasn't passed with the Link, fetch it
-    if (!service) {
-      const fetchService = async () => {
+    const fetchService = async () => {
+      try {
+        const response = await axios.get(`/api/services/${serviceId}`);
+        setService(response.data);
+      } catch (err) {
+        setError('Could not load service details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchService();
+  }, [serviceId]);
+
+    useEffect(() => {
+    if (service && date) {
+      const fetchAvailability = async () => {
         try {
-          const response = await axios.get(`/api/services/${serviceId}`);
-          setService(response.data);
+          const formattedDate = format(date, 'yyyy-MM-dd');
+          const response = await axios.get(`/api/services/${serviceId}/availability?date=${formattedDate}`);
+          setAvailableTimes(response.data);
+          setSelectedTime(''); // Reset selected time when date changes
         } catch (err) {
-          setError('Could not load service details. It may no longer exist.');
-        } finally {
-          setLoading(false);
+          setError('Could not fetch available times.');
         }
       };
-      fetchService();
+      fetchAvailability();
     }
-  }, [serviceId, service]); // Dependency array ensures this runs if the ID changes
+  }, [service, date, serviceId]);
 
-  const handleBooking = async () => {
-    setMessage('');
-    try {
-      const token = localStorage.getItem('token');
-      const headers = { 'x-auth-token': token };
-      const bookingData = {
-        serviceId: service._id,
-        date: date,
-      };
-      await axios.post('/api/bookings', bookingData, { headers });
-      setMessage('Booking successful! We will contact you to confirm the time.');
-    } catch (err) {
-      setMessage('Booking failed. Please try again.');
-    }
+  const handleProceedToBooking = () => {
+      navigate(`/book/${serviceId}/details`, {
+          state: { service, date: date.toISOString(), time: selectedTime }
+      });
   };
 
-  if (loading) return <p>Loading service details...</p>;
-  if (error) return <p style={{ color: 'var(--error-color)' }}>{error}</p>;
-  if (!service) return <p>Service not found.</p>;
+    const tileDisabled = ({ date, view }) => {
+    if (view === 'month' && service?.availableDays.length > 0) {
+      const dayName = format(date, 'EEEE'); // e.g., "Monday"
+      return !service.availableDays.includes(dayName);
+    }
+    return false;
+  };
+
+ if (loading) return <div className="page-container"><p>Loading service details...</p></div>;
+  if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
+  if (!service) return <div className="page-container"><p>Service not found.</p></div>;
 
   return (
     <div className="booking-container">
-      <h2>Book Appointment for: {service.name}</h2>
+      <h2>Book: {service.name}</h2>
       <div className="booking-layout">
         <div className="calendar-container">
-          <h3>Select a Date</h3>
+          <h3>1. Select a Date</h3>
           <Calendar
             onChange={setDate}
             value={date}
             minDate={new Date()}
+            tileDisabled={tileDisabled}
           />
         </div>
         <div className="booking-details">
-          <h3>Appointment Details</h3>
-          <p><strong>Service:</strong> {service.name}</p>
-          <p><strong>Description:</strong> {service.description}</p>
-          <p><strong>Price:</strong> ${service.price.toFixed(2)}</p>
-          <hr/>
-          <p><strong>Selected Date:</strong> {date.toLocaleDateString()}</p>
-          <button onClick={handleBooking} disabled={!!message}>
-            {message ? 'Booked!' : 'Confirm Booking'}
+          <h3>2. Select a Time</h3>
+          <div className="time-slots-container">
+            {availableTimes.length > 0 ? (
+              availableTimes.map(time => (
+                <button 
+                  key={time} 
+                  className={`time-slot-btn ${selectedTime === time ? 'selected' : ''}`}
+                  onClick={() => setSelectedTime(time)}
+                >
+                  {time}
+                </button>
+              ))
+            ) : (
+              <p>No available time slots for this date.</p>
+            )}
+          </div>
+          <button 
+            onClick={handleProceedToBooking} 
+            disabled={!selectedTime}
+            className="proceed-btn"
+          >
+            Proceed to Details
           </button>
-          {message && <p className="booking-message">{message}</p>}
         </div>
       </div>
     </div>

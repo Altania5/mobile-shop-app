@@ -8,25 +8,72 @@ const adminAuth = require('../middleware/adminAuth');
 // @access  Private
 router.post('/', auth, async (req, res) => {
   try {
-    const { serviceId, date, notes } = req.body;
+    const { serviceId, date, time, clientFirstName, clientLastName, vehicleMake, vehicleModel, vehicleYear, vehicleColor, notes } = req.body;
 
-    if (!serviceId || !date) {
-      return res.status(400).json({ msg: 'Please provide a service and a date.' });
+    if (!serviceId || !date || !time || !clientFirstName || !clientLastName || !vehicleMake || !vehicleModel || !vehicleYear || !vehicleColor) {
+      return res.status(400).json({ msg: 'Please provide all required fields.' });
     }
 
     const newBooking = new Booking({
       service: serviceId,
-      user: req.user, // from auth middleware
+      user: req.user,
       date,
+      time,
+      clientFirstName,
+      clientLastName,
+      vehicleMake,
+      vehicleModel,
+      vehicleYear,
+      vehicleColor,
       notes,
     });
 
     const savedBooking = await newBooking.save();
     res.status(201).json(savedBooking);
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// --- ADDED: Route for a user to update their own booking ---
+router.put('/:id', auth, async (req, res) => {
+    try {
+        const { vehicleMake, vehicleModel, vehicleYear, vehicleColor, notes } = req.body;
+        const booking = await Booking.findById(req.params.id);
+
+        if (!booking) return res.status(404).json({ msg: 'Booking not found' });
+        if (booking.user.toString() !== req.user) return res.status(401).json({ msg: 'User not authorized' });
+        if (booking.status !== 'Pending') return res.status(400).json({ msg: 'Only pending bookings can be modified.' });
+
+        booking.vehicleMake = vehicleMake;
+        booking.vehicleModel = vehicleModel;
+        booking.vehicleYear = vehicleYear;
+        booking.vehicleColor = vehicleColor;
+        booking.notes = notes;
+        
+        const updatedBooking = await booking.save();
+        res.json(updatedBooking);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- ADDED: Route for a user to cancel their own booking ---
+router.put('/:id/cancel', auth, async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) return res.status(404).json({ msg: 'Booking not found' });
+        if (booking.user.toString() !== req.user) return res.status(401).json({ msg: 'User not authorized' });
+        if (booking.status === 'Completed' || booking.status === 'Cancelled') {
+            return res.status(400).json({ msg: 'Booking cannot be cancelled.' });
+        }
+
+        booking.status = 'Cancelled';
+        await booking.save();
+        res.json({ msg: 'Booking cancelled successfully.' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // @route   GET /api/bookings/mybookings
@@ -35,11 +82,13 @@ router.post('/', auth, async (req, res) => {
 router.get('/mybookings', auth, async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user })
-      .populate('service', 'name price') // Get service name and price
-      .sort({ date: -1 }); // Show the most recent bookings first
+      .populate('service', 'name price') 
+      .sort({ date: -1 });
+
     res.json(bookings);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching user bookings:", err);
+    res.status(500).json({ error: 'Failed to fetch booking history.' });
   }
 });
 

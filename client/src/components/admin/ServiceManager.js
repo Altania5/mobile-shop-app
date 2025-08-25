@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function ServiceManager() {
   const [services, setServices] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '', price: '', duration: '' });
+  const [formData, setFormData] = useState({ name: '', description: '', price: '', duration: '', availableDays: [], availableTimes: '' });
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState(''); // State for handling errors
   const token = localStorage.getItem('token');
@@ -25,39 +25,6 @@ function ServiceManager() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(''); // Clear previous errors
-    const headers = { 'x-auth-token': token };
-    
-    try {
-      if (editingId) {
-        // Update existing service
-        await axios.put(`/api/services/${editingId}`, formData, { headers });
-      } else {
-        // Create new service
-        await axios.post('/api/services', formData, { headers });
-      }
-      
-      resetForm();
-      fetchServices();
-    } catch (err) {
-      // Set an error message from the server response if it exists
-      setError(err.response?.data?.msg || err.response?.data?.error || 'An error occurred. Please try again.');
-    }
-  };
-
-  const handleEdit = (service) => {
-    setError('');
-    setEditingId(service._id);
-    setFormData({ 
-      name: service.name, 
-      description: service.description, 
-      price: service.price, 
-      duration: service.duration 
-    });
-  };
-
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
@@ -71,10 +38,51 @@ function ServiceManager() {
     }
   };
 
+    const handleDayChange = (day) => {
+    const currentDays = formData.availableDays;
+    if (currentDays.includes(day)) {
+      setFormData({ ...formData, availableDays: currentDays.filter(d => d !== day) });
+    } else {
+      setFormData({ ...formData, availableDays: [...currentDays, day] });
+    }
+  };
+
+    const handleEdit = (service) => {
+    setEditingId(service._id);
+    setFormData({ 
+      name: service.name, 
+      description: service.description, 
+      price: service.price, 
+      duration: service.duration,
+      availableDays: service.availableDays || [],
+      availableTimes: service.availableTimes?.join(', ') || ''
+    });
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const headers = { 'x-auth-token': token };
+    
+    // Convert comma-separated times string to an array
+    const timesArray = formData.availableTimes.split(',').map(t => t.trim()).filter(Boolean);
+    const dataToSubmit = { ...formData, availableTimes: timesArray };
+
+    if (editingId) {
+      await axios.put(`/api/services/${editingId}`, dataToSubmit, { headers });
+    } else {
+      await axios.post('/api/services', dataToSubmit, { headers });
+    }
+    
+    resetForm();
+    fetchServices();
+  };
+
   const resetForm = () => {
     setEditingId(null);
-    setFormData({ name: '', description: '', price: '', duration: '' });
+    setFormData({ name: '', description: '', price: '', duration: '', availableDays: [], availableTimes: '' });
   };
+  
+  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   return (
     <div className="manager-container">
@@ -88,8 +96,22 @@ function ServiceManager() {
         <input name="price" type="number" value={formData.price} onChange={handleChange} placeholder="Price ($)" required />
         <input name="duration" type="number" value={formData.duration} onChange={handleChange} placeholder="Duration (min)" required />
         <div className="form-actions">
-          <button type="submit">{editingId ? 'Update Service' : 'Add Service'}</button>
-          {editingId && <button type="button" onClick={resetForm}>Cancel</button>}
+                <div>
+            <label>Available Days:</label>
+            <div className="checkbox-group">
+                {daysOfWeek.map(day => (
+                    <label key={day}>
+                        <input type="checkbox" checked={formData.availableDays.includes(day)} onChange={() => handleDayChange(day)} />
+                        {day}
+                    </label>
+                ))}
+            </div>
+        </div>
+        <input name="availableTimes" value={formData.availableTimes} onChange={handleChange} placeholder="Available Times (e.g., 09:00, 11:00, 14:00)" />
+        <div className="form-actions">
+            <button type="submit">{editingId ? 'Update Service' : 'Add Service'}</button>
+            {editingId && <button type="button" onClick={resetForm}>Cancel</button>}
+        </div>
         </div>
       </form>
 

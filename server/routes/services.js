@@ -1,6 +1,7 @@
 const router = require('express').Router();
 let Service = require('../models/service.model');
 const adminAuth = require('../middleware/adminAuth');
+const { startOfDay, endOfDay } = require('date-fns');
 
 // @route   GET /api/services
 // @desc    Get all services
@@ -67,6 +68,67 @@ router.delete('/:id', adminAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+router.get('/:id/availability', async (req, res) => {
+    try {
+        const { date } = req.query;
+        if (!date) {
+            return res.status(400).json({ msg: 'Date query parameter is required.' });
+        }
+        
+        const service = await Service.findById(req.params.id);
+        if (!service) {
+            return res.status(404).json({ msg: 'Service not found.' });
+        }
+
+        const bookingsOnDate = await Booking.find({
+            service: req.params.id,
+            date: new Date(date),
+        });
+
+        const bookedTimes = bookingsOnDate.map(booking => booking.time);
+        
+        const availableTimes = service.availableTimes.filter(time => !bookedTimes.includes(time));
+
+        res.json(availableTimes);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// @route   GET /api/services/:id/availability
+// @desc    Get available time slots for a service on a given date
+// @access  Public
+router.get('/:id/availability', async (req, res) => {
+    try {
+        const { date } = req.query;
+        if (!date) {
+            return res.status(400).json({ msg: 'Date query parameter is required.' });
+        }
+        
+        const service = await Service.findById(req.params.id);
+        if (!service) {
+            return res.status(404).json({ msg: 'Service not found.' });
+        }
+
+        const selectedDate = new Date(date);
+        const dayStart = startOfDay(selectedDate);
+        const dayEnd = endOfDay(selectedDate);
+
+        const bookingsOnDate = await Booking.find({
+            service: req.params.id,
+            date: { $gte: dayStart, $lte: dayEnd },
+        });
+
+        const bookedTimes = bookingsOnDate.map(booking => booking.time);
+        const availableTimes = service.availableTimes.filter(time => !bookedTimes.includes(time));
+
+        res.json(availableTimes);
+    } catch (err) {
+        console.error("Availability check error:", err);
+        res.status(500).json({ error: 'Server error while checking availability.' });
+    }
 });
 
 module.exports = router;
