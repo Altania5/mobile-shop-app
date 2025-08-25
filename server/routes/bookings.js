@@ -2,6 +2,7 @@ const router = require('express').Router();
 const auth = require('../middleware/auth');
 let Booking = require('../models/booking.model');
 const adminAuth = require('../middleware/adminAuth');
+let Service = require('../models/service.model');
 
 // @route   POST /api/bookings
 // @desc    Create a new booking
@@ -95,16 +96,53 @@ router.get('/mybookings', auth, async (req, res) => {
 // --- Admin-Only Routes ---
 
 // @route   GET /api/bookings
-// @desc    Get all bookings from all users
+// @desc    Get all bookings from all users (with advanced filtering)
 // @access  Admin
 router.get('/', adminAuth, async (req, res) => {
   try {
-    const bookings = await Booking.find()
-      .populate('user', 'firstName lastName email') // Get user details
-      .populate('service', 'name') // Get service name
-      .sort({ date: 1 }); // Sort by the soonest date
+    const { customerName, startDate, endDate, make, model, year, service } = req.query;
+    
+    let query = {};
+
+    // --- Build the query object based on filters ---
+    if (startDate) {
+        query.date = { ...query.date, $gte: new Date(startDate) };
+    }
+    if (endDate) {
+        query.date = { ...query.date, $lte: new Date(endDate) };
+    }
+    if (make) {
+        query.vehicleMake = { $regex: make, $options: 'i' }; // Case-insensitive search
+    }
+    if (model) {
+        query.vehicleModel = { $regex: model, $options: 'i' };
+    }
+    if (year) {
+        query.vehicleYear = year;
+    }
+    if (service) {
+        // This requires a more complex query since 'service' is a populated field
+        const services = await Service.find({ name: { $regex: service, $options: 'i' } }).select('_id');
+        const serviceIds = services.map(s => s._id);
+        query.service = { $in: serviceIds };
+    }
+
+    let bookings = await Booking.find(query)
+      .populate('user', 'firstName lastName email')
+      .populate('service', 'name')
+      .sort({ date: 1 });
+
+    // --- Filter by customer name after populating ---
+    if (customerName) {
+        bookings = bookings.filter(booking => {
+            const fullName = `${booking.user?.firstName} ${booking.user?.lastName}`;
+            return fullName.toLowerCase().includes(customerName.toLowerCase());
+        });
+    }
+
     res.json(bookings);
   } catch (err) {
+    console.error("Booking search error:", err);
     res.status(500).json({ error: err.message });
   }
 });

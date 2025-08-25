@@ -1382,3 +1382,105 @@ button:active {
   border-bottom: none;
   margin-bottom: 0;
 }
+
+/* --- Admin Booking Manager Enhancements --- */
+.show-more-btn {
+    margin-top: 15px;
+    background-color: var(--surface-color);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+.show-more-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.search-form {
+    margin-top: 20px;
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.search-results {
+    margin-top: 30px;
+}
+
+/* ================================== */
+/* === Booking Manager Overhaul === */
+/* ================================== */
+
+.manager-section {
+  margin-bottom: 20px;
+}
+
+.manager-section h4 {
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-booking-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on small screens */
+    gap: 20px;
+}
+
+@media (min-width: 992px) {
+    .admin-booking-grid {
+        grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
+    }
+}
+
+.admin-booking-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.admin-booking-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-booking-card .card-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    border: none; /* Override generic h4 styles */
+    padding: 0;
+}
+
+.admin-booking-card .card-body {
+    padding: 15px;
+    font-size: 0.95rem;
+}
+
+.admin-booking-card .card-body p {
+    margin: 0 0 8px;
+}
+
+.admin-booking-card .card-body p:last-child {
+    margin-bottom: 0;
+}
+
+.search-grid label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    color: var(--text-light-color);
+}
+
+.input-with-datalist {
+    position: relative;
+}
