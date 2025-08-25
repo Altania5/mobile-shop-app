@@ -28,4 +28,18 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/bookings/mybookings
+// @desc    Get all bookings for the logged-in user
+// @access  Private
+router.get('/mybookings', auth, async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.user })
+      .populate('service', 'name price') // Get service name and price
+      .sort({ date: -1 }); // Show the most recent bookings first
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

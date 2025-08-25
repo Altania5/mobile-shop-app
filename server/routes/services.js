@@ -13,4 +13,19 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @route   GET /api/services/:id
+// @desc    Get a single service by ID
+// @access  Public
+router.get('/:id', async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id);
+    if (!service) {
+      return res.status(404).json({ msg: 'Service not found' });
+    }
+    res.json(service);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

@@ -252,3 +252,124 @@ button:active {
     margin-top: 15px;
     font-weight: 500;
 }
+
+/* Styling for the new Nav Link */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-light-color);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+}
+
+
+/* About Page Styles */
+.about-page-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.about-hero {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.about-hero h2 {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    margin: 0;
+}
+
+.about-hero p {
+    font-size: 1.1rem;
+    color: var(--text-light-color);
+}
+
+.about-content p {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Styling for active NavLink */
+.nav-link.active {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* A generic container for our pages */
+.page-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+/* Service History Page */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.booking-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.booking-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.booking-card-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.booking-card-body {
+  padding: 20px;
+}
+
+.booking-card-body p {
+  margin: 0 0 10px;
+}
+
+.booking-status {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+}
+
+.status-pending { background-color: #ffc107; color: black; }
+.status-confirmed { background-color: var(--accent-color); }
+.status-completed { background-color: var(--success-color); }
+.status-cancelled { background-color: var(--error-color); }
