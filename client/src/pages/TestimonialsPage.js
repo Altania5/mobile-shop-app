@@ -1,18 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import TestimonialCard from '../components/TestimonialCard'; // 1. Import the new component
 
-// A simple component to render star ratings
-const StarRating = ({ rating }) => {
-  const stars = [];
-  for (let i = 0; i < 5; i++) {
-    stars.push(
-      <span key={i} className={i < rating ? 'star filled' : 'star'}>★</span>
-    );
-  }
-  return <div className="star-rating">{stars}</div>;
-};
-
-function TestimonialsPage() {
+function TestimonialsPage({ user }) { // Pass down the user prop
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,17 +14,15 @@ function TestimonialsPage() {
         setTestimonials(response.data);
       } catch (err) {
         setError('Could not fetch testimonials at this time.');
-        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchTestimonials();
   }, []);
 
-  if (loading) return <p>Loading testimonials...</p>;
-  if (error) return <p style={{ color: 'var(--error-color)' }}>{error}</p>;
+  if (loading) return <div className="page-container"><p>Loading testimonials...</p></div>;
+  if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
 
   return (
     <div className="page-container">
@@ -42,13 +30,9 @@ function TestimonialsPage() {
       {testimonials.length === 0 ? (
         <p>No testimonials yet. Be the first to leave a review!</p>
       ) : (
-        <div className="testimonials-grid">
+        <div className="testimonials-grid-v2">
           {testimonials.map(testimonial => (
-            <div key={testimonial._id} className="testimonial-card">
-              <StarRating rating={testimonial.rating} />
-              <p className="testimonial-quote">"{testimonial.quote}"</p>
-              <p className="testimonial-author">- {testimonial.author}</p>
-            </div>
+            <TestimonialCard key={testimonial._id} testimonial={testimonial} user={user} />
           ))}
         </div>
       )}

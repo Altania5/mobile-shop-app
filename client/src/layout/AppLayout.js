@@ -8,6 +8,7 @@ import TestimonialsPage from '../pages/TestimonialsPage';
 import BlogPage from '../pages/BlogPage';
 import AdminPage from '../pages/AdminPage';
 import BookingFormPage from '../pages/BookingFormPage';
+import LeaveReviewPage from '../pages/LeaveReviewPage';
 
 
 export default function AppLayout({ user, onLogout }) {
@@ -42,9 +43,10 @@ export default function AppLayout({ user, onLogout }) {
           <Route path="/book/:serviceId/details" element={<BookingFormPage user={user} />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/history" element={<ServiceHistoryPage />} /> 
-          <Route path="/testimonials" element={<TestimonialsPage />} /> 
+          <Route path="/testimonials" element={<TestimonialsPage user={user} />} /> 
           <Route path="/blog" element={<BlogPage />} />
           {user.role === 'admin' && <Route path="/admin" element={<AdminPage />} />}
+          <Route path="/leave-review" element={<LeaveReviewPage />} />
         </Routes>
       </main>
     </div>

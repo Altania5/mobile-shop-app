@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditBookingModal from '../components/EditBookingModal';
+import { Link } from 'react-router-dom';
 
 function ServiceHistoryPage() {
   const [bookings, setBookings] = useState([]);
@@ -81,7 +82,9 @@ function ServiceHistoryPage() {
                     <button onClick={() => handleCancel(booking._id)} className="delete-btn">Cancel</button>
                 )}
                 {booking.status === 'Completed' && (
-                    <button>Leave a Review</button> 
+                    <Link to="/leave-review" state={{ booking: booking }} className="review-button-link">
+                                    <button>Leave a Review</button>
+                                </Link>
                 )}
               </div>
             </div>

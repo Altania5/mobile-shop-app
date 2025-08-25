@@ -10,3 +10,6 @@ client/build/
 .env
 client/.env
 server/.env
+
+# User uploaded content
+uploads/
