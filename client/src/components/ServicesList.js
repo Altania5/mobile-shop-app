@@ -7,21 +7,37 @@ function ServicesList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const res = await axios.get("/api/services");
-        setServices(res.data.services);
-      } catch (err) {
-        setError('Could not fetch services. Please try again later.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const getServices = async () => {
+    try {
+      const res = await axios.get("/api/services");
+      
+      // Log the actual data received from the API
+      console.log("API Response:", res.data);
 
-    fetchServices();
-  }, []);
+      // Check if the response data itself is an array
+      if (Array.isArray(res.data)) {
+        setServices(res.data);
+      } 
+      // Check if the response data is an object with a 'services' array
+      else if (res.data && Array.isArray(res.data.services)) {
+        setServices(res.data.services);
+      } 
+      // If the data is not in a recognized format, set services to an empty array
+      else {
+        console.error("Received unexpected data format:", res.data);
+        setServices([]); 
+      }
+    } catch (error) {
+      console.error("Failed to fetch services:", error);
+      setServices([]); // Set to empty array on error to prevent crash
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  getServices();
+}, []);
 
   if (loading) return <p>Loading services...</p>;
   if (error) return <p style={{ color: 'var(--error-color)' }}>{error}</p>;
