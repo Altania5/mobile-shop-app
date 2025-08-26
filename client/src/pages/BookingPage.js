@@ -16,7 +16,7 @@ function BookingPage({ user }) {
   const [availableTimes, setAvailableTimes] = useState([]);
 
   const [loading, setLoading] = useState(!service); // Be in a loading state if we don't have the service data yet
-  const [message, setMessage] = useState('');
+  const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {

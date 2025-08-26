@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 // A new, reusable component for displaying a single booking in the admin panel
@@ -39,7 +39,7 @@ function BookingManager() {
   const [isSearching, setIsSearching] = useState(false);
   const token = localStorage.getItem('token');
 
-    const [makes, setMakes] = useState([]);
+  const [makes, setMakes] = useState([]);
   const [models, setModels] = useState([]);
   const [isLoadingModels, setIsLoadingModels] = useState(false);
 
@@ -78,21 +78,21 @@ function BookingManager() {
     }
   }, [filters.make]);
 
-  const fetchAllBookings = async () => {
+const fetchAllBookings = useCallback(async () => {
     try {
-      const headers = { 'x-auth-token': token };
-      const response = await axios.get('/api/bookings', { headers });
-      setAllBookings(response.data.sort((a, b) => new Date(b.date) - new Date(a.date))); // Sort by most recent
+        const token = localStorage.getItem('token');
+        const res = await axios.get('/api/bookings', {
+            headers: { 'x-auth-token': token }
+        });
+        setBookings(res.data);
     } catch (err) {
-      setError('Could not fetch bookings.');
-    } finally {
-      setLoading(false);
+        console.error("Error fetching bookings:", err);
     }
-  };
+}, []);
   
-  useEffect(() => {
+useEffect(() => {
     fetchAllBookings();
-  }, []);
+}, [fetchAllBookings]);
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
