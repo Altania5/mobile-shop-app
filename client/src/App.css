@@ -1604,3 +1604,77 @@ button:active {
 .react-calendar__tile--active:enabled:focus {
     background: var(--primary-color) !important;
 }
+
+/* ================================== */
+/* ===    Mobile Responsiveness   === */
+/* ================================== */
+
+/* --- Main Breakpoint for Tablets and smaller --- */
+@media (max-width: 992px) {
+  /* --- Mobile Navigation --- */
+  .mobile-nav-toggle {
+    display: block; /* Show the hamburger button */
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001; /* Ensure it's above other content */
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Start off-screen */
+    width: 80%;
+    height: 100vh;
+    background-color: var(--surface-color);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    transition: right 0.4s ease-in-out;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+
+  .nav-links.open {
+    right: 0; /* Slide in from the right */
+  }
+  
+  .nav-link, .nav-login-button, .dashboard-nav button {
+    font-size: 1.2rem;
+  }
+
+  .nav-user-greeting {
+    display: none; /* Hide the welcome text on mobile menu for space */
+  }
+
+  /* --- General Layout Adjustments --- */
+  .app-main, .page-container, .about-page-wrapper {
+    padding: 15px;
+  }
+
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.8rem; }
+
+  /* --- Page Specific Adjustments --- */
+  .about-hero-section { grid-template-columns: 1fr; }
+  .about-hero-image-container { grid-row: 1; } /* Move image to top on mobile */
+
+  .core-values-section { grid-template-columns: 1fr; }
+
+  .mission-section { background-attachment: scroll; } /* Parallax is often jerky on mobile */
+  .mission-overlay { padding: 20px; }
+
+  .booking-layout { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .contact-wrapper { grid-template-columns: 1fr; }
+  .admin-booking-grid { grid-template-columns: 1fr; }
+  .testimonials-grid-v2 { grid-template-columns: 1fr; }
+
+  .carousel-slide { padding: 30px 20px; }
+  .carousel-control-v2 { opacity: 0.6; } /* Make arrows visible on mobile */
+
+  .footer-content { grid-template-columns: 1fr; }
+}

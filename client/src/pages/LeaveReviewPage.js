@@ -77,9 +77,19 @@ function LeaveReviewPage() {
     );
   }
 
+    if (!booking.service) {
+    return (
+        <div className="page-container">
+          <h2>Cannot Leave Review</h2>
+          <p>This service is no longer available and cannot be reviewed.</p>
+          <Link to="/history">Return to Service History</Link>
+        </div>
+      );
+  }
+
   return (
     <div className="page-container">
-      <h2>Leave a Review for {booking.service.name}</h2>
+      <h2>Leave a Review for {booking.service?.name}</h2>
       <form onSubmit={handleSubmit} className="review-form">
         {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}

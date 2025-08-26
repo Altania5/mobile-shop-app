@@ -82,10 +82,14 @@ function ServiceHistoryPage() {
                     <button onClick={() => handleCancel(booking._id)} className="delete-btn">Cancel</button>
                 )}
                 {booking.status === 'Completed' && (
-                    <Link to="/leave-review" state={{ booking: booking }} className="review-button-link">
-                                    <button>Leave a Review</button>
-                                </Link>
-                )}
+                  booking.service ? (
+                      <Link to="/leave-review" state={{ booking: booking }} className="review-button-link">
+                          <button>Leave a Review</button>
+                      </Link>
+                  ) : (
+                      <button disabled>Service No Longer Available</button>
+                  )
+              )}
               </div>
             </div>
           ))}
