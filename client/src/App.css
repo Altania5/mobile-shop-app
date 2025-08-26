@@ -1612,20 +1612,31 @@ button:active {
 /* --- Main Breakpoint for Tablets and smaller --- */
 @media (max-width: 992px) {
   /* --- Mobile Navigation --- */
+
+/* By default (on desktop), the hamburger button is hidden */
+.mobile-nav-toggle {
+  display: none;
+}
+
+/* --- Main Breakpoint for Tablets and smaller --- */
+@media (max-width: 992px) {
+  /* On mobile, show the hamburger button */
   .mobile-nav-toggle {
-    display: block; /* Show the hamburger button */
+    display: block;
     background: none;
     border: none;
-    color: var(--primary-color);
+    color: var(--accent-color);
     font-size: 2rem;
     cursor: pointer;
-    z-index: 1001; /* Ensure it's above other content */
+    z-index: 1001;
   }
 
+  /* On mobile, hide the original nav-links container... */
   .nav-links {
+    display: none;
     position: fixed;
     top: 0;
-    right: -100%; /* Start off-screen */
+    right: -100%;
     width: 80%;
     height: 100vh;
     background-color: var(--surface-color);
@@ -1638,8 +1649,10 @@ button:active {
     z-index: 1000;
   }
 
+  /* ...and only show it as a slide-out menu when it has the 'open' class */
   .nav-links.open {
-    right: 0; /* Slide in from the right */
+    display: flex;
+    right: 0;
   }
   
   .nav-link, .nav-login-button, .dashboard-nav button {
@@ -1647,16 +1660,9 @@ button:active {
   }
 
   .nav-user-greeting {
-    display: none; /* Hide the welcome text on mobile menu for space */
+    display: none;
   }
-
-  /* --- General Layout Adjustments --- */
-  .app-main, .page-container, .about-page-wrapper {
-    padding: 15px;
-  }
-
-  h1 { font-size: 2.2rem; }
-  h2 { font-size: 1.8rem; }
+}
 
   /* --- Page Specific Adjustments --- */
   .about-hero-section { grid-template-columns: 1fr; }
@@ -1742,5 +1748,21 @@ button:active {
     flex-direction: column; /* Stack vertically */
     align-items: flex-start; /* Align to the left */
     gap: 15px;
+  }
+}
+
+/* ================================== */
+/* ===  Admin Mobile Polish (Aug 26) === */
+/* ================================== */
+
+@media (max-width: 768px) {
+  .form-grid-half {
+    grid-template-columns: 1fr;
+  }
+
+  .checkbox-group {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    gap: 10px;
   }
 }
