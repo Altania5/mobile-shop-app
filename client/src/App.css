@@ -1678,3 +1678,69 @@ button:active {
 
   .footer-content { grid-template-columns: 1fr; }
 }
+
+/* ================================== */
+/* ===  Mobile & UI Polish (Aug 26) === */
+/* ================================== */
+
+/* 1. About Page: Mission Section Tweak for Mobile */
+@media (max-width: 768px) {
+  .mission-overlay h2 {
+    font-size: 1.8rem; /* Reduce font size on mobile */
+  }
+}
+
+/* 2. Lighter Hamburger Menu Icon */
+.mobile-nav-toggle {
+  color: var(--accent-color); /* Change from dark primary to lighter accent color */
+}
+
+/* 3. Service Manager Redesign (Desktop & Mobile) */
+.manager-layout {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column for mobile */
+  gap: 30px;
+}
+
+@media (min-width: 992px) {
+  .manager-layout {
+    /* Two columns on desktop: form on left, list on right */
+    grid-template-columns: 400px 1fr; 
+  }
+}
+
+.manager-form-section h4, .manager-list-section h4 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.form-grid-half {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.service-admin-item {
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+  gap: 10px;
+}
+
+.service-admin-item span {
+  flex-grow: 1;
+}
+
+.item-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* 4. Testimonial Manager Redesign for Mobile */
+@media (max-width: 768px) {
+  .testimonial-admin-item {
+    flex-direction: column; /* Stack vertically */
+    align-items: flex-start; /* Align to the left */
+    gap: 15px;
+  }
+}
