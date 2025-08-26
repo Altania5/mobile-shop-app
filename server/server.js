@@ -12,15 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-if (process.env.NODE_ENV === 'production') {
-  const path = require('path');
-  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
-  });
-}
-
 // Connect to MongoDB
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri)
@@ -56,6 +47,14 @@ app.use('/api/contact', contactRouter);
 
 const vehicleDataRouter = require('./routes/vehicleData');
 app.use('/api/vehicles', vehicleDataRouter);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+  });
+}
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
