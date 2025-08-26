@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config({ path: __dirname + '/.env' });
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -49,11 +49,12 @@ const vehicleDataRouter = require('./routes/vehicleData');
 app.use('/api/vehicles', vehicleDataRouter);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+    const path = require('path');
+    app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
-  app.get('/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
-  });
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+    });
 }
 
 app.listen(port, () => {
