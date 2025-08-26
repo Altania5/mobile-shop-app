@@ -15,7 +15,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // --- The wildcard route fix you already have ---
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-  app.get('/*', (req, res) => {
+
+  // The "catchall" handler: for any request that doesn't match one above,
+  // send back React's index.html file.
+  // THIS IS THE CORRECTED SYNTAX
+  app.get('/:splat(*)', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
   });
 }
