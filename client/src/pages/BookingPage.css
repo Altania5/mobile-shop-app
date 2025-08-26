@@ -1,0 +1,121 @@
+/* BookingPage.css */
+
+.booking-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-layout {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.calendar-container {
+  flex: 1;
+}
+
+.booking-details {
+  flex: 1;
+  padding-left: 2rem;
+  border-left: 1px solid #ddd;
+}
+
+/* Calendar styling */
+.react-calendar {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.react-calendar__tile {
+  background: #fff;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: #f0f0f0;
+}
+
+.react-calendar__tile--now {
+  background: #e6f7ff;
+  font-weight: bold;
+}
+
+.react-calendar__tile--active {
+  background: #007bff;
+  color: white;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+    background: #0056b3;
+}
+
+.react-calendar__tile:disabled {
+    background-color: #f0f0f0;
+    color: #ababab;
+}
+
+/* Time slots styling */
+.time-slots-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.time-slot-btn {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.time-slot-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.time-slot-btn.selected {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.proceed-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.proceed-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.proceed-btn:hover:enabled {
+  background-color: #218838;
+}
+
+.error-message {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    padding: 10px;
+    border-radius: 5px;
+}

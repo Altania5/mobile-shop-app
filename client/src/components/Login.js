@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const location = useLocation();
+  const from = location.state?.from;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
       const response = await axios.post('/api/users/login', { email, password });
-      onLoginSuccess(response.data.token);
+      onLoginSuccess(response.data.token, from); 
     } catch (err) {
-      setError(err.response.data.msg || 'An error occurred during login.');
+      setError(err.response?.data?.msg || 'An error occurred during login.');
     }
   };
 

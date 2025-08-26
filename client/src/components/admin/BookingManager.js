@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// A new, reusable component for displaying a single booking in the admin panel
 const AdminBookingCard = ({ booking, onStatusChange }) => (
     <div className="admin-booking-card">
         <div className="card-header">
@@ -43,7 +42,19 @@ function BookingManager() {
   const [models, setModels] = useState([]);
   const [isLoadingModels, setIsLoadingModels] = useState(false);
 
-  // Fetch all car makes when the component mounts
+  const fetchAllBookings = async () => {
+    try {
+      setLoading(true);
+      const headers = { 'x-auth-token': token };
+      const response = await axios.get('/api/bookings', { headers });
+      setAllBookings(response.data.sort((a, b) => new Date(b.date) - new Date(a.date)));
+    } catch (err) {
+      setError('Could not fetch bookings.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
     const fetchMakes = async () => {
         try {
@@ -57,7 +68,6 @@ function BookingManager() {
     fetchMakes();
   }, []);
 
-  // Fetch models whenever the 'make' filter changes
   useEffect(() => {
     if (filters.make) {
         const fetchModels = async () => {
@@ -66,33 +76,16 @@ function BookingManager() {
                 const response = await axios.get(`/api/vehicles/models/${filters.make}`);
                 setModels(response.data);
             } catch (err) {
-                setModels([]); // Clear models on error
-                console.error("Failed to fetch models", err);
+                setModels([]);
             } finally {
                 setIsLoadingModels(false);
             }
         };
         fetchModels();
     } else {
-        setModels([]); // Clear models if make is cleared
+        setModels([]);
     }
   }, [filters.make]);
-
-const fetchAllBookings = useCallback(async () => {
-    try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('/api/bookings', {
-            headers: { 'x-auth-token': token }
-        });
-        setAllBookings(res.data);
-    } catch (err) {
-        console.error("Error fetching bookings:", err);
-    }
-}, []);
-  
-useEffect(() => {
-    fetchAllBookings();
-}, [fetchAllBookings]);
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
@@ -100,7 +93,7 @@ useEffect(() => {
         const headers = { 'x-auth-token': token };
         const body = { status: newStatus };
         await axios.put(`/api/bookings/${bookingId}/status`, body, { headers });
-        fetchAllBookings(); // Refresh the entire list to reflect the change
+        fetchAllBookings();
     } catch (err) {
         setError(err.response?.data?.msg || 'Failed to update status.');
     }
@@ -116,7 +109,6 @@ useEffect(() => {
     setError('');
     try {
         const headers = { 'x-auth-token': token };
-        // Filter out empty filter values before creating params
         const activeFilters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''));
         const params = new URLSearchParams(activeFilters).toString();
 
@@ -136,7 +128,6 @@ useEffect(() => {
       <h3>Manage Bookings</h3>
       {error && <p className="error-message">{error}</p>}
       
-      {/* --- Active Bookings Section --- */}
       <div className="manager-section">
         <h4>Active Bookings ({activeBookings.length})</h4>
         <div className="admin-booking-grid">
@@ -155,28 +146,19 @@ useEffect(() => {
 
       <hr className="section-divider" />
 
-      {/* --- Advanced Search Section --- */}
       <div className="manager-section">
         <h4>Advanced Booking Search</h4>
         <form onSubmit={handleSearch} className="search-form">
           <div className="search-grid">
             <input name="customerName" value={filters.customerName} onChange={handleFilterChange} placeholder="Customer Name" />
-            
-            {/* --- NEW SMART FIELDS --- */}
             <div className="input-with-datalist">
               <input list="makes-list" name="make" value={filters.make} onChange={handleFilterChange} placeholder="Car Make" />
-              <datalist id="makes-list">
-                {makes.map((makeName, i) => <option key={i} value={makeName} />)}
-              </datalist>
+              <datalist id="makes-list">{makes.map((makeName, i) => <option key={i} value={makeName} />)}</datalist>
             </div>
-
             <div className="input-with-datalist">
               <input list="models-list" name="model" value={filters.model} onChange={handleFilterChange} placeholder={isLoadingModels ? "Loading..." : "Car Model"} disabled={!filters.make} />
-              <datalist id="models-list">
-                {models.map((modelName, i) => <option key={i} value={modelName} />)}
-              </datalist>
+              <datalist id="models-list">{models.map((modelName, i) => <option key={i} value={modelName} />)}</datalist>
             </div>
-            
             <input name="year" type="number" value={filters.year} onChange={handleFilterChange} placeholder="Car Year" min="1900" max={new Date().getFullYear() + 1} />
             <input name="service" value={filters.service} onChange={handleFilterChange} placeholder="Service Type" />
             <label>From: <input name="startDate" type="date" value={filters.startDate} onChange={handleFilterChange} /></label>
