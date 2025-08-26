@@ -84,7 +84,7 @@ const fetchAllBookings = useCallback(async () => {
         const res = await axios.get('/api/bookings', {
             headers: { 'x-auth-token': token }
         });
-        setAllBookings(res.data); // Corrected function call
+        setAllBookings(res.data);
     } catch (err) {
         console.error("Error fetching bookings:", err);
     }
