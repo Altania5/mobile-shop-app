@@ -1,0 +1,75 @@
+/* client/src/components/admin/ServiceManager.css */
+
+.service-manager-container {
+    background-color: #ffffff; /* White background */
+    border-radius: 8px; /* Rounded corners */
+    padding: 1.5rem; /* Spacing inside the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin: 1rem; /* Space around the component */
+}
+
+.table-responsive-container {
+    overflow-x: auto;
+}
+
+.services-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.services-table th,
+.services-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.services-table th {
+    background-color: #f2f2f2;
+}
+
+/* --- Mobile-Friendly Card Layout --- */
+@media screen and (max-width: 768px) {
+    .services-table thead {
+        /* Hide the table header on small screens */
+        display: none;
+    }
+
+    .services-table,
+    .services-table tbody,
+    .services-table tr,
+    .services-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .services-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .services-table td {
+        text-align: right; /* Align content to the right */
+        padding-left: 50%; /* Create space for the label */
+        position: relative;
+        border: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .services-table td:before {
+        /* Use the data-label attribute for the label */
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        font-weight: bold;
+        text-align: left; /* Align label to the left */
+    }
+
+    .services-table td:last-child {
+        border-bottom: 0;
+    }
+}
