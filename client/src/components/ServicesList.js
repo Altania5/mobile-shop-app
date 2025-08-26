@@ -10,8 +10,8 @@ function ServicesList() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get('/api/services');
-        setServices(response.data);
+        const res = await axios.get("/api/services");
+        setServices(res.data.services);
       } catch (err) {
         setError('Could not fetch services. Please try again later.');
         console.error(err);
