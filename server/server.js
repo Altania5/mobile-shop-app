@@ -14,40 +14,40 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- DEBUGGING LOGS START HERE ---
 
-// // API Routes
-// console.log("Loading router: ./routes/users");
-// const usersRouter = require('./routes/users');
-// app.use('/api/users', usersRouter);
+// API Routes
+console.log("Loading router: ./routes/users");
+const usersRouter = require('./routes/users');
+app.use('/api/users', usersRouter);
 
-// console.log("Loading router: ./routes/services");
-// const servicesRouter = require('./routes/services');
-// app.use('/api/services', servicesRouter);
+console.log("Loading router: ./routes/services");
+const servicesRouter = require('./routes/services');
+app.use('/api/services', servicesRouter);
 
-// console.log("Loading router: ./routes/bookings");
-// const bookingsRouter = require('./routes/bookings');
-// app.use('/api/bookings', bookingsRouter);
+console.log("Loading router: ./routes/bookings");
+const bookingsRouter = require('./routes/bookings');
+app.use('/api/bookings', bookingsRouter);
 
-// console.log("Loading router: ./routes/testimonials");
-// const testimonialsRouter = require('./routes/testimonials');
-// app.use('/api/testimonials', testimonialsRouter);
+console.log("Loading router: ./routes/testimonials");
+const testimonialsRouter = require('./routes/testimonials');
+app.use('/api/testimonials', testimonialsRouter);
 
-// console.log("Loading router: ./routes/posts");
-// const postsRouter = require('./routes/posts');
-// app.use('/api/posts', postsRouter);
+console.log("Loading router: ./routes/posts");
+const postsRouter = require('./routes/posts');
+app.use('/api/posts', postsRouter);
 
-// console.log("Loading router: ./routes/googleReviews");
-// const googleReviewsRouter = require('./routes/googleReviews');
-// app.use('/api/google-reviews', googleReviewsRouter);
+console.log("Loading router: ./routes/googleReviews");
+const googleReviewsRouter = require('./routes/googleReviews');
+app.use('/api/google-reviews', googleReviewsRouter);
 
-// console.log("Loading router: ./routes/contact");
-// const contactRouter = require('./routes/contact');
-// app.use('/api/contact', contactRouter);
+console.log("Loading router: ./routes/contact");
+const contactRouter = require('./routes/contact');
+app.use('/api/contact', contactRouter);
 
-// console.log("Loading router: ./routes/vehicleData");
-// const vehicleDataRouter = require('./routes/vehicleData');
-// app.use('/api/vehicles', vehicleDataRouter);
+console.log("Loading router: ./routes/vehicleData");
+const vehicleDataRouter = require('./routes/vehicleData');
+app.use('/api/vehicles', vehicleDataRouter);
 
-// console.log("--- All routers loaded successfully. Starting server... ---");
+console.log("--- All routers loaded successfully. Starting server... ---");
 
 // --- SERVE REACT APP SECOND ---
 // This block will run for any request that doesn't match an API route above.
