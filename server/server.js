@@ -12,29 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// --- The wildcard route fix you already have ---
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-
-  // The "catchall" handler: for any request that doesn't match one above,
-  // send back React's index.html file.
-  // THIS IS THE CORRECTED SYNTAX
-  app.get('/:splat(*)', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
-  });
-}
-
-// Connect to MongoDB
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri)
-  .then(() => {
-    console.log("MongoDB database connection established successfully");
-  })
-  .catch(err => {
-    console.error("!!! MongoDB connection error:", err);
-    process.exit(1);
-  });
-
 // --- DEBUGGING LOGS START HERE ---
 
 // API Routes
@@ -72,8 +49,28 @@ app.use('/api/vehicles', vehicleDataRouter);
 
 console.log("--- All routers loaded successfully. Starting server... ---");
 
-// --- DEBUGGING LOGS END HERE ---
+// --- SERVE REACT APP SECOND ---
+// This block will run for any request that doesn't match an API route above.
+if (process.env.NODE_ENV === 'production') {
+  // Serve the static files from the React app
+  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
+  // Handles any requests that don't match the ones above
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+  });
+}
+
+// Connect to MongoDB
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri)
+  .then(() => {
+    console.log("MongoDB database connection established successfully");
+  })
+  .catch(err => {
+    console.error("!!! MongoDB connection error:", err);
+    process.exit(1);
+  });
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
