@@ -1883,7 +1883,7 @@ button:active {
     /* Add a semi-transparent overlay to make text more readable */
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url('uploads\\services-hero.jpg');
+        url(uploads\\services-hero.jpg);
 }
 
 .page-header h1 {
@@ -1898,4 +1898,12 @@ button:active {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* client/src/App.css */
+
+.page-container {
+  max-width: 1200px; /* Increase this value from the previous default */
+  margin: 0 auto; /* This keeps it centered */
+  padding: 2rem;
 }
