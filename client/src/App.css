@@ -1883,7 +1883,7 @@ button:active {
     /* Add a semi-transparent overlay to make text more readable */
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url(uploads\\services-hero.jpg);
+        url(/images/services-hero.jpg);
 }
 
 .page-header h1 {
