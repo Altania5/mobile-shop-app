@@ -10,16 +10,17 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure multer to use Cloudinary for storage
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'mobile-shop-testimonials', // A folder name in your Cloudinary account
-    allowed_formats: ['jpeg', 'jpg', 'png', 'gif'],
-    transformation: [{ width: 200, height: 200, crop: 'limit' }] // Optional: Resize images
-  },
-});
+const createUploader = (folderName) => {
+    const storage = new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+            folder: folderName,
+            allowed_formats: ['jpg', 'png', 'jpeg'],
+            transformation: [{ width: 1200, height: 675, crop: 'limit' }] // Optional: resize images
+        },
+    });
 
-const upload = multer({ storage: storage }).single('profileImage');
+    return multer({ storage: storage });
+};
 
-module.exports = upload;
+module.exports = createUploader;

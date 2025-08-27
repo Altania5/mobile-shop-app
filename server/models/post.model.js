@@ -1,34 +1,48 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+// server/models/post.model.js
 
-const postSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  author: {
-    // In a more complex app, this would be a reference to a User
-    type: String, 
-    required: true,
-    default: 'Shop Owner'
-  },imageUrl: { type: String },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    commentsEnabled: { type: Boolean, default: true },
-    slug: { // For creating user-friendly URLs
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
-  }
-}, {
-  timestamps: true,
+const mongoose = require('mongoose');
+const slugify = require('slugify');
+
+const PostSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, 'Please add a title'], // Added error message for clarity
+        trim: true
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    content: {
+        type: String,
+        required: [true, 'Please add content']
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    // --- New Fields ---
+    imageUrl: {
+        type: String
+    },
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    commentsEnabled: {
+        type: Boolean,
+        default: true
+    }
+}, { timestamps: true });
+
+// Mongoose middleware to auto-generate slug from title before saving
+PostSchema.pre('save', function (next) {
+    if (this.isModified('title')) {
+        this.slug = slugify(this.title, { lower: true, strict: true });
+    }
+    next();
 });
 
-const Post = mongoose.model('Post', postSchema);
-
-module.exports = Post;
+module.exports = mongoose.model('Post', PostSchema);

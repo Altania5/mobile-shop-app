@@ -7,6 +7,9 @@ const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const upload = require('../middleware/upload'); // Assuming your upload middleware is here
 
+const createUploader = require('../middleware/upload');
+const blogImageUploader = createUploader('blog_images');
+
 // GET all posts (public)
 router.get('/', async (req, res) => {
     try {
@@ -35,25 +38,34 @@ router.get('/:id', async (req, res) => {
 
 
 // POST a new blog post (Admin Only)
-router.post('/', adminAuth, upload.single('image'), async (req, res) => {
+router.post('/', adminAuth, blogImageUploader.single('image'), async (req, res) => {
     const { title, content, commentsEnabled } = req.body;
+    
+    // --- START: The Fix ---
+    // First, verify that the admin user was actually found by the middleware.
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ msg: 'Authentication error, user not found.' });
+    }
+    // --- END: The Fix ---
+
     try {
         const newPost = new Post({
             title,
             content,
             commentsEnabled: commentsEnabled === 'true',
-            author: req.user.id,
+            author: req.user.id, // This now correctly uses the ID from the authenticated admin
             imageUrl: req.file ? req.file.path : null
         });
+
         const post = await newPost.save();
         res.json(post);
     } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        console.error("Error creating post:", err);
+        res.status(500).json({ msg: 'Server error', error: err.message });
     }
 });
 
 // PUT (Update) a post (Admin Only)
-// (For simplicity, this example doesn't handle image updates, but it could be added)
 router.put('/:id', adminAuth, async (req, res) => {
     const { title, content, commentsEnabled } = req.body;
     try {
