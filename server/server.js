@@ -35,6 +35,10 @@ console.log("Loading router: ./routes/posts");
 const postsRouter = require('./routes/posts');
 app.use('/api/posts', postsRouter);
 
+console.log("Loading router: ./routes/comments");
+const commentsRouter = require('./routes/comments');
+app.use('/api/comments', commentsRouter);
+
 console.log("Loading router: ./routes/googleReviews");
 const googleReviewsRouter = require('./routes/googleReviews');
 app.use('/api/google-reviews', googleReviewsRouter);

@@ -16,8 +16,10 @@ const postSchema = new Schema({
     type: String, 
     required: true,
     default: 'Shop Owner'
-  },
-  slug: { // For creating user-friendly URLs
+  },imageUrl: { type: String },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    commentsEnabled: { type: Boolean, default: true },
+    slug: { // For creating user-friendly URLs
     type: String,
     required: true,
     unique: true,

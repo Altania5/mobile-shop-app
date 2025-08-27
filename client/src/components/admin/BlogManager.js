@@ -7,6 +7,15 @@ function BlogManager() {
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
   const token = localStorage.getItem('token');
+  const [image, setImage] = useState(null);
+  const [commentsEnabled, setCommentsEnabled] = useState(true);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+
+
+  const handleFileChange = (e) => {
+    setImage(e.target.files[0]);
+};
 
   const fetchPosts = async () => {
     try {
@@ -67,13 +76,57 @@ function BlogManager() {
     setFormData({ title: '', content: '' });
   };
 
+    const handleCreatePost = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        formData.append('commentsEnabled', commentsEnabled);
+        if (image) {
+            formData.append('image', image);
+        }
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'x-auth-token': token
+                }
+            };
+            await axios.post('/api/posts', formData, config);
+            // Clear form and refresh posts list
+            setTitle('');
+            setContent('');
+            setImage(null);
+            // fetchPosts(); // Assuming you have a function to refresh the list
+            alert('Post created successfully!');
+        } catch (err) {
+            console.error('Failed to create post:', err);
+            alert('Error creating post.');
+        }
+    };
+
   return (
     <div className="manager-container">
       <h3>Manage Blog Posts</h3>
       {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit} className="manager-form">
+      <form onSubmit={handleCreatePost} className="manager-form">
         <input name="title" value={formData.title} onChange={handleChange} placeholder="Post Title" required />
         <textarea name="content" value={formData.content} onChange={handleChange} placeholder="Post Content (use line breaks for paragraphs)" required style={{ minHeight: '150px' }} />
+        <div>
+          <label>Header Image</label>
+          <input type="file" onChange={handleFileChange} />
+        </div>
+        <div>
+        <label>
+            <input 
+                type="checkbox" 
+                checked={commentsEnabled} 
+                onChange={() => setCommentsEnabled(!commentsEnabled)} 
+            />
+            Allow Comments
+        </label>
+    </div>
         <div className="form-actions">
           <button type="submit">{editingId ? 'Update Post' : 'Create Post'}</button>
           {editingId && <button type="button" onClick={resetForm}>Cancel</button>}

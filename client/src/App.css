@@ -1872,7 +1872,6 @@ button:active {
 
 /* client/src/App.css */
 
-/* --- Page Header Styles (for Services, Contact, etc.) --- */
 .page-header {
     padding: 5rem 2rem;
     background-size: cover;
@@ -1880,7 +1879,6 @@ button:active {
     color: #fff;
     text-align: center;
     position: relative;
-    /* Add a semi-transparent overlay to make text more readable */
     background-image: 
         linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url(/public/images/services-hero.jpg);

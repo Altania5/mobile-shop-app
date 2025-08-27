@@ -14,8 +14,9 @@ function BookingPage({ user }) {
   const [date, setDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState('');
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [timesLoading, setTimesLoading] = useState(false);
 
-  const [loading, setLoading] = useState(!service); // Be in a loading state if we don't have the service data yet
+  const [loading, setLoading] = useState(!service);
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
 
@@ -34,26 +35,33 @@ function BookingPage({ user }) {
   }, [serviceId]);
 
     useEffect(() => {
-    if (service && date) {
-      const fetchAvailability = async () => {
-        try {
-          const formattedDate = format(date, 'yyyy-MM-dd');
-          const response = await axios.get(`/api/services/${serviceId}/availability?date=${formattedDate}`);
-          setAvailableTimes(response.data);
-          setSelectedTime(''); // Reset selected time when date changes
-        } catch (err) {
-          setError('Could not fetch available times.');
+        if (service && date) {
+            const fetchAvailability = async () => {
+                setTimesLoading(true); // <-- 2. Set loading to true before fetching
+                try {
+                    const formattedDate = format(date, 'yyyy-MM-dd');
+                    const response = await axios.get(`/api/services/${serviceId}/availability?date=${formattedDate}`);
+                    setAvailableTimes(response.data);
+                    setSelectedTime('');
+                } catch (err) {
+                    setError('Could not fetch available times.');
+                } finally {
+                    setTimesLoading(false); // <-- 3. Set loading to false after fetching
+                }
+            };
+            fetchAvailability();
         }
-      };
-      fetchAvailability();
-    }
-  }, [service, date, serviceId]);
+    }, [service, date, serviceId]);
 
-  const handleProceedToBooking = () => {
-      navigate(`/book/${serviceId}/details`, {
-          state: { service, date: date.toISOString(), time: selectedTime }
-      });
-  };
+const handleProceedToBooking = () => {
+    navigate(`/book/${serviceId}/details`, {
+        state: { 
+            service, 
+            date: format(date, 'yyyy-MM-dd'),
+            time: selectedTime 
+        }
+    });
+};
 
     const tileDisabled = ({ date, view }) => {
     if (view === 'month' && service?.availableDays.length > 0) {
@@ -83,8 +91,10 @@ function BookingPage({ user }) {
         <div className="booking-details">
           <h3>2. Select a Time</h3>
           <div className="time-slots-container">
-            {availableTimes.length > 0 ? (
-              availableTimes.map(time => (
+            {timesLoading ? (
+                    <p>Loading times...</p>
+                ) : availableTimes.length > 0 ? (
+                    availableTimes.map(time => (
                 <button 
                   key={time} 
                   className={`time-slot-btn ${selectedTime === time ? 'selected' : ''}`}
