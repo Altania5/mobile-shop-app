@@ -12,7 +12,7 @@ const bookingSchema = new Schema({
     enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
     default: 'Pending'
   },
-  // ADDED: Detailed information for the booking
+  serviceStatus: { type: String, default: '' },
   clientFirstName: { type: String, required: true },
   clientLastName: { type: String, required: true },
   vehicleMake: { type: String, required: true },

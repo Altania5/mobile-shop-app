@@ -59,6 +59,7 @@ function ServiceHistoryPage() {
         <div className="bookings-list">
           {bookings.map(booking => (
             <div key={booking._id} className="booking-card">
+              <p><strong>Status:</strong> <span className={`status-${booking.status.toLowerCase()}`}>{booking.status}</span></p>
               <div className="booking-card-header">
                 <h3>{booking.service?.name || 'Service Removed'}</h3>
                 <span className={`booking-status status-${booking.status.toLowerCase()}`}>
@@ -90,6 +91,9 @@ function ServiceHistoryPage() {
                       <button disabled>Service No Longer Available</button>
                   )
               )}
+              {booking.serviceStatus && (booking.status === 'Pending' || booking.status === 'Confirmed') && (
+                <p className="service-progress"><strong>Progress:</strong> {booking.serviceStatus}</p>
+            )}
               </div>
             </div>
           ))}

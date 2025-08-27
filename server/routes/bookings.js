@@ -175,4 +175,30 @@ router.put('/:id/status', adminAuth, async (req, res) => {
   }
 });
 
+// @route   PUT api/bookings/:id/status
+// @desc    Update the service status of a booking
+// @access  Admin
+router.put('/:id/service-status', adminAuth, async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+
+        if (!booking) {
+            return res.status(404).json({ msg: 'Booking not found' });
+        }
+
+        // Only allow status updates for pending or confirmed bookings
+        if (booking.status !== 'pending' && booking.status !== 'confirmed') {
+            return res.status(400).json({ msg: 'Service status can only be updated for pending or confirmed bookings.' });
+        }
+
+        booking.serviceStatus = req.body.serviceStatus;
+        await booking.save();
+
+        res.json(booking);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;
