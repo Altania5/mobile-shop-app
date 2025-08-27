@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './ServiceManager.css';
 
 function ServiceManager() {
   const [services, setServices] = useState([]);
@@ -88,7 +89,7 @@ function ServiceManager() {
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   return (
-    <div className="manager-container">
+    <div className="service-manager-container">
       <h3>Manage Services</h3>
       {error && <p className="error-message">{error}</p>}
       
