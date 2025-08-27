@@ -6,18 +6,32 @@ function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+    const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+    const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const location = useLocation();
   const from = location.state?.from;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setMessage('');
     try {
-      const response = await axios.post('/api/users/login', { email, password });
-      onLoginSuccess(response.data.token, from); 
+      // --- START: THE FIX ---
+      // Send the formData object directly
+      const res = await axios.post('/api/users/login', formData);
+      // --- END: THE FIX ---
+      
+      localStorage.setItem('token', res.data.token);
+      onLoginSuccess();
     } catch (err) {
-      setError(err.response?.data?.msg || 'An error occurred during login.');
+      setMessage(err.response?.data?.msg || 'An error occurred during login.');
     }
   };
 
@@ -38,6 +52,7 @@ function Login({ onLoginSuccess }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          autoComplete="current-password"
         />
         <button type="submit">Login</button>
       </form>

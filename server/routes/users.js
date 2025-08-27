@@ -51,19 +51,27 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(400).json({ msg: 'Invalid credentials.' });
+      // Use a generic message to prevent exposing whether an email exists
+      return res.status(400).json({ msg: 'Invalid credentials. Please try again.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials.' });
+      return res.status(400).json({ msg: 'Invalid credentials. Please try again.' });
     }
 
-    // Sign a token
+    // --- START: The Fix - More Robust Token Creation ---
+    if (!process.env.JWT_SECRET) {
+        console.error('FATAL ERROR: JWT_SECRET is not defined in the .env file.');
+        return res.status(500).json({ msg: 'Server configuration error.' });
+    }
+
     const token = jwt.sign(
       { id: user._id, firstName: user.firstName, role: user.role },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: '5h' } // It's good practice to add an expiration
     );
+    // --- END: The Fix ---
 
     res.json({
       token,
@@ -76,7 +84,9 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    // This will now log the specific error to your server's console
+    console.error('Login Error:', err.message);
+    res.status(500).json({ msg: 'A server error occurred during login.' });
   }
 });
 

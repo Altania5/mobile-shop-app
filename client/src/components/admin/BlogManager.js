@@ -1,4 +1,4 @@
-// client/src/components/admin/BlogManager.js
+// Git/client/src/components/admin/BlogManager.js
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -11,7 +11,6 @@ const BlogManager = () => {
     const [commentsEnabled, setCommentsEnabled] = useState(true);
     const [loading, setLoading] = useState(true);
 
-    // --- START: Added fetchPosts function ---
     const fetchPosts = async () => {
         try {
             setLoading(true);
@@ -24,12 +23,9 @@ const BlogManager = () => {
         }
     };
 
-    // Load posts when the component mounts
     useEffect(() => {
         fetchPosts();
     }, []);
-    // --- END: Added fetchPosts function ---
-
 
     const handleFileChange = (e) => {
         setImage(e.target.files[0]);
@@ -37,12 +33,7 @@ const BlogManager = () => {
 
     const handleCreatePost = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('Authentication error. Please log in again.');
-            return;
-        }
-
+        
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -52,34 +43,36 @@ const BlogManager = () => {
         }
 
         try {
+            // --- START: THE FIX ---
+            // Remove the manual config object. The authentication header
+            // is now handled globally by the setAuthToken utility.
+            // We only need to specify the Content-Type for file uploads.
             const config = {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'x-auth-token': token
+                    'Content-Type': 'multipart/form-data'
                 }
             };
             await axios.post('/api/posts', formData, config);
+            // --- END: THE FIX ---
             
-            // Clear form and refresh the list of posts
             setTitle('');
             setContent('');
             setImage(null);
-            fetchPosts(); // <-- This now correctly calls the function
+            fetchPosts();
             alert('Post created successfully!');
         } catch (err) {
             console.error('Failed to create post:', err);
-            const errorMsg = err.response?.data?.msg || 'Error creating post.';
+            const errorMsg = err.response?.data?.msg || 'Error creating post. You may not be authorized.';
             alert(errorMsg);
         }
     };
     
-    // (Optional but recommended) Add a delete handler
     const handleDeletePost = async (postId) => {
         if (window.confirm('Are you sure you want to delete this post?')) {
-            const token = localStorage.getItem('token');
             try {
-                await axios.delete(`/api/posts/${postId}`, { headers: { 'x-auth-token': token } });
-                fetchPosts(); // Refresh list after deleting
+                // The auth header is also handled automatically for this request.
+                await axios.delete(`/api/posts/${postId}`);
+                fetchPosts();
             } catch (err) {
                 console.error('Failed to delete post', err);
             }
@@ -90,7 +83,6 @@ const BlogManager = () => {
         <div className="manager-container">
             <h3>Create New Blog Post</h3>
             <form onSubmit={handleCreatePost}>
-                {/* ... form fields from before ... */}
                  <div>
                     <label>Title</label>
                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />

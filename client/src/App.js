@@ -4,9 +4,16 @@ import { jwtDecode } from 'jwt-decode';
 import AppLayout from './layout/AppLayout';
 import LoginPage from './pages/LoginPage';
 import ServicesPage from './pages/ServicesPage';
+import setAuthToken from './utils/setAuthToken';
 import './App.css';
 
 function App() {
+
+  const token = localStorage.getItem('token');
+if (token) {
+    setAuthToken(token);
+}
+
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -44,12 +51,12 @@ function App() {
 
   return (
     <div className="App">
-      {/* The AppLayout is now always visible, but its content will change */}
+      <AppLayout user={user} onLogout={handleLogout}>
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-        {/* The "/*" wildcard passes control to AppLayout for all other routes */}
         <Route path="/*" element={<AppLayout user={user} onLogout={handleLogout} />} />
       </Routes>
+      </AppLayout>
     </div>
   );
 }
