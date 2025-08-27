@@ -39,7 +39,9 @@ function ServiceHistoryPage() {
     }
   };
 
-  if (loading) return <p>Loading your service history...</p>;
+  if (loading) {
+        return <div className="loader">Loading...</div>;
+    }
   if (error) return <p style={{ color: 'var(--error-color)' }}>{error}</p>;
 
   return (

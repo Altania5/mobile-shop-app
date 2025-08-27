@@ -13,6 +13,7 @@ import AdminPage from '../pages/AdminPage';
 import LeaveReviewPage from '../pages/LeaveReviewPage';
 import ContactPage from '../pages/ContactPage';
 import ProtectedRoute from '../components/ProtectedRoute';
+import ServicesPage from '../pages/ServicesPage';
 
 export default function AppLayout({ user, onLogout }) {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export default function AppLayout({ user, onLogout }) {
         <Routes>
           {/* --- Routes Updated --- */}
           <Route path="/" element={<AboutPage />} /> {/* The "About" page is now the homepage */}
-          <Route path="/services" element={<MainPage />} /> {/* The "Services" page is now at /services */}
+          <Route path="/services" element={<ServicesPage />} />
           
           {/* --- Public Routes --- */}
           <Route path="/about" element={<AboutPage />} /> {/* Keep this route for the nav link */}

@@ -1,11 +1,8 @@
-// client/src/pages/MainPage.js
+// client/src/components/HowItWorks.js
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ServicesList from '../components/ServicesList';
-import TestimonialCarousel from '../components/TestimonialCarousel';
 
-// New Component for the "How It Works" Checklist
 const HowItWorks = () => (
     <div className="how-it-works-section">
         <h2>How It Works: Our Simple Process</h2>
@@ -32,36 +29,9 @@ const HowItWorks = () => (
                 </div>
             </div>
         </div>
-        <Link to="/booking" className="cta-button">Book a Service Now</Link>
+        {/* This button correctly links to the /services page */}
+        <Link to="/services" className="cta-button">Book a Service Now</Link>
     </div>
 );
 
-const MainPage = () => {
-    return (
-        <div className="main-page">
-            <header className="hero-section">
-                <div className="hero-content">
-                    <h1>Trusted Mobile Mechanics</h1>
-                    <p>Your reliable, on-the-go solution for car maintenance and repair. Quality service delivered right to your doorstep.</p>
-                    <Link to="/about" className="cta-button">Learn More About Us</Link>
-                </div>
-            </header>
-
-            <HowItWorks />
-
-            <main>
-                <section id="services">
-                    <h2>Our Services</h2>
-                    <ServicesList />
-                </section>
-
-                <section id="testimonials">
-                    <h2>What Our Customers Say</h2>
-                    <TestimonialCarousel />
-                </section>
-            </main>
-        </div>
-    );
-};
-
-export default MainPage;
+export default HowItWorks;

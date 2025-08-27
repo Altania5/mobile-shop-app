@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TestimonialCarousel from '../components/TestimonialCarousel';
+import HowItWorks from '../components/HowItWorks'; 
 
 // You will need three images for this page.
 // Place them in your `client/public/images` folder (create it if it doesn't exist).
@@ -27,6 +28,8 @@ function AboutPage() {
           <img src={heroImage} alt="Client headshot" className="fade-in-right" />
         </div>
       </section>
+
+      <HowItWorks />
 
       {/* --- Core Values Section --- */}
       <section className="core-values-section">

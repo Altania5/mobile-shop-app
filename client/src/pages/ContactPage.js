@@ -15,18 +15,23 @@ function ContactPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [message, setMessage] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsError(false);
-    setResponseMsg('');
+        setIsSubmitting(true);
+        setMessage('');
     try {
       const response = await axios.post('/api/contact', formData);
       setResponseMsg(response.data.msg);
-      setFormData({ name: '', email: '', subject: '', message: '' }); // Clear form
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setMessage('Your message has been sent successfully!');
     } catch (err) {
-      setIsError(true);
-      setResponseMsg(err.response?.data?.msg || 'An error occurred. Please try again.');
-    }
+      setMessage('An error occurred. Please try again.');
+    } finally {
+            setIsSubmitting(false);
+        }
   };
 
   return (
@@ -48,7 +53,10 @@ function ContactPage() {
           </div>
           <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Subject" required />
           <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Your Message" required />
-          <button type="submit">Send Message</button>
+          <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+            {message && <p>{message}</p>}
         </form>
         <div className="contact-info">
           <h3>Contact Information</h3>

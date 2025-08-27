@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import AppLayout from './layout/AppLayout';
 import LoginPage from './pages/LoginPage';
+import ServicesPage from './pages/ServicesPage';
 import './App.css';
 
 function App() {

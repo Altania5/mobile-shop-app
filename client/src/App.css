@@ -1795,3 +1795,107 @@ button:active {
 .service-status-input-container button:hover {
     background-color: #0056b3;
 }
+
+/* client/src/App.css */
+
+/* client/src/App.css */
+
+/* --- How It Works Section Styles --- */
+.how-it-works-section {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.how-it-works-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #333;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 350px;
+}
+
+.step-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-right: 1.5rem;
+    line-height: 1;
+}
+
+.step-content h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.step-content p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* --- General CTA Button Style --- */
+.cta-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+}
+
+/* Add some margin to the hero button */
+.hero-content .cta-button {
+    margin-top: 1rem;
+}
+
+/* client/src/App.css */
+
+/* --- Page Header Styles (for Services, Contact, etc.) --- */
+.page-header {
+    padding: 5rem 2rem;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    /* Add a semi-transparent overlay to make text more readable */
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('uploads\\services-hero.jpg');
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.page-header p {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
