@@ -36,7 +36,6 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// --- ADDED: Route for a user to update their own booking ---
 router.put('/:id', auth, async (req, res) => {
     try {
         const { vehicleMake, vehicleModel, vehicleYear, vehicleColor, notes } = req.body;
@@ -59,7 +58,6 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-// --- ADDED: Route for a user to cancel their own booking ---
 router.put('/:id/cancel', auth, async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.id);
@@ -84,7 +82,7 @@ router.get('/mybookings', auth, async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user })
       .populate('service', 'name price') 
-      .sort({ date: -1 });
+      .sort({createdAt: -1 });
 
     res.json(bookings);
   } catch (err) {
@@ -104,7 +102,6 @@ router.get('/', adminAuth, async (req, res) => {
     
     let query = {};
 
-    // --- Build the query object based on filters ---
     if (startDate) {
         query.date = { ...query.date, $gte: new Date(startDate) };
     }
@@ -112,7 +109,7 @@ router.get('/', adminAuth, async (req, res) => {
         query.date = { ...query.date, $lte: new Date(endDate) };
     }
     if (make) {
-        query.vehicleMake = { $regex: make, $options: 'i' }; // Case-insensitive search
+        query.vehicleMake = { $regex: make, $options: 'i' };
     }
     if (model) {
         query.vehicleModel = { $regex: model, $options: 'i' };
@@ -121,7 +118,6 @@ router.get('/', adminAuth, async (req, res) => {
         query.vehicleYear = year;
     }
     if (service) {
-        // This requires a more complex query since 'service' is a populated field
         const services = await Service.find({ name: { $regex: service, $options: 'i' } }).select('_id');
         const serviceIds = services.map(s => s._id);
         query.service = { $in: serviceIds };
@@ -132,7 +128,6 @@ router.get('/', adminAuth, async (req, res) => {
       .populate('service', 'name')
       .sort({ date: 1 });
 
-    // --- Filter by customer name after populating ---
     if (customerName) {
         bookings = bookings.filter(booking => {
             const fullName = `${booking.user?.firstName} ${booking.user?.lastName}`;
@@ -153,7 +148,6 @@ router.get('/', adminAuth, async (req, res) => {
 router.put('/:id/status', adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
-    // Basic validation for status
     const allowedStatuses = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({ msg: 'Invalid status value.' });
@@ -175,7 +169,7 @@ router.put('/:id/status', adminAuth, async (req, res) => {
   }
 });
 
-// @route   PUT api/bookings/:id/status
+// @route   PUT api/bookings/:id/service-status
 // @desc    Update the service status of a booking
 // @access  Admin
 router.put('/:id/service-status', adminAuth, async (req, res) => {
@@ -186,12 +180,13 @@ router.put('/:id/service-status', adminAuth, async (req, res) => {
             return res.status(404).json({ msg: 'Booking not found' });
         }
 
-        // Only allow status updates for pending or confirmed bookings
-        if (booking.status !== 'pending' && booking.status !== 'confirmed') {
-            return res.status(400).json({ msg: 'Service status can only be updated for pending or confirmed bookings.' });
+        if (booking.status !== 'Pending' && booking.status !== 'Confirmed') {
+            return res.status(400).json({ 
+                msg: 'Service status can only be updated for Pending or Confirmed bookings.' 
+            });
         }
 
-        booking.serviceStatus = req.body.serviceStatus;
+        booking.serviceStatus = req.body.serviceStatus || '';
         await booking.save();
 
         res.json(booking);

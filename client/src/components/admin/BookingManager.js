@@ -154,18 +154,27 @@ function BookingManager() {
         setServiceStatuses(prev => ({ ...prev, [bookingId]: value }));
     };
 
-    const handleSaveStatus = async (bookingId) => {
-        try {
-            const headers = { 'x-auth-token': token };
-            await axios.put(`/api/bookings/${bookingId}/service-status`, {
-                serviceStatus: serviceStatuses[bookingId],
-            }, { headers });
-            alert('Status updated successfully!');
-        } catch (err) {
-            console.error('Failed to update status:', err);
-            alert('Failed to update status.');
-        }
-    };
+const handleSaveStatus = async (bookingId) => {
+    try {
+        // We need to get the token to prove we are an admin
+        const token = localStorage.getItem('token');
+        
+        // Create a headers object to send the token
+        const headers = {
+            'x-auth-token': token,
+        };
+
+        // Add the headers object to the axios request
+        await axios.put(`/api/bookings/${bookingId}/service-status`, {
+            serviceStatus: serviceStatuses[bookingId],
+        }, { headers });
+
+        alert('Status updated successfully!');
+    } catch (err) {
+        console.error('Failed to update status:', err);
+        alert('Failed to update status.');
+    }
+};
 
     const activeBookings = allBookings.filter(b => b.status !== 'Cancelled' && b.status !== 'Completed');
     
