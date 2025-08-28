@@ -60,12 +60,15 @@ router.get('/', auth, async (req, res) => {
 });
 
 // GET ALL BOOKINGS (For Admin)
-router.get('/all', [auth, adminAuth], async (req, res) => {
+router.get('/all', [auth, adminAuth], (req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+}, async (req, res) => {
     try {
         const bookings = await Booking.find({})
             .populate('user', 'firstName lastName email')
             .populate('service', 'name')
-            .sort({ date: -1 }); // Sort by booking date
+            .sort({ date: -1 });
         res.json(bookings);
     } catch (err) {
         console.error("Error fetching all bookings:", err);
