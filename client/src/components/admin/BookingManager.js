@@ -5,7 +5,8 @@ import axios from 'axios';
 const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusTextChange, onSaveStatus }) => (
     <div className="admin-booking-card">
         <div className="card-header">
-            <h4>{booking.service?.name || 'Service Not Available'}</h4>
+            {/* Safe check for service name */}
+            <h4>{booking.service ? booking.service.name : 'Service Not Available'}</h4>
             <select
                 value={booking.status}
                 onChange={(e) => onStatusChange(booking._id, e.target.value)}
@@ -18,7 +19,6 @@ const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusText
             </select>
         </div>
         
-        {/* ---- START: New Service Status Input ---- */}
         {(booking.status === 'Pending' || booking.status === 'Confirmed') && (
             <div className="service-status-input-container">
                 <input
@@ -30,10 +30,14 @@ const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusText
                 <button onClick={onSaveStatus}>Save</button>
             </div>
         )}
-        {/* ---- END: New Service Status Input ---- */}
 
         <div className="card-body">
-            <p><strong>Client:</strong> {booking.user?.firstName} {booking.user?.lastName} ({booking.user?.email})</p>
+            {/* THE FIX: Explicitly check if booking.user exists before trying to render its properties */}
+            {booking.user ? (
+                <p><strong>Client:</strong> {booking.user.firstName} {booking.user.lastName} ({booking.user.email})</p>
+            ) : (
+                <p><strong>Client:</strong> User Not Found</p>
+            )}
             <p><strong>Appointment:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
             <p><strong>Vehicle:</strong> {booking.vehicleYear} {booking.vehicleMake} {booking.vehicleModel}</p>
         </div>
