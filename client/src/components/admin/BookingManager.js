@@ -65,6 +65,7 @@ const fetchAllBookings = useCallback(async () => {
         const headers = { 'x-auth-token': token };
         const response = await axios.get('/api/bookings/all', { headers });
 
+        // This safety check is crucial
         if (Array.isArray(response.data)) {
             const bookingsData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
             setAllBookings(bookingsData);
@@ -81,7 +82,7 @@ const fetchAllBookings = useCallback(async () => {
         
     } catch (err) {
         setError('Could not fetch bookings.');
-        setAllBookings([]);
+        setAllBookings([]); 
     } finally {
         setLoading(false);
     }
