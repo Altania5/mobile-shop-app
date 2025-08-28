@@ -68,7 +68,7 @@ function App() {
         <Route element={<AppLayout user={user} onLogout={handleLogout} />}>
           
           {/* Public Routes */}
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<ServicesPage />} />
           <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/testimonials" element={<TestimonialsPage user={user} />} />
