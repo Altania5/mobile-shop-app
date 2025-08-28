@@ -196,64 +196,62 @@ const handleSearch = async (e) => {
         />
     );
 
-    return (
-        <div className="manager-container">
-            <h3>Manage Bookings</h3>
-            {error && <p className="error-message">{error}</p>}
-            
-            <div className="manager-section">
-                {/* Safe calculation of active bookings length */}
-                <h4>Active Bookings ({activeBookings.length})</h4>
-                <div className="admin-booking-grid">
-                    {loading ? <p>Loading bookings...</p> : 
-                    
-                    /* THE FINAL FIX: This guard prevents the crash on initial render */
-                    activeBookings.length === 0 ? <p>No active bookings found.</p> : 
-                    activeBookings.slice(0, visibleCount).map(renderBookingCard)}
-                </div>
-                {activeBookings.length > visibleCount && (
-                    <button onClick={() => setVisibleCount(visibleCount + 5)} className="show-more-btn">
-                        Show 5 More
-                    </button>
-                )}
-            </div>
-
-            <hr className="section-divider" />
-
-            <div className="manager-section">
-                <h4>Advanced Booking Search</h4>
-                                <form onSubmit={handleSearch} className="search-form">
-                    <div className="search-grid">
-                        <input name="customerName" value={filters.customerName} onChange={handleFilterChange} placeholder="Customer Name" />
-                        <div className="input-with-datalist">
-                            <input list="makes-list" name="make" value={filters.make} onChange={handleFilterChange} placeholder="Car Make" />
-                            <datalist id="makes-list">{makes.map((makeName, i) => <option key={i} value={makeName} />)}</datalist>
-                        </div>
-                        <div className="input-with-datalist">
-                            <input list="models-list" name="model" value={filters.model} onChange={handleFilterChange} placeholder={isLoadingModels ? "Loading..." : "Car Model"} disabled={!filters.make} />
-                            <datalist id="models-list">{models.map((modelName, i) => <option key={i} value={modelName} />)}</datalist>
-                        </div>
-                        <input name="year" type="number" value={filters.year} onChange={handleFilterChange} placeholder="Car Year" min="1900" max={new Date().getFullYear() + 1} />
-                        <input name="service" value={filters.service} onChange={handleFilterChange} placeholder="Service Type" />
-                        <label>From: <input name="startDate" type="date" value={filters.startDate} onChange={handleFilterChange} /></label>
-                        <label>To: <input name="endDate" type="date" value={filters.endDate} onChange={handleFilterChange} /></label>
-                    </div>
-                    <button type="submit" disabled={isSearching}>{isSearching ? 'Searching...' : 'Search Bookings'}</button>
-                </form>
-
-                {/* Safe rendering of search results */}
-                {searchResults && (
-                    <div className="search-results">
-                        <h4>Search Results ({searchResults.length})</h4>
-                        <div className="admin-booking-grid">
-                            {searchResults.length === 0 ? <p>No bookings match your criteria.</p> : 
-                            Array.isArray(searchResults) && searchResults.map(renderBookingCard)}
-                        </div>
-                    </div>
-                )}
-            </div>
+  return (
+    <div className="manager-container">
+      <h3>Manage Bookings</h3>
+      {error && <p className="error-message">{error}</p>}
+      
+        <div className="manager-section">
+            <h4>Active Bookings ({activeBookings.length})</h4>
+        <div className="admin-booking-grid">
+          {loading ? <p>Loading bookings...</p> : 
+          
+          activeBookings.length === 0 ? <p>No active bookings found.</p> : 
+          activeBookings.slice(0, visibleCount).map(renderBookingCard)}
         </div>
-    );
+        {activeBookings.length > visibleCount && (
+          <button onClick={() => setVisibleCount(visibleCount + 5)} className="show-more-btn">
+            Show 5 More
+          </button>
+        )}
+      </div>
+
+      <hr className="section-divider" />
+
+      <div className="manager-section">
+        <h4>Advanced Booking Search</h4>
+          <form onSubmit={handleSearch} className="search-form">
+          <div className="search-grid">
+            <input name="customerName" value={filters.customerName} onChange={handleFilterChange} placeholder="Customer Name" />
+            <div className="input-with-datalist">
+              <input list="makes-list" name="make" value={filters.make} onChange={handleFilterChange} placeholder="Car Make" />
+              <datalist id="makes-list">{makes.map((makeName, i) => <option key={i} value={makeName} />)}</datalist>
+            </div>
+            <div className="input-with-datalist">
+              <input list="models-list" name="model" value={filters.model} onChange={handleFilterChange} placeholder={isLoadingModels ? "Loading..." : "Car Model"} disabled={!filters.make} />
+              <datalist id="models-list">{models.map((modelName, i) => <option key={i} value={modelName} />)}</datalist>
+            </div>
+            <input name="year" type="number" value={filters.year} onChange={handleFilterChange} placeholder="Car Year" min="1900" max={new Date().getFullYear() + 1} />
+            <input name="service" value={filters.service} onChange={handleFilterChange} placeholder="Service Type" />
+            <label>From: <input name="startDate" type="date" value={filters.startDate} onChange={handleFilterChange} /></label>
+            <label>To: <input name="endDate" type="date" value={filters.endDate} onChange={handleFilterChange} /></label>
+          </div>
+          <button type="submit" disabled={isSearching}>{isSearching ? 'Searching...' : 'Search Bookings'}</button>
+        </form>
+
+        {/* Safe rendering of search results */}
+        {searchResults && (
+          <div className="search-results">
+            <h4>Search Results ({searchResults.length})</h4>
+            <div className="admin-booking-grid">
+              {searchResults.length === 0 ? <p>No bookings match your criteria.</p> : 
+              Array.isArray(searchResults) && searchResults.map(renderBookingCard)}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default BookingManager;
