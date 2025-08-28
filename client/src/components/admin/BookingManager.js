@@ -248,9 +248,15 @@ const fetchAllBookings = useCallback(async () => {
                     <div className="search-results">
                         <h4>Search Results ({searchResults.length})</h4>
                         <div className="admin-booking-grid">
-                        {searchResults.length === 0 ? <p>No bookings match your criteria.</p> : 
-                        Array.isArray(searchResults) && searchResults.map(renderBookingCard)}
-                    </div>
+                            {loading ? <p>Loading bookings...</p> : 
+                            Array.isArray(activeBookings) && activeBookings.length === 0 ? <p>No active bookings found.</p> : 
+                            Array.isArray(activeBookings) && activeBookings.slice(0, visibleCount).map(renderBookingCard)}
+                            {Array.isArray(activeBookings) && activeBookings.length > visibleCount && (
+                                <button onClick={() => setVisibleCount(visibleCount + 5)} className="show-more-btn">
+                                    Show 5 More
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
