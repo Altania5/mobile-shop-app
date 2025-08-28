@@ -1,113 +1,115 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import CommentModal from './CommentModal';
 
 function TestimonialManager() {
-  const [testimonials, setTestimonials] = useState([]);
-  // This state is for the "Add New Testimonial" form
-  const [formData, setFormData] = useState({ quote: '', author: '', rating: '5' });
-  const [error, setError] = useState('');
-  const [commentingOn, setCommentingOn] = useState(null);
-  const token = localStorage.getItem('token');
+    // FIX: Initialize state with an empty array to prevent crashes
+    const [testimonials, setTestimonials] = useState([]);
+    const [formData, setFormData] = useState({ name: '', message: '', isFeatured: false });
+    const [editingId, setEditingId] = useState(null);
+    const [error, setError] = useState('');
+    const token = localStorage.getItem('token');
 
-  const fetchTestimonials = async () => {
-    try {
-      const response = await axios.get('/api/testimonials');
-      setTestimonials(response.data);
-    } catch (err) {
-      setError('Could not fetch testimonials.');
-    }
-  };
+    const fetchTestimonials = useCallback(async () => {
+        try {
+            const response = await axios.get('/api/testimonials/');
+            // FIX: Ensure the response is an array before setting state
+            if (Array.isArray(response.data)) {
+                setTestimonials(response.data);
+            } else {
+                setTestimonials([]);
+            }
+        } catch (err) {
+            setError('Could not fetch testimonials.');
+            setTestimonials([]); // Also set to empty on error
+        }
+    }, []);
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
+    useEffect(() => {
+        fetchTestimonials();
+    }, [fetchTestimonials]);
 
-  // --- THIS IS THE CORRECT handleChange FUNCTION ---
-  // It updates the state for the "Add New Testimonial" form
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
 
-  // --- THIS IS THE CORRECT handleSubmit FUNCTION ---
-  // It sends the data from the "Add New Testimonial" form to the backend
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const headers = { 'x-auth-token': token };
-      await axios.post('/api/testimonials', formData, { headers });
-      setFormData({ quote: '', author: '', rating: '5' }); // Reset form
-      fetchTestimonials(); // Refresh list
-    } catch (err) {
-      setError(err.response?.data?.msg || 'Failed to add testimonial.');
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this testimonial?')) {
-      try {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setError('');
         const headers = { 'x-auth-token': token };
-        await axios.delete(`/api/testimonials/${id}`, { headers });
-        fetchTestimonials();
-      } catch (err) {
-        setError(err.response?.data?.msg || 'Failed to delete testimonial.');
-      }
-    }
-  };
+        const url = editingId ? `/api/testimonials/update/${editingId}` : '/api/testimonials/add';
+        const method = editingId ? 'post' : 'post'; // Both are post in your backend
 
-  return (
-    <>
-      {commentingOn && 
-        <CommentModal 
-            testimonial={commentingOn} 
-            onClose={() => setCommentingOn(null)} 
-            onCommentAdded={fetchTestimonials} 
-        />}
+        try {
+            await axios[method](url, formData, { headers });
+            setFormData({ name: '', message: '', isFeatured: false });
+            setEditingId(null);
+            fetchTestimonials(); // Refresh list
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Failed to save testimonial.');
+        }
+    };
+    
+    const handleEdit = (testimonial) => {
+        setEditingId(testimonial._id);
+        setFormData({ name: testimonial.name, message: testimonial.message, isFeatured: testimonial.isFeatured });
+    };
 
-      <div className="manager-container">
-        <h3>Manage Testimonials</h3>
-        {error && <p className="error-message">{error}</p>}
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this testimonial?')) {
+            try {
+                const headers = { 'x-auth-token': token };
+                await axios.delete(`/api/testimonials/${id}`, { headers });
+                fetchTestimonials(); // Refresh list
+            } catch (err) {
+                setError(err.response?.data?.msg || 'Failed to delete testimonial.');
+            }
+        }
+    };
 
-        {/* --- THIS IS THE JSX FOR THE FORM --- */}
-        <form onSubmit={handleSubmit} className="manager-form">
-          <h4>Add a New Testimonial</h4>
-          <textarea name="quote" value={formData.quote} onChange={handleChange} placeholder="Quote" required />
-          <input name="author" value={formData.author} onChange={handleChange} placeholder="Author (e.g., John D.)" required />
-          <select name="rating" value={formData.rating} onChange={handleChange}>
-            <option value="5">5 Stars</option>
-            <option value="4">4 Stars</option>
-            <option value="3">3 Stars</option>
-            <option value="2">2 Stars</option>
-            <option value="1">1 Star</option>
-          </select>
-          <button type="submit">Add Testimonial</button>
-        </form>
+    const handleFeature = async (id, isFeatured) => {
+        try {
+            const headers = { 'x-auth-token': token };
+            await axios.patch(`/api/testimonials/${id}/feature`, { isFeatured: !isFeatured }, { headers });
+            fetchTestimonials(); // Refresh list
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Failed to update feature status.');
+        }
+    };
 
-        <div className="manager-list">
-          {testimonials.map(testimonial => (
-            <div key={testimonial._id} className="list-item testimonial-admin-item">
-              <div className="testimonial-info">
-                <strong>{testimonial.author?.firstName || testimonial.author} said:</strong> "{testimonial.quote.substring(0, 50)}..."
-                <br />
-                <span className="info-meta">
-                  Rating: {testimonial.rating}/5 | 
-                  Likes: {testimonial.likes.length} | 
-                  Dislikes: {testimonial.dislikes.length} | 
-                  Comments: {testimonial.comments.length}
-                </span>
-              </div>
-              <div>
-                <button onClick={() => setCommentingOn(testimonial)}>Reply</button>
-                <button onClick={() => handleDelete(testimonial._id)} className="delete-btn">Delete</button>
-              </div>
+    return (
+        <div className="manager-container">
+            <h3>Manage Testimonials</h3>
+            {error && <p className="error-message">{error}</p>}
+            
+            <form onSubmit={handleSubmit} className="manager-form">
+                <input name="name" value={formData.name} onChange={handleChange} placeholder="Client Name" required />
+                <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Testimonial Message" required />
+                <label>
+                    <input type="checkbox" name="isFeatured" checked={formData.isFeatured} onChange={handleChange} />
+                    Feature this testimonial?
+                </label>
+                <button type="submit">{editingId ? 'Update Testimonial' : 'Add Testimonial'}</button>
+                {editingId && <button onClick={() => { setEditingId(null); setFormData({ name: '', message: '', isFeatured: false }); }}>Cancel Edit</button>}
+            </form>
+
+            <div className="manager-list">
+                {/* FIX: Add safety check before mapping testimonials */}
+                {Array.isArray(testimonials) && testimonials.map(t => (
+                    <div key={t._id} className="list-item">
+                        <p><strong>{t.name}</strong>: "{t.message}"</p>
+                        <div className="item-actions">
+                            <button onClick={() => handleFeature(t._id, t.isFeatured)}>
+                                {t.isFeatured ? 'Unfeature' : 'Feature'}
+                            </button>
+                            <button onClick={() => handleEdit(t)}>Edit</button>
+                            <button onClick={() => handleDelete(t._id)} className="delete-btn">Delete</button>
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
         </div>
-      </div>
-    </>
-  );
+    );
 }
 
 export default TestimonialManager;
