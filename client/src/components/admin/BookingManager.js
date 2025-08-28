@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 // Updated AdminBookingCard to include the new service status feature
@@ -51,7 +51,7 @@ function BookingManager() {
     const [filters, setFilters] = useState({
         customerName: '', startDate: '', endDate: '', make: '', model: '', year: '', service: ''
     });
-    const [searchResults, setSearchResults] = useState(null);
+    const [searchResults, setSearchResults] = useState(null); 
     const [isSearching, setIsSearching] = useState(false);
     const token = localStorage.getItem('token');
 
@@ -59,7 +59,7 @@ function BookingManager() {
     const [models, setModels] = useState([]);
     const [isLoadingModels, setIsLoadingModels] = useState(false);
 
-    const fetchAllBookings = async () => {
+    const fetchAllBookings = useCallback(async () => {
         try {
             setLoading(true);
             const headers = { 'x-auth-token': token };
@@ -78,7 +78,7 @@ function BookingManager() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token]);
 
     // This useEffect hook fetches initial data
     useEffect(() => {
@@ -90,9 +90,10 @@ function BookingManager() {
                 console.error("Failed to fetch makes", err);
             }
         };
+        
         fetchAllBookings();
         fetchMakes();
-    }, [token]);
+    }, [fetchAllBookings]); 
 
     // This useEffect hook handles fetching models when a make is selected
     useEffect(() => {
@@ -138,11 +139,16 @@ function BookingManager() {
             const headers = { 'x-auth-token': token };
             const activeFilters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''));
             const params = new URLSearchParams(activeFilters).toString();
-
-            const response = await axios.get(`/api/bookings?${params}`, { headers });
-            setSearchResults(response.data);
+            const response = await axios.get(`/api/bookings/all?${params}`, { headers });
+        
+            if(Array.isArray(response.data)) {
+              setSearchResults(response.data);
+            } else {
+              setSearchResults([]);
+            }
         } catch (err) {
             setError('Search failed. Please try again.');
+            setSearchResults([]);
         } finally {
             setIsSearching(false);
         }
@@ -229,9 +235,9 @@ function BookingManager() {
                     <div className="search-results">
                         <h4>Search Results ({searchResults.length})</h4>
                         <div className="admin-booking-grid">
-                            {searchResults.length === 0 ? <p>No bookings match your criteria.</p> : 
-                            searchResults.map(renderBookingCard)}
-                        </div>
+                        {searchResults.length === 0 ? <p>No bookings match your criteria.</p> : 
+                        Array.isArray(searchResults) && searchResults.map(renderBookingCard)}
+                    </div>
                     </div>
                 )}
             </div>

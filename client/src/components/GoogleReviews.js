@@ -16,21 +16,27 @@ function GoogleReviews() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchGoogleReviews = async () => {
+    const fetchReviews = async () => {
       try {
         const response = await axios.get('/api/google-reviews');
-        setReviews(response.data);
+        if (Array.isArray(response.data)) {
+          setReviews(response.data);
+        } else {
+          setError('Could not load reviews at this time.');
+        }
       } catch (err) {
-        setError('Could not load Google reviews at this time.');
+        setError('Failed to fetch Google reviews.');
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchGoogleReviews();
+
+    fetchReviews();
   }, []);
 
+  if (loading) return <div className="loader">Loading Reviews...</div>;
   if (error) return <p className="error-message">{error}</p>;
-  if (loading) return <p>Loading Google reviews...</p>;
 
   return (
     <div className="google-reviews-container">
