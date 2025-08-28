@@ -13,7 +13,7 @@ function ServiceHistoryPage() {
     try {
       const token = localStorage.getItem('token');
       const headers = { 'x-auth-token': token };
-      const response = await axios.get('/api/bookings/mybookings', { headers });
+      const response = await axios.get('/api/bookings/', { headers }); // Changed from /api/bookings/mybookings
       setBookings(response.data);
     } catch (err) {
       setError('Could not fetch your booking history.');
@@ -68,9 +68,12 @@ function ServiceHistoryPage() {
                 </span>
               </div>
               <div className="booking-card-body">
-                <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
-                <p><strong>Vehicle:</strong> {booking.vehicleYear} {booking.vehicleMake} {booking.vehicleModel} ({booking.vehicleColor})</p>
-                <p><strong>Price:</strong> ${booking.service ? booking.service.price.toFixed(2) : 'N/A'}</p>
+                  <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
+                  <p><strong>Vehicle:</strong> {booking.vehicleYear} {booking.vehicleMake} {booking.vehicleModel} ({booking.vehicleColor})</p>
+                  <p><strong>Price:</strong> {booking.service && typeof booking.service.price === 'number' 
+                      ? `$${booking.service.price.toFixed(2)}` 
+                      : 'N/A'}
+                  </p>
               </div>
               <div className="booking-card-footer">
                 {booking.status === 'Pending' && (

@@ -63,11 +63,10 @@ function BookingManager() {
         try {
             setLoading(true);
             const headers = { 'x-auth-token': token };
-            const response = await axios.get('/api/bookings', { headers });
+            const response = await axios.get('/api/bookings/all', { headers });
             const bookingsData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
             setAllBookings(bookingsData);
 
-            // Initialize the serviceStatuses state from the fetched bookings
             const initialStatuses = bookingsData.reduce((acc, booking) => {
                 acc[booking._id] = booking.serviceStatus || '';
                 return acc;
@@ -93,7 +92,7 @@ function BookingManager() {
         };
         fetchAllBookings();
         fetchMakes();
-    }, [token]); // Added token dependency
+    }, [token]);
 
     // This useEffect hook handles fetching models when a make is selected
     useEffect(() => {
@@ -120,8 +119,8 @@ function BookingManager() {
             setError('');
             const headers = { 'x-auth-token': token };
             const body = { status: newStatus };
-            await axios.put(`/api/bookings/${bookingId}/status`, body, { headers });
-            fetchAllBookings(); // Refetch to get the latest state
+            await axios.patch(`/api/bookings/${bookingId}/status`, body, { headers });
+            fetchAllBookings();
         } catch (err) {
             setError(err.response?.data?.msg || 'Failed to update status.');
         }
@@ -154,31 +153,25 @@ function BookingManager() {
         setServiceStatuses(prev => ({ ...prev, [bookingId]: value }));
     };
 
-const handleSaveStatus = async (bookingId) => {
-    try {
-        // We need to get the token to prove we are an admin
-        const token = localStorage.getItem('token');
-        
-        // Create a headers object to send the token
-        const headers = {
-            'x-auth-token': token,
-        };
+    const handleSaveStatus = async (bookingId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const headers = { 'x-auth-token': token };
 
-        // Add the headers object to the axios request
-        await axios.put(`/api/bookings/${bookingId}/service-status`, {
-            serviceStatus: serviceStatuses[bookingId],
-        }, { headers });
+            await axios.patch(`/api/bookings/${bookingId}/status`, {
+                serviceStatus: serviceStatuses[bookingId],
+            }, { headers });
 
-        alert('Status updated successfully!');
-    } catch (err) {
-        console.error('Failed to update status:', err);
-        alert('Failed to update status.');
-    }
-};
+            fetchAllBookings();
+            alert('Status updated successfully!');
+        } catch (err) {
+            console.error('Failed to update status:', err);
+            alert('Failed to update status.');
+        }
+    };
 
     const activeBookings = allBookings.filter(b => b.status !== 'Cancelled' && b.status !== 'Completed');
     
-    // Helper function to render booking cards to avoid code repetition
     const renderBookingCard = (booking) => (
         <AdminBookingCard 
             key={booking._id} 

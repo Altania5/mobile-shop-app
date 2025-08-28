@@ -1,29 +1,36 @@
-// server/routes/comments.js
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const Comment = require('../models/comment.model');
-const Post = require('../models/post.model');
+const Post = require('../models/post.model'); // This line is required
 const auth = require('../middleware/auth');
 
-// POST a new comment (Logged-in users)
-router.post('/:postId', auth, async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.postId);
-        if (!post || !post.commentsEnabled) {
-            return res.status(400).json({ msg: 'Comments are not enabled for this post.' });
-        }
-
-        const newComment = new Comment({
-            text: req.body.text,
-            post: req.params.postId,
-            user: req.user.id
-        });
-
-        const comment = await newComment.save();
-        res.json(comment);
-    } catch (err) {
-        res.status(500).json({ msg: 'Server Error' });
+// --- POST A NEW COMMENT (Authenticated Users) ---
+router.post('/', auth, async (req, res) => {
+  try {
+    const { text, postId } = req.body;
+    if (!text) {
+      return res.status(400).json({ msg: 'Comment text is required.' });
     }
+
+    // This block is required to validate the post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found.' });
+    }
+
+    const newComment = new Comment({
+      text,
+      author: req.user,
+      post: postId,
+    });
+
+    const savedComment = await newComment.save();
+    const populatedComment = await savedComment.populate('author', 'firstName lastName');
+
+    res.status(201).json(populatedComment);
+  } catch (err) {
+    console.error("Comment Post Error:", err.message);
+    res.status(500).json({ error: 'Server error while posting comment.' });
+  }
 });
 
 module.exports = router;

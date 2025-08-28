@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
-import { Routes, Route, NavLink, useNavigate, Link } from 'react-router-dom';
+import { NavLink, useNavigate, Link, Outlet } from 'react-router-dom';
 import Footer from './Footer';
-import MainPage from '../pages/MainPage';
-import BookingPage from '../pages/BookingPage';
-import BookingFormPage from '../pages/BookingFormPage';
-import AboutPage from '../pages/AboutPage';
-import ServiceHistoryPage from '../pages/ServiceHistoryPage';
-import TestimonialsPage from '../pages/TestimonialsPage';
-import BlogPage from '../pages/BlogPage';
-import PostPage from '../pages/PostPage';
-import AdminPage from '../pages/AdminPage';
-import LeaveReviewPage from '../pages/LeaveReviewPage';
-import ContactPage from '../pages/ContactPage';
-import ProtectedRoute from '../components/ProtectedRoute';
-import ServicesPage from '../pages/ServicesPage';
 
 export default function AppLayout({ user, onLogout }) {
   const navigate = useNavigate();
@@ -50,7 +37,7 @@ export default function AppLayout({ user, onLogout }) {
                 <NavLink to="/admin" className="nav-link" onClick={closeMenu}>Admin</NavLink>
               )}
               <span className="nav-user-greeting">Welcome, {user.firstName}!</span>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={handleLogout} className="nav-logout-button">Logout</button>
             </>
           ) : (
             <Link to="/login" className="nav-login-button" onClick={closeMenu}>Login / Register</Link>
@@ -58,28 +45,8 @@ export default function AppLayout({ user, onLogout }) {
         </div>
       </nav>
       <main className="app-main">
-        <Routes>
-          {/* --- Routes Updated --- */}
-          <Route path="/" element={<AboutPage />} /> {/* The "About" page is now the homepage */}
-          <Route path="/services" element={<ServicesPage />} />
-          
-          {/* --- Public Routes --- */}
-          <Route path="/about" element={<AboutPage />} /> {/* Keep this route for the nav link */}
-          <Route path="/testimonials" element={<TestimonialsPage user={user} />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:slug" element={<PostPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-
-          {/* --- Protected Routes (Require Login) --- */}
-          <Route path="/book/:serviceId" element={<ProtectedRoute user={user}><BookingPage /></ProtectedRoute>} />
-          <Route path="/book/:serviceId/details" element={<ProtectedRoute user={user}><BookingFormPage user={user} /></ProtectedRoute>} />
-          <Route path="/history" element={<ProtectedRoute user={user}><ServiceHistoryPage /></ProtectedRoute>} />
-          <Route path="/leave-review" element={<ProtectedRoute user={user}><LeaveReviewPage /></ProtectedRoute>} />
-          
-          {user && user.role === 'admin' && (
-            <Route path="/admin" element={<ProtectedRoute user={user}><AdminPage /></ProtectedRoute>} />
-          )}
-        </Routes>
+        {/* All page components will be rendered here */}
+        <Outlet />
       </main>
       <Footer />
     </div>

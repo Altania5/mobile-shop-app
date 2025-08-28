@@ -1,26 +1,35 @@
-// In server/middleware/upload.js
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
+const path = require('path');
 
-// Configure Cloudinary with your credentials
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+// Set up storage engine
+const storage = multer.diskStorage({
+  destination: './uploads/',
+  filename: function(req, file, cb) {
+    // Generate a unique filename to avoid conflicts
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
 });
 
-const createUploader = (folderName) => {
-    const storage = new CloudinaryStorage({
-        cloudinary: cloudinary,
-        params: {
-            folder: folderName,
-            allowed_formats: ['jpg', 'png', 'jpeg'],
-            transformation: [{ width: 1200, height: 675, crop: 'limit' }] // Optional: resize images
-        },
-    });
+// Check File Type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
 
-    return multer({ storage: storage });
-};
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
 
-module.exports = createUploader;
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5000000 }, // Limit file size to 5MB
+  fileFilter: function(req, file, cb) {
+    checkFileType(file, cb);
+  }
+});
+
+module.exports = upload;

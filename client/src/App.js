@@ -1,26 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import setAuthToken from './utils/setAuthToken';
+
+// Layout and Authentication
 import AppLayout from './layout/AppLayout';
 import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Page Imports
+import MainPage from './pages/MainPage';
 import ServicesPage from './pages/ServicesPage';
-import setAuthToken from './utils/setAuthToken';
+import TestimonialsPage from './pages/TestimonialsPage';
+import BlogPage from './pages/BlogPage';
+import PostPage from './pages/PostPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import ServiceHistoryPage from './pages/ServiceHistoryPage';
+import AdminPage from './pages/AdminPage';
+import BookingPage from './pages/BookingPage';
+import BookingFormPage from './pages/BookingFormPage';
+import LeaveReviewPage from './pages/LeaveReviewPage';
+
 import './App.css';
 
 function App() {
-
-  const token = localStorage.getItem('token');
-if (token) {
-    setAuthToken(token);
-}
-
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Effect to check for an existing token on app load
+  const handleLogout = React.useCallback(() => {
+    localStorage.removeItem('token');
+    setAuthToken(null);
+    setUser(null);
+    navigate('/');
+  }, [navigate]);
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
+      setAuthToken(token);
       try {
         const decodedUser = jwtDecode(token);
         const isExpired = decodedUser.exp * 1000 < Date.now();
@@ -33,30 +51,43 @@ if (token) {
         handleLogout();
       }
     }
-  }, []);
+  }, [handleLogout]);
 
-  const handleLoginSuccess = (token, from) => {
+  const handleLoginSuccess = (token) => {
     localStorage.setItem('token', token);
+    setAuthToken(token);
     const decodedUser = jwtDecode(token);
     setUser({ ...decodedUser, token, role: decodedUser.role });
-    const destination = from?.pathname || '/';
-    navigate(destination, { replace: true }); 
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    navigate('/'); // Redirect to main page after logout
+    navigate('/history');
   };
 
   return (
     <div className="App">
-      <AppLayout user={user} onLogout={handleLogout}>
       <Routes>
-        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-        <Route path="/*" element={<AppLayout user={user} onLogout={handleLogout} />} />
+        {/* All routes are now nested within the AppLayout */}
+        <Route element={<AppLayout user={user} onLogout={handleLogout} />}>
+          
+          {/* Public Routes */}
+          <Route path="/" element={<MainPage />} />
+          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage user={user} />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<PostPage user={user} />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+
+          {/* Protected Routes */}
+          <Route path="/history" element={<ProtectedRoute user={user}><ServiceHistoryPage /></ProtectedRoute>} />
+          <Route path="/book/:serviceId" element={<ProtectedRoute user={user}><BookingPage /></ProtectedRoute>} />
+          <Route path="/book/:serviceId/details" element={<ProtectedRoute user={user}><BookingFormPage user={user} /></ProtectedRoute>} />
+          <Route path="/leave-review" element={<ProtectedRoute user={user}><LeaveReviewPage /></ProtectedRoute>} />
+
+          {/* Admin-Only Route */}
+          <Route path="/admin" element={<ProtectedRoute user={user} roles={['admin']}><AdminPage /></ProtectedRoute>} />
+
+        </Route>
       </Routes>
-      </AppLayout>
     </div>
   );
 }

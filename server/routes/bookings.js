@@ -1,198 +1,101 @@
 const router = require('express').Router();
-const auth = require('../middleware/auth');
 let Booking = require('../models/booking.model');
+const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
-let Service = require('../models/service.model');
+const User = require('../models/user.model'); 
+const Service = require('../models/service.model'); 
 
-// @route   POST /api/bookings
-// @desc    Create a new booking
-// @access  Private
+// CREATE A BOOKING
+// THE FIX: This route now correctly handles all fields from the booking form.
 router.post('/', auth, async (req, res) => {
-  try {
-    const { serviceId, date, time, clientFirstName, clientLastName, vehicleMake, vehicleModel, vehicleYear, vehicleColor, notes } = req.body;
-
-    if (!serviceId || !date || !time || !clientFirstName || !clientLastName || !vehicleMake || !vehicleModel || !vehicleYear || !vehicleColor) {
-      return res.status(400).json({ msg: 'Please provide all required fields.' });
-    }
-
-    const newBooking = new Booking({
-      service: serviceId,
-      user: req.user,
-      date,
-      time,
-      clientFirstName,
-      clientLastName,
-      vehicleMake,
-      vehicleModel,
-      vehicleYear,
-      vehicleColor,
-      notes,
-    });
-
-    const savedBooking = await newBooking.save();
-    res.status(201).json(savedBooking);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.put('/:id', auth, async (req, res) => {
     try {
-        const { vehicleMake, vehicleModel, vehicleYear, vehicleColor, notes } = req.body;
-        const booking = await Booking.findById(req.params.id);
+        // FIX: Change the destructured variables to match the client-side form data
+        const {
+            serviceId,
+            date,
+            time,
+            notes, // Changed from customerNotes
+            clientFirstName, // Changed from firstName
+            clientLastName, // Changed from lastName
+            vehicleMake,
+            vehicleModel,
+            vehicleYear,
+            vehicleColor
+        } = req.body;
 
-        if (!booking) return res.status(404).json({ msg: 'Booking not found' });
-        if (booking.user.toString() !== req.user) return res.status(401).json({ msg: 'User not authorized' });
-        if (booking.status !== 'Pending') return res.status(400).json({ msg: 'Only pending bookings can be modified.' });
+        const newBooking = new Booking({
+            user: req.user,
+            service: serviceId,
+            date,
+            time,
+            notes, // Pass the notes field
+            clientFirstName, // Pass the correct variable
+            clientLastName,  // Pass the correct variable
+            vehicleMake,
+            vehicleModel,
+            vehicleYear,
+            vehicleColor
+        });
 
-        booking.vehicleMake = vehicleMake;
-        booking.vehicleModel = vehicleModel;
-        booking.vehicleYear = vehicleYear;
-        booking.vehicleColor = vehicleColor;
-        booking.notes = notes;
-        
-        const updatedBooking = await booking.save();
-        res.json(updatedBooking);
+        const savedBooking = await newBooking.save();
+        res.status(201).json(savedBooking);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error creating booking:", err);
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ msg: 'Please fill out all required fields.', details: err.errors });
+        }
+        res.status(500).json({ msg: 'Server error while creating booking.' });
     }
 });
 
-router.put('/:id/cancel', auth, async (req, res) => {
+// GET USER'S BOOKINGS
+router.get('/', auth, async (req, res) => {
     try {
-        const booking = await Booking.findById(req.params.id);
-        if (!booking) return res.status(404).json({ msg: 'Booking not found' });
-        if (booking.user.toString() !== req.user) return res.status(401).json({ msg: 'User not authorized' });
-        if (booking.status === 'Completed' || booking.status === 'Cancelled') {
-            return res.status(400).json({ msg: 'Booking cannot be cancelled.' });
+        const bookings = await Booking.find({ user: req.user }).populate('service', 'name description price');
+        res.json(bookings);
+    } catch (err) {
+        console.error("Error fetching user bookings:", err);
+        res.status(500).json({ msg: 'Server error while fetching user bookings.' });
+    }
+});
+
+// GET ALL BOOKINGS (For Admin)
+router.get('/all', [auth, adminAuth], async (req, res) => {
+    try {
+        const bookings = await Booking.find({})
+            .populate('user', 'firstName lastName email')
+            .populate('service', 'name')
+            .sort({ date: -1 }); // Sort by booking date
+        res.json(bookings);
+    } catch (err) {
+        console.error("Error fetching all bookings:", err);
+        res.status(500).json({ msg: 'Server error while fetching all bookings.' });
+    }
+});
+
+// UPDATE BOOKING STATUS (For Admin)
+router.patch('/:id/status', [auth, adminAuth], async (req, res) => {
+    try {
+        const { status, serviceStatus } = req.body;
+        
+        const updateData = {};
+        if (status) {
+            updateData.status = status;
+        }
+        // Allow serviceStatus to be an empty string
+        if (serviceStatus !== undefined) {
+            updateData.serviceStatus = serviceStatus;
         }
 
-        booking.status = 'Cancelled';
-        await booking.save();
-        res.json({ msg: 'Booking cancelled successfully.' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// @route   GET /api/bookings/mybookings
-// @desc    Get all bookings for the logged-in user
-// @access  Private
-router.get('/mybookings', auth, async (req, res) => {
-  try {
-    const bookings = await Booking.find({ user: req.user })
-      .populate('service', 'name price') 
-      .sort({createdAt: -1 });
-
-    res.json(bookings);
-  } catch (err) {
-    console.error("Error fetching user bookings:", err);
-    res.status(500).json({ error: 'Failed to fetch booking history.' });
-  }
-});
-
-// --- Admin-Only Routes ---
-
-// @route   GET /api/bookings
-// @desc    Get all bookings from all users (with advanced filtering)
-// @access  Admin
-router.get('/', adminAuth, async (req, res) => {
-  try {
-    const { customerName, startDate, endDate, make, model, year, service } = req.query;
-    
-    let query = {};
-
-    if (startDate) {
-        query.date = { ...query.date, $gte: new Date(startDate) };
-    }
-    if (endDate) {
-        query.date = { ...query.date, $lte: new Date(endDate) };
-    }
-    if (make) {
-        query.vehicleMake = { $regex: make, $options: 'i' };
-    }
-    if (model) {
-        query.vehicleModel = { $regex: model, $options: 'i' };
-    }
-    if (year) {
-        query.vehicleYear = year;
-    }
-    if (service) {
-        const services = await Service.find({ name: { $regex: service, $options: 'i' } }).select('_id');
-        const serviceIds = services.map(s => s._id);
-        query.service = { $in: serviceIds };
-    }
-
-    let bookings = await Booking.find(query)
-      .populate('user', 'firstName lastName email')
-      .populate('service', 'name')
-      .sort({ date: 1 });
-
-    if (customerName) {
-        bookings = bookings.filter(booking => {
-            const fullName = `${booking.user?.firstName} ${booking.user?.lastName}`;
-            return fullName.toLowerCase().includes(customerName.toLowerCase());
-        });
-    }
-
-    res.json(bookings);
-  } catch (err) {
-    console.error("Booking search error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// @route   PUT /api/bookings/:id/status
-// @desc    Update the status of a booking
-// @access  Admin
-router.put('/:id/status', adminAuth, async (req, res) => {
-  try {
-    const { status } = req.body;
-    const allowedStatuses = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
-    if (!allowedStatuses.includes(status)) {
-      return res.status(400).json({ msg: 'Invalid status value.' });
-    }
-
-    const updatedBooking = await Booking.findByIdAndUpdate(
-      req.params.id,
-      { status: status },
-      { new: true }
-    ).populate('user', 'firstName lastName email').populate('service', 'name');
-
-    if (!updatedBooking) {
-      return res.status(404).json({ msg: 'Booking not found.' });
-    }
-
-    res.json(updatedBooking);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// @route   PUT api/bookings/:id/service-status
-// @desc    Update the service status of a booking
-// @access  Admin
-router.put('/:id/service-status', adminAuth, async (req, res) => {
-    try {
-        const booking = await Booking.findById(req.params.id);
+        const booking = await Booking.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
         if (!booking) {
             return res.status(404).json({ msg: 'Booking not found' });
         }
-
-        if (booking.status !== 'Pending' && booking.status !== 'Confirmed') {
-            return res.status(400).json({ 
-                msg: 'Service status can only be updated for Pending or Confirmed bookings.' 
-            });
-        }
-
-        booking.serviceStatus = req.body.serviceStatus || '';
-        await booking.save();
-
         res.json(booking);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
+        console.error("Error updating booking status:", err);
+        res.status(500).json({ msg: 'Server error while updating booking status.' });
     }
 });
 

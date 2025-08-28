@@ -3,16 +3,13 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
 function Login({ onLoginSuccess }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
-    const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [error, setError] = useState('');
 
-    const handleChange = (e) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -21,17 +18,11 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
     try {
-      // --- START: THE FIX ---
-      // Send the formData object directly
       const res = await axios.post('/api/users/login', formData);
-      // --- END: THE FIX ---
-      
-      localStorage.setItem('token', res.data.token);
-      onLoginSuccess();
+      onLoginSuccess(res.data.token, from);
     } catch (err) {
-      setMessage(err.response?.data?.msg || 'An error occurred during login.');
+      setError(err.response?.data?.msg || 'An error occurred during login.');
     }
   };
 
@@ -41,16 +32,18 @@ function Login({ onLoginSuccess }) {
       <form onSubmit={handleSubmit}>
         <input
           type="email"
+          name="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
           required
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleChange}
           required
           autoComplete="current-password"
         />

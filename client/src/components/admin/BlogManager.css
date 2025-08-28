@@ -1,0 +1,165 @@
+/* Main container for the blog manager */
+.blog-manager-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blog-manager-container h3,
+.blog-manager-container h4 {
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* Styling for the form */
+.blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-options {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.form-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* --- ADDED/UPDATED STYLES --- */
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.submit-btn,
+.delete-btn,
+.edit-btn,
+.cancel-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.submit-btn:active,
+.delete-btn:active,
+.edit-btn:active,
+.cancel-btn:active {
+    transform: scale(0.98);
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+}
+.submit-btn:hover { background-color: #0056b3; }
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+.delete-btn:hover { background-color: #c82333; }
+
+.edit-btn {
+    background-color: #ffc107;
+    color: #212529;
+}
+.edit-btn:hover { background-color: #e0a800; }
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+.cancel-btn:hover { background-color: #5a6268; }
+
+
+/* Styling for the list of existing posts */
+.posts-list-container {
+  margin-top: 20px;
+}
+
+.posts-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.post-title {
+  font-weight: 500;
+  margin-right: 15px;
+}
+
+.post-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Message styling */
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+}
+
+.success-message {
+  color: #155724;
+  background-color: #d4edda;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #c3e6cb;
+}

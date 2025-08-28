@@ -1,124 +1,165 @@
-// Git/client/src/components/admin/BlogManager.js
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import './BlogManager.css';
 
-const BlogManager = () => {
-    const [posts, setPosts] = useState([]);
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [image, setImage] = useState(null);
-    const [commentsEnabled, setCommentsEnabled] = useState(true);
-    const [loading, setLoading] = useState(true);
+function BlogManager() {
+  const [posts, setPosts] = useState([]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [summary, setSummary] = useState('');
+  const [allowLikes, setAllowLikes] = useState(true);
+  const [allowComments, setAllowComments] = useState(true);
+  const [heroImage, setHeroImage] = useState(null);
+  
+  // State for editing
+  const [editingPostId, setEditingPostId] = useState(null);
 
-    const fetchPosts = async () => {
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const formRef = useRef(null); // Ref to scroll to the form when editing
+
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get('/api/posts');
+      setPosts(res.data);
+    } catch (err) {
+      setError('Could not fetch posts.');
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const resetForm = () => {
+    setTitle('');
+    setContent('');
+    setSummary('');
+    setAllowLikes(true);
+    setAllowComments(true);
+    setHeroImage(null);
+    setEditingPostId(null);
+    if (document.getElementById('heroImage')) {
+      document.getElementById('heroImage').value = null;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('summary', summary);
+    formData.append('allowLikes', allowLikes);
+    formData.append('allowComments', allowComments);
+    if (heroImage) {
+      formData.append('heroImage', heroImage);
+    }
+
+    try {
+      if (editingPostId) {
+        // --- UPDATE EXISTING POST ---
+        await axios.put(`/api/posts/${editingPostId}`, formData);
+        setMessage('Post updated successfully!');
+      } else {
+        // --- CREATE NEW POST ---
+        await axios.post('/api/posts', formData);
+        setMessage('Post created successfully!');
+      }
+      resetForm();
+      fetchPosts();
+    } catch (err) {
+      setError(err.response?.data?.msg || 'Operation failed.');
+    }
+  };
+
+  const handleEdit = (post) => {
+    setEditingPostId(post._id);
+    setTitle(post.title);
+    setContent(post.content);
+    setSummary(post.summary || '');
+    setAllowLikes(post.allowLikes);
+    setAllowComments(post.allowComments);
+    setMessage('');
+    setError('');
+    formRef.current.scrollIntoView({ behavior: 'smooth' }); // Scroll to form
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
         try {
-            setLoading(true);
-            const res = await axios.get('/api/posts');
-            setPosts(res.data);
-        } catch (err) {
-            console.error("Failed to fetch posts:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchPosts();
-    }, []);
-
-    const handleFileChange = (e) => {
-        setImage(e.target.files[0]);
-    };
-
-    const handleCreatePost = async (e) => {
-        e.preventDefault();
-        
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', content);
-        formData.append('commentsEnabled', commentsEnabled);
-        if (image) {
-            formData.append('image', image);
-        }
-
-        try {
-            // --- START: THE FIX ---
-            // Remove the manual config object. The authentication header
-            // is now handled globally by the setAuthToken utility.
-            // We only need to specify the Content-Type for file uploads.
-            const config = {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            };
-            await axios.post('/api/posts', formData, config);
-            // --- END: THE FIX ---
-            
-            setTitle('');
-            setContent('');
-            setImage(null);
+            await axios.delete(`/api/posts/${id}`);
+            setMessage('Post deleted successfully!');
             fetchPosts();
-            alert('Post created successfully!');
         } catch (err) {
-            console.error('Failed to create post:', err);
-            const errorMsg = err.response?.data?.msg || 'Error creating post. You may not be authorized.';
-            alert(errorMsg);
+            setError(err.response?.data?.msg || 'Failed to delete post.');
         }
-    };
-    
-    const handleDeletePost = async (postId) => {
-        if (window.confirm('Are you sure you want to delete this post?')) {
-            try {
-                // The auth header is also handled automatically for this request.
-                await axios.delete(`/api/posts/${postId}`);
-                fetchPosts();
-            } catch (err) {
-                console.error('Failed to delete post', err);
-            }
-        }
-    };
+    }
+  };
 
-    return (
-        <div className="manager-container">
-            <h3>Create New Blog Post</h3>
-            <form onSubmit={handleCreatePost}>
-                 <div>
-                    <label>Title</label>
-                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                </div>
-                <div>
-                    <label>Content</label>
-                    <textarea value={content} onChange={(e) => setContent(e.target.value)} required />
-                </div>
-                <div>
-                    <label>Header Image</label>
-                    <input type="file" onChange={handleFileChange} />
-                </div>
-                <div>
-                    <label>
-                        <input type="checkbox" checked={commentsEnabled} onChange={() => setCommentsEnabled(!commentsEnabled)} />
-                        Allow Comments
-                    </label>
-                </div>
-                <button type="submit">Create Post</button>
-            </form>
-
-            <hr className="section-divider" />
-
-            <h3>Existing Posts</h3>
-            {loading ? <p>Loading posts...</p> : (
-                <div className="posts-list">
-                    {posts.map(post => (
-                        <div key={post._id} className="post-item">
-                            <span>{post.title}</span>
-                            <button onClick={() => handleDeletePost(post._id)} className="delete-btn">Delete</button>
-                        </div>
-                    ))}
-                </div>
-            )}
+  return (
+    <div className="blog-manager-container">
+      <h3>Blog Manager</h3>
+      
+      <form onSubmit={handleSubmit} className="blog-form" ref={formRef}>
+        <h4>{editingPostId ? 'Edit Post' : 'Create New Post'}</h4>
+        {error && <p className="error-message">{error}</p>}
+        {message && <p className="success-message">{message}</p>}
+        
+        <div className="form-group">
+          <label htmlFor="title">Title</label>
+          <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
         </div>
-    );
-};
+
+        <div className="form-group">
+          <label htmlFor="heroImage">Hero Image (Optional)</label>
+          <input id="heroImage" type="file" onChange={(e) => setHeroImage(e.target.files[0])} />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="summary">Summary</label>
+          <textarea id="summary" value={summary} onChange={(e) => setSummary(e.target.value)}></textarea>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="content">Content</label>
+          <textarea id="content" value={content} onChange={(e) => setContent(e.target.value)} required rows="10"></textarea>
+        </div>
+        
+        <div className="form-options">
+          <label><input type="checkbox" checked={allowLikes} onChange={(e) => setAllowLikes(e.target.checked)} /> Allow Likes</label>
+          <label><input type="checkbox" checked={allowComments} onChange={(e) => setAllowComments(e.target.checked)} /> Allow Comments</label>
+        </div>
+        
+        <div className="form-actions">
+            <button type="submit" className="submit-btn">{editingPostId ? 'Update Post' : 'Create Post'}</button>
+            {editingPostId && <button type="button" className="cancel-btn" onClick={resetForm}>Cancel Edit</button>}
+        </div>
+      </form>
+
+      <div className="posts-list-container">
+        <h4>Existing Posts</h4>
+        <ul className="posts-list">
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <li key={post._id} className="post-item">
+                <span className="post-title">{post.title}</span>
+                <div className="post-actions">
+                    <button onClick={() => handleEdit(post)} className="edit-btn">Edit</button>
+                    <button onClick={() => handleDelete(post._id)} className="delete-btn">Delete</button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p>No posts found.</p>
+          )}
+        </ul>
+      </div>
+    </div>
+  );
+}
 
 export default BlogManager;

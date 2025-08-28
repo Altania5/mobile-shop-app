@@ -1,114 +1,145 @@
-// client/src/pages/PostPage.js
-
 import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import './PostPage.css';
 
-const PostPage = () => {
-    const { id } = useParams();
-    const [post, setPost] = useState(null);
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('');
-    const [loading, setLoading] = useState(true);
-    const token = localStorage.getItem('token'); // Get token for authenticated actions
+// Pass the logged-in user as a prop
+function PostPage({ user }) {
+  const [post, setPost] = useState(null);
+  const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
-    const fetchPostData = async () => {
-        try {
-            const res = await axios.get(`/api/posts/${id}`);
-            setPost(res.data.post);
-            setComments(res.data.comments);
-        } catch (err) {
-            console.error("Failed to fetch post data", err);
-        } finally {
-            setLoading(false);
-        }
+  // Function to fetch everything for the post
+  const fetchPostData = React.useCallback(async (postId) => {
+    try {
+      const [postRes, commentsRes] = await Promise.all([
+        axios.get(`/api/posts/${slug}`),
+        axios.get(`/api/posts/${postId}/comments`)
+      ]);
+      setPost(postRes.data);
+      setLikes(postRes.data.likes);
+      setComments(commentsRes.data);
+    } catch (err) {
+      setError('Could not find the requested post.');
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    const getPostAndComments = async () => {
+      try {
+        const res = await axios.get(`/api/posts/${slug}`);
+        fetchPostData(res.data._id);
+      } catch (err) {
+        setError('Could not find the requested post.');
+        setLoading(false);
+      }
     };
+    getPostAndComments();
+  }, [slug, fetchPostData]);
 
-    useEffect(() => {
-        fetchPostData();
-    }, [id]);
+  const handleLike = async () => {
+    if (!user) return navigate('/login'); // Redirect if not logged in
+    try {
+      const res = await axios.put(`/api/posts/${post._id}/like`);
+      setLikes(res.data);
+    } catch (err) {
+      console.error('Error liking post:', err);
+    }
+  };
 
-    // --- START: Define handleLike function ---
-    const handleLike = async () => {
-        if (!token) {
-            alert('You must be logged in to like a post.');
-            return;
-        }
-        try {
-            const headers = { 'x-auth-token': token };
-            const res = await axios.put(`/api/posts/${id}/like`, {}, { headers });
-            // Update likes count on the post object
-            setPost({ ...post, likes: res.data });
-        } catch (err) {
-            console.error('Failed to like post:', err);
-        }
-    };
-    // --- END: Define handleLike function ---
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) return navigate('/login');
+    if (!newComment.trim()) return;
+    try {
+      const res = await axios.post('/api/comments', {
+        text: newComment,
+        postId: post._id,
+      });
+      setComments([res.data, ...comments]); // Add new comment to the top
+      setNewComment('');
+    } catch (err) {
+      console.error('Error submitting comment:', err);
+    }
+  };
 
-    // --- START: Define handleCommentSubmit function ---
-    const handleCommentSubmit = async (e) => {
-        e.preventDefault();
-        if (!token) {
-            alert('You must be logged in to comment.');
-            return;
-        }
-        if (!newComment.trim()) return;
+  if (loading) return <div className="post-status">Loading post...</div>;
+  if (error) return <div className="post-status error">{error}</div>;
+  if (!post) return null;
 
-        try {
-            const headers = { 'x-auth-token': token };
-            const body = { text: newComment };
-            await axios.post(`/api/comments/${id}`, body, { headers });
-            setNewComment('');
-            fetchPostData(); // Refetch post and comments to show the new one
-        } catch (err) {
-            console.error('Failed to submit comment:', err);
-            alert('Error submitting comment.');
-        }
-    };
-    // --- END: Define handleCommentSubmit function ---
+  const imageUrl = post.heroImage ? `http://localhost:5000${post.heroImage}` : null;
+  const authorName = post.author ? `${post.author.firstName} ${post.author.lastName}` : 'Admin';
+  const hasLiked = user && likes.includes(user.id);
 
-    if (loading) return <div>Loading...</div>;
-    if (!post) return <div>Post not found.</div>;
+  return (
+    <article className="post-page-container">
+      <header className="post-header">
+        <h1>{post.title}</h1>
+        <p className="post-meta-single">
+          Posted by {authorName} on {new Date(post.createdAt).toLocaleDateString()}
+        </p>
+      </header>
 
-    return (
-        <div className="post-page-container">
-            {post.imageUrl && <img src={`/${post.imageUrl.replace(/\\/g, '/')}`} alt={post.title} className="post-header-image" />}
-            <h1>{post.title}</h1>
-            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+      {imageUrl && <img src={imageUrl} alt={post.title} className="post-hero-image" />}
 
-            <div className="post-actions">
-                <button onClick={handleLike} className="like-button">
-                    ❤️ {post.likes.length} Likes
-                </button>
-            </div>
+      <div className="post-content-area">
+        <ReactMarkdown>{post.content}</ReactMarkdown>
+      </div>
 
-            {post.commentsEnabled && (
-                <div className="comments-section">
-                    <h3>Comments</h3>
-                    <form onSubmit={handleCommentSubmit} className="comment-form">
-                        <textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Add a comment..."
-                            required
-                        ></textarea>
-                        <button type="submit">Submit</button>
-                    </form>
-                    <div className="comments-list">
-                        {comments.length > 0 ? (
-                            comments.map(comment => (
-                                <div key={comment._id} className="comment">
-                                    <p><strong>{comment.user ? `${comment.user.firstName} ${comment.user.lastName}` : 'User'}:</strong> {comment.text}</p>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No comments yet.</p>
-                        )}
-                    </div>
-                </div>
+      {/* --- Likes and Comments Section --- */}
+      <div className="post-interactions">
+        {post.allowLikes && (
+          <div className="likes-section">
+            <button onClick={handleLike} className={`like-button ${hasLiked ? 'liked' : ''}`}>
+              ❤️ {hasLiked ? 'Liked' : 'Like'}
+            </button>
+            <span>{likes.length} {likes.length === 1 ? 'like' : 'likes'}</span>
+          </div>
+        )}
+
+        {post.allowComments && (
+          <div className="comments-section">
+            <h3>Comments ({comments.length})</h3>
+            {user ? (
+              <form onSubmit={handleCommentSubmit} className="comment-form">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Write a comment..."
+                  rows="3"
+                ></textarea>
+                <button type="submit">Post Comment</button>
+              </form>
+            ) : (
+              <p><Link to="/login">Log in</Link> to post a comment.</p>
             )}
-        </div>
-    );
-};
+            <div className="comments-list">
+              {comments.map(comment => (
+                <div key={comment._id} className="comment">
+                  <p className="comment-author">
+                    {comment.author ? `${comment.author.firstName} ${comment.author.lastName}` : 'User'}
+                  </p>
+                  <p className="comment-text">{comment.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="post-footer">
+        <Link to="/blog" className="back-to-blog-link">&larr; Back to all posts</Link>
+      </div>
+    </article>
+  );
+}
 
 export default PostPage;

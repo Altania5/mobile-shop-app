@@ -3,26 +3,30 @@ const User = require('../models/user.model');
 
 const adminAuth = async (req, res, next) => {
   try {
-    const token = req.header('x-auth-token');
-    if (!token) {
-      return res.status(401).json({ msg: 'No authentication token, authorization denied.' });
+    // The 'auth' middleware has already run and placed the user ID on req.user
+    if (!req.user) {
+      return res.status(401).json({ msg: 'Authentication error, user not found.' });
     }
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    if (!verified) {
-      return res.status(401).json({ msg: 'Token verification failed, authorization denied.' });
+    // THE FIX: Find the user by the ID directly from req.user,
+    // not req.user.id, because req.user is just the ID string.
+    const user = await User.findById(req.user);
+
+    if (!user) {
+      return res.status(401).json({ msg: 'Authentication error, user not found in database.' });
     }
-    
-    // Find the user and check their role
-    const user = await User.findById(verified.id);
-    if (user && user.role === 'admin') {
-      req.user = verified.id; // Pass user id to the next middleware/route handler
-      next();
-    } else {
-      return res.status(403).json({ msg: 'Admin access required.' });
+
+    // Check if the user has the 'admin' role
+    if (user.role !== 'admin') {
+      return res.status(403).json({ msg: 'Access denied. User is not an admin.' });
     }
+
+    // If the user is an admin, proceed to the next middleware or route handler
+    next();
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Admin Auth Error:', err.message);
+    res.status(500).json({ error: 'Server error during admin authentication.' });
   }
 };
 

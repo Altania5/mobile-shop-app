@@ -1,117 +1,126 @@
-// server/routes/posts.js
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const Post = require('../models/post.model');
 const Comment = require('../models/comment.model');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
-const upload = require('../middleware/upload'); // Assuming your upload middleware is here
+const upload = require('../middleware/upload');
+const slugify = require('slugify');
 
-const createUploader = require('../middleware/upload');
-const blogImageUploader = createUploader('blog_images');
-
-// GET all posts (public)
+// --- GET ALL POSTS (Public) ---
 router.get('/', async (req, res) => {
-    try {
-        const posts = await Post.find()
-            .populate('author', 'firstName lastName')
-            .sort({ createdAt: -1 });
-        res.json(posts);
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
-    }
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 }).populate('author', 'firstName lastName');
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// GET single post by ID (public)
-router.get('/:id', async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id).populate('author', 'firstName lastName');
-        if (!post) return res.status(404).json({ msg: 'Post not found' });
-
-        const comments = await Comment.find({ post: post._id }).populate('user', 'firstName lastName').sort({ createdAt: -1 });
-        
-        res.json({ post, comments });
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
-    }
+// --- GET SINGLE POST by SLUG (Public) ---
+router.get('/:slug', async (req, res) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug }).populate('author', 'firstName lastName');
+    if (!post) return res.status(404).json({ msg: 'Post not found' });
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-
-// POST a new blog post (Admin Only)
-router.post('/', adminAuth, blogImageUploader.single('image'), async (req, res) => {
-    const { title, content, commentsEnabled } = req.body;
-    
-    // --- START: The Fix ---
-    // First, verify that the admin user was actually found by the middleware.
-    if (!req.user || !req.user.id) {
-        return res.status(401).json({ msg: 'Authentication error, user not found.' });
+// --- CREATE NEW POST (Admin Only) ---
+router.post('/', [auth, adminAuth, upload.single('heroImage')], async (req, res) => {
+  try {
+    const { title, content, summary, allowLikes, allowComments } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ msg: 'Please enter title and content.' });
     }
-    // --- END: The Fix ---
+    const newPostData = {
+      title, content, summary, allowLikes, allowComments,
+      author: req.user, 
+      slug: slugify(title, { lower: true, strict: true }),
+    };
+    if (req.file) {
+      newPostData.heroImage = `/uploads/${req.file.filename}`;
+    }
+    const newPost = new Post(newPostData);
+    const savedPost = await newPost.save();
+    res.status(201).json(savedPost);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error while creating post.' });
+  }
+});
 
+// --- UPDATE POST (Admin Only) ---
+router.put('/:id', [auth, adminAuth, upload.single('heroImage')], async (req, res) => {
     try {
-        const newPost = new Post({
+        const { title, content, summary, allowLikes, allowComments } = req.body;
+        const updatedData = {
             title,
             content,
-            commentsEnabled: commentsEnabled === 'true',
-            author: req.user.id, // This now correctly uses the ID from the authenticated admin
-            imageUrl: req.file ? req.file.path : null
-        });
+            summary,
+            allowLikes,
+            allowComments,
+            slug: slugify(title, { lower: true, strict: true })
+        };
 
-        const post = await newPost.save();
-        res.json(post);
-    } catch (err) {
-        console.error("Error creating post:", err);
-        res.status(500).json({ msg: 'Server error', error: err.message });
-    }
-});
-
-// PUT (Update) a post (Admin Only)
-router.put('/:id', adminAuth, async (req, res) => {
-    const { title, content, commentsEnabled } = req.body;
-    try {
-        let post = await Post.findById(req.params.id);
-        if (!post) return res.status(404).json({ msg: 'Post not found' });
-
-        post.title = title;
-        post.content = content;
-        post.commentsEnabled = commentsEnabled;
-        
-        await post.save();
-        res.json(post);
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
-    }
-});
-
-
-// DELETE a post (Admin Only)
-router.delete('/:id', adminAuth, async (req, res) => {
-    try {
-        await Post.findByIdAndDelete(req.params.id);
-        await Comment.deleteMany({ post: req.params.id });
-        res.json({ msg: 'Post and associated comments removed' });
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
-    }
-});
-
-
-// PUT Like/Unlike a post (Logged-in users)
-router.put('/:id/like', auth, async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id);
-        // Check if the post has already been liked by this user
-        if (post.likes.some(like => like.equals(req.user.id))) {
-            // If yes, remove the like (unlike)
-            post.likes = post.likes.filter(like => !like.equals(req.user.id));
-        } else {
-            // If no, add the like
-            post.likes.push(req.user.id);
+        if (req.file) {
+            updatedData.heroImage = `/uploads/${req.file.filename}`;
         }
-        await post.save();
-        res.json(post.likes);
+
+        const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+        if (!updatedPost) {
+            return res.status(404).json({ msg: 'Post not found' });
+        }
+        res.json(updatedPost);
     } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        res.status(500).json({ error: 'Server error while updating post.' });
+    }
+});
+
+
+// --- LIKE/UNLIKE A POST (Authenticated Users) ---
+router.put('/:id/like', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    if (post.likes.includes(req.user)) {
+      post.likes = post.likes.filter(userId => userId.toString() !== req.user);
+    } else {
+      post.likes.push(req.user);
+    }
+    await post.save();
+    res.json(post.likes);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error while updating likes.' });
+  }
+});
+
+// --- GET COMMENTS FOR A POST (Public) ---
+router.get('/:id/comments', async (req, res) => {
+  try {
+    const comments = await Comment.find({ post: req.params.id })
+      .populate('author', 'firstName lastName')
+      .sort({ createdAt: 'desc' });
+    res.json(comments);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error while fetching comments.' });
+  }
+});
+
+// --- DELETE POST (Admin Only) ---
+router.delete('/:id', [auth, adminAuth], async (req, res) => {
+    try {
+        // THE FIX: Changed from post.remove() to Post.findByIdAndDelete()
+        const post = await Post.findByIdAndDelete(req.params.id);
+        if (!post) {
+            return res.status(404).json({ msg: 'Post not found' });
+        }
+        // Note: This doesn't delete the associated image file from storage.
+        res.json({ msg: 'Post deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error while deleting post.' });
     }
 });
 
