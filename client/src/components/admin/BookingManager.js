@@ -135,28 +135,29 @@ const fetchAllBookings = useCallback(async () => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
     };
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        setIsSearching(true);
-        setError('');
-        try {
-            const headers = { 'x-auth-token': token };
-            const activeFilters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''));
-            const params = new URLSearchParams(activeFilters).toString();
-            const response = await axios.get(`/api/bookings/all?${params}`, { headers });
+const handleSearch = async (e) => {
+    e.preventDefault();
+    setIsSearching(true);
+    setError('');
+    try {
+        const headers = { 'x-auth-token': token };
+        const activeFilters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''));
+        const params = new URLSearchParams(activeFilters).toString();
+        
+        const response = await axios.get(`/api/bookings/all?${params}`, { headers });
+        if (Array.isArray(response.data)) {
             setSearchResults(response.data);
-            if(Array.isArray(response.data)) {
-              setSearchResults(response.data);
-            } else {
-              setSearchResults([]);
-            }
-        } catch (err) {
-            setError('Search failed. Please try again.');
+        } else {
+            console.error("Search response was not an array:", response.data);
             setSearchResults([]);
-        } finally {
-            setIsSearching(false);
         }
-    };
+    } catch (err) {
+        setError('Search failed. Please try again.');
+        setSearchResults([]);
+    } finally {
+        setIsSearching(false);
+    }
+};
 
     const handleStatusTextChange = (e, bookingId) => {
         const { value } = e.target;
@@ -221,8 +222,23 @@ const fetchAllBookings = useCallback(async () => {
 
             <div className="manager-section">
                 <h4>Advanced Booking Search</h4>
-                <form onSubmit={handleSearch} className="search-form">
-                    {/* ... your form JSX ... */}
+                                <form onSubmit={handleSearch} className="search-form">
+                    <div className="search-grid">
+                        <input name="customerName" value={filters.customerName} onChange={handleFilterChange} placeholder="Customer Name" />
+                        <div className="input-with-datalist">
+                            <input list="makes-list" name="make" value={filters.make} onChange={handleFilterChange} placeholder="Car Make" />
+                            <datalist id="makes-list">{makes.map((makeName, i) => <option key={i} value={makeName} />)}</datalist>
+                        </div>
+                        <div className="input-with-datalist">
+                            <input list="models-list" name="model" value={filters.model} onChange={handleFilterChange} placeholder={isLoadingModels ? "Loading..." : "Car Model"} disabled={!filters.make} />
+                            <datalist id="models-list">{models.map((modelName, i) => <option key={i} value={modelName} />)}</datalist>
+                        </div>
+                        <input name="year" type="number" value={filters.year} onChange={handleFilterChange} placeholder="Car Year" min="1900" max={new Date().getFullYear() + 1} />
+                        <input name="service" value={filters.service} onChange={handleFilterChange} placeholder="Service Type" />
+                        <label>From: <input name="startDate" type="date" value={filters.startDate} onChange={handleFilterChange} /></label>
+                        <label>To: <input name="endDate" type="date" value={filters.endDate} onChange={handleFilterChange} /></label>
+                    </div>
+                    <button type="submit" disabled={isSearching}>{isSearching ? 'Searching...' : 'Search Bookings'}</button>
                 </form>
 
                 {/* Safe rendering of search results */}
