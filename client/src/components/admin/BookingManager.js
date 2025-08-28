@@ -59,11 +59,13 @@ function BookingManager() {
     const [models, setModels] = useState([]);
     const [isLoadingModels, setIsLoadingModels] = useState(false);
 
-    const fetchAllBookings = useCallback(async () => {
-        try {
-            setLoading(true);
-            const headers = { 'x-auth-token': token };
-            const response = await axios.get('/api/bookings/all', { headers });
+const fetchAllBookings = useCallback(async () => {
+    try {
+        setLoading(true);
+        const headers = { 'x-auth-token': token };
+        const response = await axios.get('/api/bookings/all', { headers });
+
+        if (Array.isArray(response.data)) {
             const bookingsData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
             setAllBookings(bookingsData);
 
@@ -72,13 +74,18 @@ function BookingManager() {
                 return acc;
             }, {});
             setServiceStatuses(initialStatuses);
-            
-        } catch (err) {
-            setError('Could not fetch bookings.');
-        } finally {
-            setLoading(false);
+        } else {
+            setError('Received an invalid response from the server.');
+            setAllBookings([]); 
         }
-    }, [token]);
+        
+    } catch (err) {
+        setError('Could not fetch bookings.');
+        setAllBookings([]);
+    } finally {
+        setLoading(false);
+    }
+}, [token]);
 
     // This useEffect hook fetches initial data
     useEffect(() => {
