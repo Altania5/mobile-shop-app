@@ -60,15 +60,53 @@ router.get('/', auth, async (req, res) => {
 });
 
 // GET ALL BOOKINGS (For Admin)
-router.get('/all', [auth, adminAuth], (req, res, next) => {
-    res.set('Cache-Control', 'no-store');
-    next();
-}, async (req, res) => {
+router.get('/all', [auth, adminAuth], async (req, res) => {
     try {
-        const bookings = await Booking.find({})
+        const { customerName, startDate, endDate, make, model, year, service } = req.query;
+        const query = {};
+
+        if (startDate) {
+            // Add or initialize the date part of the query
+            query.date = { ...query.date, $gte: new Date(startDate) };
+        }
+        if (endDate) {
+            // To include the full end day, set to the end of that day
+            const endOfDay = new Date(endDate);
+            endOfDay.setHours(23, 59, 59, 999);
+            query.date = { ...query.date, $lte: endOfDay };
+        }
+
+        if (make) query.vehicleMake = { $regex: make, $options: 'i' };
+        if (model) query.vehicleModel = { $regex: model, $options: 'i' };
+        if (year) query.vehicleYear = Number(year);
+
+        // Search by client's first or last name
+        if (customerName) {
+            const nameRegex = new RegExp(customerName, 'i');
+            query.$or = [
+                { 'clientFirstName': nameRegex },
+                { 'clientLastName': nameRegex }
+            ];
+        }
+
+        // Search by service name
+        if (service) {
+            // Find service documents that match the service name search term
+            const matchingServices = await Service.find({ name: { $regex: service, $options: 'i' } });
+            if (matchingServices.length > 0) {
+                // If services are found, add a condition to match any of their IDs
+                query.service = { $in: matchingServices.map(s => s._id) };
+            } else {
+                // If no service matches, return an empty array immediately
+                return res.json([]);
+            }
+        }
+
+        const bookings = await Booking.find(query)
             .populate('user', 'firstName lastName email')
             .populate('service', 'name')
             .sort({ date: -1 });
+            
         res.json(bookings);
     } catch (err) {
         console.error("Error fetching all bookings:", err);

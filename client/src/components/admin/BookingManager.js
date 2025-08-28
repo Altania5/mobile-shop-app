@@ -64,33 +64,24 @@ function BookingManager() {
     const [isLoadingModels, setIsLoadingModels] = useState(false);
 
 const fetchAllBookings = useCallback(async () => {
-    try {
-        setLoading(true);
-        const headers = { 'x-auth-token': token };
-        const response = await axios.get('/api/bookings/all', { headers });
-
-        // --- START DEBUGGING LOG ---
-        console.log("Response from /api/bookings/all:", response.data);
-        // --- END DEBUGGING LOG ---
-
-        if (Array.isArray(response.data)) {
+        try {
+            setLoading(true);
+            const headers = { 'x-auth-token': token };
+            const response = await axios.get('/api/bookings/all', { headers }); 
             const bookingsData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
             setAllBookings(bookingsData);
-            // ... rest of the function
-        } else {
-            setError('Received an invalid response from the server.');
-            setAllBookings([]); 
+
+            const initialStatuses = bookingsData.reduce((acc, booking) => {
+                acc[booking._id] = booking.serviceStatus || '';
+                return acc;
+            }, {});
+            setServiceStatuses(initialStatuses);
+            
+        } catch (err) {
+            setError('Could not fetch bookings.');
+        } finally {
+            setLoading(false);
         }
-        
-    } catch (err) {
-        // --- START DEBUGGING LOG ---
-        console.error("Error fetching bookings:", err.response?.data || err.message);
-        // --- END DEBUGGING LOG ---
-        setError('Could not fetch bookings.');
-        setAllBookings([]);
-    } finally {
-        setLoading(false);
-    }
 }, [token]);
 
     // This useEffect hook fetches initial data
@@ -153,7 +144,7 @@ const fetchAllBookings = useCallback(async () => {
             const activeFilters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''));
             const params = new URLSearchParams(activeFilters).toString();
             const response = await axios.get(`/api/bookings/all?${params}`, { headers });
-        
+            setSearchResults(response.data);
             if(Array.isArray(response.data)) {
               setSearchResults(response.data);
             } else {
