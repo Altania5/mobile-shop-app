@@ -65,24 +65,25 @@ const fetchAllBookings = useCallback(async () => {
         const headers = { 'x-auth-token': token };
         const response = await axios.get('/api/bookings/all', { headers });
 
-        // This safety check is crucial
+        // --- START DEBUGGING LOG ---
+        console.log("Response from /api/bookings/all:", response.data);
+        // --- END DEBUGGING LOG ---
+
         if (Array.isArray(response.data)) {
             const bookingsData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
             setAllBookings(bookingsData);
-
-            const initialStatuses = bookingsData.reduce((acc, booking) => {
-                acc[booking._id] = booking.serviceStatus || '';
-                return acc;
-            }, {});
-            setServiceStatuses(initialStatuses);
+            // ... rest of the function
         } else {
             setError('Received an invalid response from the server.');
             setAllBookings([]); 
         }
         
     } catch (err) {
+        // --- START DEBUGGING LOG ---
+        console.error("Error fetching bookings:", err.response?.data || err.message);
+        // --- END DEBUGGING LOG ---
         setError('Could not fetch bookings.');
-        setAllBookings([]); 
+        setAllBookings([]);
     } finally {
         setLoading(false);
     }
