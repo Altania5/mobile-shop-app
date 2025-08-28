@@ -22,9 +22,16 @@ router.get('/', async (req, res) => {
 // @desc    Create a new testimonial
 // @access  Admin
 router.post('/', auth, (req, res) => {
-  upload(req, res, async (err) => {
-    
+  // Create the upload middleware for a single file.
+  // Replace 'profileImage' with the name of your file input field.
+  const profileImageUpload = upload.single('profileImage');
+
+  profileImageUpload(req, res, async (err) => {
     if (err) {
+      // Handle Multer errors
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ msg: 'File size is too large. Maximum size is 5MB.' });
+      }
       return res.status(400).json({ msg: err });
     }
 
@@ -48,6 +55,30 @@ router.post('/', auth, (req, res) => {
       res.status(400).json({ error: err.message });
     }
   });
+});
+
+router.put('/:id/author', adminAuth, async (req, res) => {
+  try {
+    const { authorName } = req.body;
+    if (!authorName) {
+      return res.status(400).json({ msg: 'Author name is required.' });
+    }
+
+    const testimonial = await Testimonial.findById(req.params.id);
+    if (!testimonial) {
+      return res.status(404).json({ msg: 'Testimonial not found.' });
+    }
+
+    testimonial.authorName = authorName;
+    testimonial.author = undefined; 
+
+    const savedTestimonial = await testimonial.save();
+    
+    res.json(savedTestimonial);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.put('/:id/vote', auth, async (req, res) => {

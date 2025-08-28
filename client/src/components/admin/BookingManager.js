@@ -87,10 +87,8 @@ function BookingManager() {
     useEffect(() => {
         const fetchMakes = async () => {
             try {
-                const response = await axios.get('/api/vehicles/makes');
-                if (Array.isArray(response.data)) {
-                    setMakes(response.data);
-                }
+                const response = await axios.get('/api/vehicleData/makes');
+                setMakes(response.data);
             } catch (err) {
                 console.error("Failed to fetch makes", err);
             }
@@ -105,10 +103,8 @@ function BookingManager() {
             const fetchModels = async () => {
                 setIsLoadingModels(true);
                 try {
-                    const response = await axios.get(`/api/vehicles/models/${filters.make}`);
-                    if (Array.isArray(response.data)) {
-                        setModels(response.data);
-                    }
+                    const response = await axios.get(`/api/vehicleData/models/${filters.make}`);
+                    setModels(response.data);
                 } catch (err) {
                     setModels([]);
                 } finally {

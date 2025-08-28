@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
+
 // A reusable StarRating input component
 const StarRatingInput = ({ rating, setRating }) => {
   return (
