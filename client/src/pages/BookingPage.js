@@ -17,7 +17,6 @@ function BookingPage({ user }) {
   const [timesLoading, setTimesLoading] = useState(false);
 
   const [loading, setLoading] = useState(!service);
-  const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {

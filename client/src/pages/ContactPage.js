@@ -9,6 +9,7 @@ function ContactPage() {
     message: ''
   });
   const [responseMsg, setResponseMsg] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {

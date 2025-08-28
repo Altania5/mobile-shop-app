@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -29,7 +29,6 @@ const StarRatingInput = ({ rating, setRating }) => {
 
 function LeaveReviewPage() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { booking } = location.state || {};
 
   const [rating, setRating] = useState(5);
