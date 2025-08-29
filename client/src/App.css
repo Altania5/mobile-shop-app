@@ -2083,28 +2083,35 @@ button:active {
 
 .services-page-layout {
   display: grid;
-  grid-template-columns: 1fr; /* Single column on mobile */
+  grid-template-columns: 1fr; /* Single column on mobile by default */
   gap: 30px;
-  align-items: flex-start; /* Important for columns of different heights */
+  align-items: flex-start;
 }
 
-@media (min-width: 992px) {
-  .services-page-layout {
-    /* Sidebar takes 280px, the rest is for the main content */
-    grid-template-columns: 280px 1fr;
-  }
-}
-
-/* --- Filter Sidebar --- */
+/* --- Filter Sidebar (Base Styles for Mobile) --- */
 .filter-sidebar {
   background-color: var(--surface-color);
   border-radius: var(--border-radius);
   padding: 20px;
   border: 1px solid var(--border-color);
-  position: sticky; /* Makes the sidebar stick on scroll */
-  top: 20px; /* Distance from the top */
+  /* 'position: sticky' is removed from here */
 }
 
+/* --- Desktop Layout (for screens 992px and wider) --- */
+@media (min-width: 992px) {
+  .services-page-layout {
+    /* Switch to a two-column grid on desktop */
+    grid-template-columns: 280px 1fr;
+  }
+
+  /* --- Apply sticky positioning ONLY on desktop --- */
+  .filter-sidebar {
+    position: sticky; /* Makes the sidebar stick on scroll */
+    top: 20px;       /* Distance from the top */
+  }
+}
+
+/* --- Filter Widget Styles (No changes needed here) --- */
 .filter-widget {
   margin-bottom: 25px;
   padding-bottom: 25px;
@@ -2123,23 +2130,20 @@ button:active {
   color: var(--primary-color);
 }
 
-/* Style the price range slider */
 .price-slider {
   width: 100%;
   cursor: pointer;
 }
 
-/* Reuse checkbox styles from admin panel */
 .filter-widget .checkbox-group {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* --- Style for the new Apply Filters button --- */
 .filter-apply-btn {
     width: 100%;
-    margin-top: 10px; /* Add some space above the button */
+    margin-top: 10px;
     padding: 12px;
     font-size: 1rem;
     font-weight: 600;
