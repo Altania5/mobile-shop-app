@@ -62,6 +62,29 @@ const AboutPage = () => {
                 </div>
             </section>
 
+            <section className="stats-section">
+                <div className="stat-item">
+                    <i className="fas fa-award"></i>
+                    <h3>10+</h3>
+                    <p>Years Experience</p>
+                </div>
+                <div className="stat-item">
+                    <i className="fas fa-car-on"></i>
+                    <h3>5,000+</h3>
+                    <p>Vehicles Detailed</p>
+                </div>
+                <div className="stat-item">
+                    <i className="fas fa-smile"></i>
+                    <h3>99%</h3>
+                    <p>Client Satisfaction</p>
+                </div>
+                <div className="stat-item">
+                    <i className="fas fa-leaf"></i>
+                    <h3>Eco-Friendly</h3>
+                    <p>Products Used</p>
+                </div>
+            </section>
+
             <div className="about-page-grid">
                 {/* LEFT SIDEBAR */}
                 <aside className="about-sidebar left-sidebar">
@@ -95,7 +118,8 @@ const AboutPage = () => {
                     </section>
                     
                     {/* TESTIMONIAL CAROUSEL */}
-                    <section ref={addToRefs} className="testimonial-carousel-section">
+                    <section className="testimonial-container">
+                        <h2>What Our Clients Say</h2>
                         <TestimonialCarousel />
                     </section>
                 </main>

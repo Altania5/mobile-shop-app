@@ -1138,16 +1138,8 @@ button:active {
 /* ================================== */
 
 /* --- Testimonial Carousel --- */
-/* --- Testimonial Carousel --- */
 .testimonial-carousel-section {
     padding: 60px 20px;
-}
-
-.testimonial-carousel-wrapper {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-    position: relative; /* Needed for positioning the new arrows */
 }
 
 .testimonial-carousel-wrapper h2 {
@@ -1237,7 +1229,7 @@ button:active {
 .core-values-section.animate {
     animation: fadeInUp 0.8s ease-out 0.2s forwards;
 }
-.testimonial-carousel-section.animate {
+.testimonial-container.animate { /* <<< THIS IS THE CORRECTED CLASS */
     animation: fadeInUp 0.8s ease-out 0.4s forwards;
 }
 .mission-section.animate {
@@ -1246,7 +1238,6 @@ button:active {
 .cta-section.animate {
     animation: fadeInUp 0.8s ease-out 0.8s forwards;
 }
-
 /* ================================== */
 /* ===         Site Footer        === */
 /* ================================== */
@@ -1999,4 +1990,157 @@ button:active {
   text-align: center;
   margin-top: 15px;
   gap: 8px; /* Space for button icon */
+}
+
+/* ================================== */
+/* ===   Key Statistics Section   === */
+/* ================================== */
+
+.stats-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns on mobile */
+  gap: 20px;
+  background-color: var(--primary-color); /* Dark navy blue background */
+  color: white;
+  padding: 40px 20px;
+  border-radius: var(--border-radius);
+  margin-top: 40px; /* Space from the hero section above */
+  text-align: center;
+}
+
+/* Switch to four columns on larger screens */
+@media (min-width: 992px) {
+  .stats-section {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-item i {
+  font-size: 2.5rem; /* Large icons */
+  color: var(--accent-color); /* Bright blue for the icons */
+  margin-bottom: 15px;
+}
+
+.stat-item h3 {
+  font-size: 2.2rem;
+  margin: 0 0 5px 0;
+  color: white; /* Ensure h3 color is white */
+  border: none; /* Override any other h3 styles */
+  padding: 0; /* Override any other h3 styles */
+}
+
+.stat-item p {
+  font-size: 1rem;
+  margin: 0;
+  color: #a9b3c1; /* Lighter text for the description */
+}
+
+/* ================================== */
+/* ===   Testimonial Container    === */
+/* ================================== */
+
+.testimonial-container {
+  background-color: #f8f9fa; /* A very light gray, same as the body bg */
+  border-radius: var(--border-radius);
+  padding: 40px 20px;
+  border: 1px solid var(--border-color);
+  margin-top: 40px; /* Add some space from the core values section */
+}
+
+.testimonial-container h2 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 30px;
+  position: relative; /* For the decorative underline */
+  padding-bottom: 15px;
+}
+
+/* Creates a small accent-colored line under the heading */
+.testimonial-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+}
+
+.testimonial-carousel-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+}
+
+/* ================================== */
+/* ===      Services Page         === */
+/* ================================== */
+
+.services-page-layout {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column on mobile */
+  gap: 30px;
+  align-items: flex-start; /* Important for columns of different heights */
+}
+
+@media (min-width: 992px) {
+  .services-page-layout {
+    /* Sidebar takes 280px, the rest is for the main content */
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+/* --- Filter Sidebar --- */
+.filter-sidebar {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  position: sticky; /* Makes the sidebar stick on scroll */
+  top: 20px; /* Distance from the top */
+}
+
+.filter-widget {
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filter-widget:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.filter-widget h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+/* Style the price range slider */
+.price-slider {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Reuse checkbox styles from admin panel */
+.filter-widget .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* --- Style for the new Apply Filters button --- */
+.filter-apply-btn {
+    width: 100%;
+    margin-top: 10px; /* Add some space above the button */
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
 }
