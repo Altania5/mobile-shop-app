@@ -1905,3 +1905,98 @@ button:active {
   margin: 0 auto; /* This keeps it centered */
   padding: 2rem;
 }
+
+/* ================================== */
+/* === About Page 3-Column Layout === */
+/* ================================== */
+
+.about-page-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+@media (min-width: 992px) {
+  .about-page-grid {
+    grid-template-columns: 1fr 2.5fr 1fr;
+  }
+}
+
+/* --- Enhanced Sidebar Styling --- */
+.about-sidebar .sidebar-widget {
+  background: linear-gradient(145deg, var(--surface-color) 0%, #f7f9fc 100%); /* Subtle gradient */
+  padding: 25px;
+  border-radius: var(--border-radius);
+  /* A more defined shadow for a "lifted" look */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07); 
+  border-top: 4px solid var(--accent-color); /* Changed from border-left for a top accent */
+  border-left: none; /* Remove the old border */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-sidebar .sidebar-widget:hover {
+    transform: translateY(-5px); /* Add a hover effect */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-widget h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px; /* Increased margin */
+  display: flex; /* Align icon and text */
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+  font-size: 1.3rem;
+}
+
+.sidebar-widget h3 .fa-bolt,
+.sidebar-widget h3 .fa-concierge-bell {
+    color: var(--accent-color); /* Make title icons pop */
+}
+
+/* Style the text and icons within the sidebar */
+.sidebar-widget p, .sidebar-widget ul li a {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between icon and text */
+  margin-bottom: 15px;
+}
+
+.sidebar-widget p i, .sidebar-widget ul li a i {
+    color: var(--text-light-color); /* Softer color for content icons */
+    width: 20px; /* Ensure consistent alignment */
+    text-align: center;
+}
+
+.sidebar-widget ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-widget ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar-widget ul a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block; /* Needed for transform */
+}
+
+.sidebar-widget ul a:hover {
+  color: var(--accent-color);
+  transform: translateX(5px); /* Nudge text on hover */
+}
+
+.sidebar-widget .cta-button {
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  gap: 8px; /* Space for button icon */
+}

@@ -1,80 +1,142 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import TestimonialCarousel from '../components/TestimonialCarousel';
-import HowItWorks from '../components/HowItWorks'; 
 
-// You will need three images for this page.
-// Place them in your `client/public/images` folder (create it if it doesn't exist).
-const heroImage = '/images/about-hero.jpg';      // A professional headshot or action shot
-const signatureImage = '/images/signature.png'; // A transparent PNG of the client's signature
-const missionImage = '/images/mission-bg.jpg';  // A background image, maybe of tools or a vehicle
+// Import images (assuming you have these in your project)
+import heroImage from './/images/about-hero-image.jpg'; // Replace with your actual image path
+import missionBg from './/images/mission-bg.jpeg'; // Replace with your actual image path
+import signature from './/images/signature.png'; // Replace with your actual image path
 
-function AboutPage() {
-  return (
-    <div className="about-page-wrapper">
-      
-      {/* --- Hero Section --- */}
-      <section className="about-hero-section">
-        <div className="about-hero-content">
-          <h1 className="fade-in-down">Meet Your Trusted Mechanic</h1>
-          <p className="fade-in-up delay-1">
-            A truly local expert with a deep understanding of vehicle care. 
-            When it comes to selecting a mechanic, knowledge and trust are paramount. 
-            As someone with years of hands-on experience, I bring homegrown expertise and a commitment to honest service right to your driveway.
-          </p>
-          <img src={signatureImage} alt="Signature" className="signature-image fade-in-up delay-2" />
+
+const AboutPage = () => {
+    const sectionsRef = useRef([]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        sectionsRef.current.forEach((section) => {
+            if (section) {
+                observer.observe(section);
+            }
+        });
+
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            sectionsRef.current.forEach((section) => {
+                if (section) {
+                    observer.unobserve(section);
+                }
+            });
+        };
+    }, []);
+
+    const addToRefs = (el) => {
+        if (el && !sectionsRef.current.includes(el)) {
+            sectionsRef.current.push(el);
+        }
+    };
+
+    return (
+        <div className="about-page-wrapper">
+
+            {/* HERO SECTION */}
+            <section ref={addToRefs} className="about-hero-section">
+                <div className="about-hero-content">
+                    <h1 className="fade-in-down">Your Trusted Partner in Mobile Detailing</h1>
+                    <p className="fade-in-up">
+                        We are more than just a car wash. We are a team of passionate professionals dedicated to bringing back the showroom shine to your vehicle, right at your doorstep.
+                    </p>
+                    <img src={signature} alt="Signature" className="signature-image fade-in-up delay-1" />
+                </div>
+                <div className="about-hero-image-container fade-in-right">
+                    <img src={heroImage} alt="Professional detailing a car" />
+                </div>
+            </section>
+
+            <div className="about-page-grid">
+                {/* LEFT SIDEBAR */}
+                <aside className="about-sidebar left-sidebar">
+                    <div className="sidebar-widget">
+                        <h3><i className="fas fa-bolt"></i> Quick Contact</h3>
+                        <p><i className="fas fa-phone"></i> <strong>Phone:</strong> (555) 123-4567</p>
+                        <p><i className="fas fa-envelope"></i> <strong>Email:</strong> contact@mobileshop.com</p>
+                        <p><i className="fas fa-clock"></i> <strong>Hours:</strong> Mon-Fri, 9am - 5pm</p>
+                        <Link to="/contact" className="cta-button">
+                            <i className="fas fa-paper-plane"></i> Send a Message
+                        </Link>
+                    </div>
+                </aside>
+
+                {/* MAIN CONTENT AREA */}
+                <main className="about-main-content">
+                    {/* CORE VALUES */}
+                    <section ref={addToRefs} className="core-values-section">
+                        <div className="value-card hover-lift">
+                            <h3><i className="fas fa-check-circle"></i></h3>
+                            <h4>Quality</h4>
+                        </div>
+                        <div className="value-card hover-lift">
+                            <h3><i className="fas fa-handshake"></i></h3>
+                            <h4>Integrity</h4>
+                        </div>
+                        <div className="value-card hover-lift">
+                            <h3><i className="fas fa-star"></i></h3>
+                            <h4>Excellence</h4>
+                        </div>
+                    </section>
+                    
+                    {/* TESTIMONIAL CAROUSEL */}
+                    <section ref={addToRefs} className="testimonial-carousel-section">
+                        <TestimonialCarousel />
+                    </section>
+                </main>
+                
+                {/* RIGHT SIDEBAR */}
+                <aside className="about-sidebar right-sidebar">
+                    <div className="sidebar-widget">
+                        <h3><i className="fas fa-concierge-bell"></i> Our Services</h3>
+                        <ul>
+                            <li><Link to="/services"><i className="fas fa-car-side"></i> Exterior Detailing</Link></li>
+                            <li><Link to="/services"><i className="fas fa-couch"></i> Interior Cleaning</Link></li>
+                            <li><Link to="/services"><i className="fas fa-paint-roller"></i> Paint Correction</Link></li>
+                            <li><Link to="/services"><i className="fas fa-shield-alt"></i> Ceramic Coating</Link></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+
+
+            {/* MISSION SECTION (Full Width) */}
+            <section
+                ref={addToRefs}
+                className="mission-section"
+                style={{ backgroundImage: `url(${missionBg})` }}
+            >
+                <div className="mission-overlay">
+                    <h2>Our Mission</h2>
+                    <p>
+                        To provide the most convenient, high-quality, and reliable mobile detailing service, ensuring every client feels proud of their vehicle's appearance and condition.
+                    </p>
+                </div>
+            </section>
+
+            {/* CTA SECTION (Full Width) */}
+            <section ref={addToRefs} className="cta-section">
+                <h2>Ready for the Ultimate Shine?</h2>
+                <p>Book your appointment today and experience the difference.</p>
+                <Link to="/booking" className="cta-button hover-glow">Book an Appointment</Link>
+            </section>
         </div>
-        <div className="about-hero-image-container">
-          <img src={heroImage} alt="Client headshot" className="fade-in-right" />
-        </div>
-      </section>
-
-      <HowItWorks />
-
-      {/* --- Core Values Section --- */}
-      <section className="core-values-section">
-        <div className="value-card hover-lift">
-          <h3>15+</h3>
-          <p>Years of Experience</p>
-        </div>
-        <div className="value-card hover-lift">
-          <h3>1,200+</h3>
-          <p>Satisfied Clients</p>
-        </div>
-        <div className="value-card hover-lift">
-          <h3>4,000+</h3>
-          <p>Services Completed</p>
-        </div>
-      </section>
-
-      <section className="testimonial-carousel-section animate fade-in-up">
-          <TestimonialCarousel />
-      </section>
-
-      {/* --- Mission Statement Section --- */}
-      <section className="mission-section" style={{ backgroundImage: `url(${missionImage})` }}>
-        <div className="mission-overlay">
-          <h2>Tired of the Same Old Garage Experience?</h2>
-          <p>
-            Whether it's the inconvenient drop-offs, the confusing jargon, or the unexpected charges, the traditional auto repair industry has room for improvement. 
-            My mission is to provide real, tangible value by bringing convenience, transparency, and master-level skill directly to you.
-          </p>
-        </div>
-      </section>
-      
-      {/* --- Call to Action Section --- */}
-      <section className="cta-section">
-        <h2>Ready to Experience the Difference?</h2>
-        <p>Let's get your vehicle the expert care it deserves, without the hassle.</p>
-        <Link to="/contact"> {/* We will build the contact page later */}
-          <button className="cta-button hover-glow">
-            Contact Me
-          </button>
-        </Link>
-      </section>
-
-    </div>
-  );
-}
+    );
+};
 
 export default AboutPage;
