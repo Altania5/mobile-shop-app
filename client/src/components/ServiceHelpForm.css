@@ -1,0 +1,96 @@
+.service-help-form-container {
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service-help-form-container h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.service-help-form-container p {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #666;
+}
+
+.service-help-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.service-help-form .form-group {
+    flex: 1 1 auto; /* Allow items to grow and shrink */
+    display: flex;
+    flex-direction: column;
+    min-width: 200px; /* Prevent fields from becoming too small */
+}
+
+.service-help-form .full-width {
+    width: 100%;
+}
+
+.service-help-form .form-row {
+    display: contents; /* Allows children to participate in the parent flex layout */
+}
+
+.service-help-form label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.service-help-form input,
+.service-help-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important for consistent sizing */
+}
+
+.service-help-form textarea {
+    resize: vertical;
+}
+
+.service-help-form .submit-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.service-help-form .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.status-message {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

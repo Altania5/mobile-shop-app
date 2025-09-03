@@ -37,6 +37,7 @@ function Login({ onLoginSuccess }) {
           value={formData.email}
           onChange={handleChange}
           required
+          autoComplete="username"
         />
         <input
           type="password"

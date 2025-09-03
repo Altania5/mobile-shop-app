@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ServicesList from '../components/ServicesList';
+import ServiceHelpForm from '../components/ServiceHelpForm';
 import axios from 'axios';
 
 const ServicesPage = () => {
@@ -109,6 +110,10 @@ const ServicesPage = () => {
             </section>
         </div>
 
+        <div className="container">
+            <ServiceHelpForm />
+        </div>
+
         <div className="page-container services-page-layout">
             <aside className="filter-sidebar">
                 <div className="filter-widget">
@@ -120,6 +125,7 @@ const ServicesPage = () => {
                         onChange={(e) => setDraftSearchTerm(e.target.value)}
                     />
                 </div>
+
                 <div className="filter-widget">
                     <h4>Max Price: ${draftMaxPrice}</h4>
                     <input

@@ -33,6 +33,7 @@ export default function AppLayout({ user, onLogout }) {
           {user ? (
             <>
               <NavLink to="/history" className="nav-link" onClick={closeMenu}>My Service History</NavLink>
+              <NavLink to="/account-settings" className="nav-link" onClick={closeMenu}>Account Settings</NavLink>
               {user.role === 'admin' && (
                 <NavLink to="/admin" className="nav-link" onClick={closeMenu}>Admin</NavLink>
               )}

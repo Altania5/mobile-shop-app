@@ -1,93 +1,123 @@
 const router = require('express').Router();
+const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-let User = require('../models/user.model');
+const auth = require('../middleware/auth');
+const adminAuth = require('../middleware/adminAuth');
 
-// --- REGISTRATION ---
+// @route   POST /api/users/register
+// @desc    Register a new user
+// @access  Public
 router.post('/register', async (req, res) => {
-  try {
-    const { firstName, lastName, email, password } = req.body;
-
-    // Validation
-    if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ msg: 'Please enter all fields.' });
+    const { username, email, password } = req.body;
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: 'User already exists' });
+        }
+        user = new User({ username, email, password });
+        await user.save();
+        const payload = { user: { id: user.id, role: user.role } };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
     }
-    if (password.length < 6) {
-      return res.status(400).json({ msg: 'Password must be at least 6 characters.' });
-    }
-
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-      return res.status(400).json({ msg: 'An account with this email already exists.' });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      password: passwordHash,
-    });
-
-    const savedUser = await newUser.save();
-    res.json(savedUser);
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
 });
 
-// --- LOGIN ---
+// @route   POST /api/users/login
+// @desc    Authenticate user & get token
+// @access  Public
 router.post('/login', async (req, res) => {
-  try {
     const { email, password } = req.body;
-
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({ msg: 'Please enter all fields.' });
+    try {
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
+        const payload = { user: { id: user.id, role: user.role } };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
     }
+});
 
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      // Use a generic message to prevent exposing whether an email exists
-      return res.status(400).json({ msg: 'Invalid credentials. Please try again.' });
+
+// @route   GET /api/users/me
+// @desc    Get current user's data
+// @access  Private
+router.get('/me', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        const userResponse = user.toObject();
+        userResponse.hasCardOnFile = !!user.squareCustomerId;
+        res.json(userResponse);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
+});
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials. Please try again.' });
+// @route   POST /api/users/change-password
+// @desc    Change user's password
+// @access  Private
+router.post('/change-password', auth, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        const isMatch = await user.matchPassword(currentPassword);
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Incorrect current password.' });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ msg: 'New password must be at least 6 characters long.' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await User.findByIdAndUpdate(req.user.id, { password: hashedPassword });
+
+        res.json({ msg: 'Password updated successfully.' });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
+});
 
-    // --- START: The Fix - More Robust Token Creation ---
-    if (!process.env.JWT_SECRET) {
-        console.error('FATAL ERROR: JWT_SECRET is not defined in the .env file.');
-        return res.status(500).json({ msg: 'Server configuration error.' });
+
+// @route   GET /api/users
+// @desc    Get all users (for admin)
+// @access  Admin
+router.get('/', adminAuth, async (req, res) => {
+    try {
+        const users = await User.find().select('-password');
+        res.json(users);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
     }
-
-    const token = jwt.sign(
-      { id: user._id, firstName: user.firstName, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '5h' } // It's good practice to add an expiration
-    );
-    // --- END: The Fix ---
-
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        email: user.email,
-        role: user.role,
-      },
-    });
-
-  } catch (err) {
-    // This will now log the specific error to your server's console
-    console.error('Login Error:', err.message);
-    res.status(500).json({ msg: 'A server error occurred during login.' });
-  }
 });
 
 module.exports = router;

@@ -1,0 +1,20 @@
+.account-settings-page {
+    padding: 2rem 0;
+}
+
+.account-settings-page h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.settings-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.settings-section {
+    flex: 1 1 400px; /* Each section will take up space, wrapping if needed */
+    max-width: 500px;
+}

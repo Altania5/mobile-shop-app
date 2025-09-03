@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import './BookingPage.css';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { format } from 'date-fns';
 
@@ -73,6 +74,31 @@ const handleProceedToBooking = () => {
  if (loading) return <div className="page-container"><p>Loading service details...</p></div>;
   if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
   if (!service) return <div className="page-container"><p>Service not found.</p></div>;
+
+  if (!user) {
+    return (
+        <div className="booking-container">
+            <div className="notice-card">
+                <h2>Please Log In</h2>
+                <p>You must be logged in to book a service.</p>
+                <Link to="/login" className="btn-primary">Login</Link>
+            </div>
+        </div>
+    );
+  }
+
+  if (!user.hasCardOnFile) {
+    return (
+        <div className="booking-container">
+            <div className="notice-card">
+                <h2>Payment Method Required</h2>
+                <p>To ensure a seamless booking process, we require a card on file before you can schedule a service.</p>
+                <p>Your card will not be charged until the service is complete.</p>
+                <Link to="/account-settings" className="btn-primary">Go to Account Settings</Link>
+            </div>
+        </div>
+    );
+  }
 
   return (
     <div className="booking-container">

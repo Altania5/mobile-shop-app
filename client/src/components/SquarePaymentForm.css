@@ -1,0 +1,63 @@
+.payment-form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-form-container h3 {
+    text-align: center;
+}
+
+.payment-form-container p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+#card-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+#card-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #006aff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#card-button:hover {
+    background-color: #004dc5;
+}
+
+.status-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-message.info {
+    background-color: #cce5ff;
+    color: #004085;
+}

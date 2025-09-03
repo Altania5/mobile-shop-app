@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
+import axios from 'axios';
 
 // Layout and Authentication
 import AppLayout from './layout/AppLayout';
@@ -20,6 +21,7 @@ import AdminPage from './pages/AdminPage';
 import BookingPage from './pages/BookingPage';
 import BookingFormPage from './pages/BookingFormPage';
 import LeaveReviewPage from './pages/LeaveReviewPage';
+import AccountSettingsPage from './pages/AccountSettingsPage';
 
 import './App.css';
 
@@ -34,6 +36,16 @@ function App() {
     navigate('/');
   }, [navigate]);
 
+    const fetchUser = useCallback(async () => {
+    try {
+      const res = await axios.get('/api/users/me');
+      setUser(res.data);
+    } catch (err) {
+      console.error('Failed to fetch user', err);
+      handleLogout();
+    }
+  }, [handleLogout]);
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -44,20 +56,41 @@ function App() {
         if (isExpired) {
           handleLogout();
         } else {
-          setUser({ ...decodedUser, token, role: decodedUser.role });
+          // Fetch full user data instead of relying only on the token
+          fetchUser();
         }
       } catch (error) {
         handleLogout();
       }
     }
-  }, [handleLogout]);
+  }, [handleLogout, fetchUser]);
 
-  const handleLoginSuccess = (token) => {
+  // const handleLoginSuccess = (token) => {
+  //   localStorage.setItem('token', token);
+  //   setAuthToken(token);
+  //   const decodedUser = jwtDecode(token);
+  //   setUser({ ...decodedUser, token, role: decodedUser.role });
+  //   navigate('/history');
+  // };
+
+  const handleLoginSuccess = (token, from) => {
     localStorage.setItem('token', token);
     setAuthToken(token);
-    const decodedUser = jwtDecode(token);
-    setUser({ ...decodedUser, token, role: decodedUser.role });
-    navigate('/history');
+
+    try {
+        const decodedUser = jwtDecode(token);
+        setUser(decodedUser.user);
+    } catch (error) {
+        console.error("Failed to decode token on login", error);
+        handleLogout();
+        return;
+    }
+    
+    // This call will now work because fetchUser is defined above
+    fetchUser();
+    
+    const destination = from?.pathname || '/';
+    navigate(destination, { replace: true });
   };
 
   return (
@@ -81,6 +114,7 @@ function App() {
           <Route path="/book/:serviceId" element={<ProtectedRoute user={user}><BookingPage /></ProtectedRoute>} />
           <Route path="/book/:serviceId/details" element={<ProtectedRoute user={user}><BookingFormPage user={user} /></ProtectedRoute>} />
           <Route path="/leave-review" element={<ProtectedRoute user={user}><LeaveReviewPage /></ProtectedRoute>} />
+          <Route path="/account-settings" element={<ProtectedRoute user={user}><AccountSettingsPage /></ProtectedRoute>} />
 
           {/* Admin-Only Route */}
           <Route path="/admin" element={<ProtectedRoute user={user} roles={['admin']}><AdminPage /></ProtectedRoute>} />
