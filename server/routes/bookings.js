@@ -24,7 +24,7 @@ router.post('/', auth, async (req, res) => {
         } = req.body;
 
         const newBooking = new Booking({
-            user: req.user,
+            user: req.user.id,
             service: serviceId,
             date,
             time,
@@ -51,7 +51,7 @@ router.post('/', auth, async (req, res) => {
 // GET USER'S BOOKINGS
 router.get('/', auth, async (req, res) => {
     try {
-        const bookings = await Booking.find({ user: req.user }).populate('service', 'name description price');
+        const bookings = await Booking.find({ user: req.user.id }).populate('service', 'name description price');
         res.json(bookings);
     } catch (err) {
         console.error("Error fetching user bookings:", err);
@@ -138,6 +138,22 @@ router.patch('/:id/status', [auth, adminAuth], async (req, res) => {
         console.error("Error updating booking status:", err);
         res.status(500).json({ msg: 'Server error while updating booking status.' });
     }
+});
+
+// @route   GET /api/bookings/mybookings
+// @desc    Get all bookings for the logged-in user
+// @access  Private
+router.get('/mybookings', auth, async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.user.id })
+      .populate('service', 'name price')
+      .sort({createdAt: -1 });
+
+    res.json(bookings);
+  } catch (err) {
+    console.error("Error fetching user bookings:", err);
+    res.status(500).json({ error: 'Failed to fetch booking history.' });
+  }
 });
 
 module.exports = router;
