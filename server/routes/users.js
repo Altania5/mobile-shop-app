@@ -28,28 +28,51 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// @route   POST /api/users/login
-// @desc    Authenticate user & get token
+// @route   POST api/users/login
+// @desc    Authenticate user
 // @access  Public
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ msg: 'Please enter all fields' });
+    }
+
     try {
-        let user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
-        const isMatch = await user.matchPassword(password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
-        const payload = { user: { id: user.id, role: user.role } };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
-            if (err) throw err;
-            res.json({ token });
-        });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ msg: 'User does not exist' });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+
+        // *** THE FIX: Create a payload with a 'user' object inside ***
+        // This matches what the auth.js middleware expects.
+        const payload = {
+            user: {
+                id: user.id,
+                role: user.role
+            }
+        };
+
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: 3600 },
+            (err, token) => {
+                if (err) throw err;
+                res.json({
+                    token,
+                    user: {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role
+                    }
+                });
+            }
+        );
+    } catch (e) {
+        res.status(500).json({ msg: 'Server error' });
     }
 });
 

@@ -10,12 +10,10 @@ function auth(req, res, next) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (decoded.user && decoded.user.id) {
-            req.user = decoded.user;
-        } else if (decoded.id) {
-            req.user = decoded;
-        } else {
-            return res.status(400).json({ msg: 'Token is not valid (missing user ID)' });
+        req.user = decoded.user;
+        
+        if (!req.user || !req.user.id) {
+             return res.status(401).json({ msg: 'Token is invalid' });
         }
 
         next();

@@ -2,27 +2,48 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './SquarePaymentForm.css';
 
+// Use a global variable to ensure the form is initialized only once per page load.
+let isSquareFormInitialized = false;
+
 const SquarePaymentForm = () => {
     const [status, setStatus] = useState({ message: '', type: '' });
     const cardRef = useRef(null);
 
     useEffect(() => {
         const initSquare = async () => {
+            // If the form is already initialized anywhere on the page, do nothing.
+            if (isSquareFormInitialized) {
+                return;
+            }
+
             if (!window.Square) {
                 console.error('Square SDK not loaded');
                 return;
             }
-            const appId = 'YOUR_SQUARE_APPLICATION_ID'; 
-            const locationId = 'YOUR_SQUARE_LOCATION_ID';
-            
-            const payments = window.Square.payments(appId, locationId);
-            
-            const card = await payments.card();
-            await card.attach('#card-container');
-            cardRef.current = card;
+
+            // Mark as initialized immediately.
+            isSquareFormInitialized = true;
+
+            const appId = 'sq0idp-q-vzV4gSPquTpMuWUE65cg';
+            const locationId = 'L3RJ8MENJB14Q';
+
+            try {
+                const payments = window.Square.payments(appId, locationId);
+                const card = await payments.card();
+                await card.attach('#card-container');
+                cardRef.current = card;
+            } catch (error) {
+                console.error("Failed to attach Square card form:", error);
+                isSquareFormInitialized = false; // Reset on failure
+            }
         };
 
         initSquare();
+
+        return () => {
+            // When the component unmounts, reset the global flag.
+            isSquareFormInitialized = false;
+        };
     }, []);
 
     const handlePayment = async (event) => {
@@ -38,7 +59,6 @@ const SquarePaymentForm = () => {
             const result = await cardRef.current.tokenize();
             if (result.status === 'OK') {
                 const token = result.token;
-                // Send the token to your backend
                 const response = await axios.post('/api/payments/save-card', { sourceId: token });
                 setStatus({ message: response.data.msg, type: 'success' });
             } else {
@@ -49,11 +69,6 @@ const SquarePaymentForm = () => {
             setStatus({ message: errorMessage, type: 'error' });
         }
     };
-    
-    // IMPORTANT: You must replace 'YOUR_SQUARE_APPLICATION_ID' and 'YOUR_SQUARE_LOCATION_ID'
-    // in the useEffect hook above with the actual values from your Square Developer Dashboard.
-    // For better security, these should ideally be loaded from a configuration endpoint
-    // rather than being hardcoded.
 
     return (
         <div className="payment-form-container">

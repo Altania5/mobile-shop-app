@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the 'uploads' directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('../uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- DATABASE CONNECTION ---
 const uri = process.env.ATLAS_URI;
@@ -52,6 +52,8 @@ routes.forEach(route => {
         console.error(`Error loading router for ${route}:`, error);
     }
 });
+
+app.use('/api/google-reviews', require('./routes/googleReviews'));
 
 
 // --- SERVE FRONTEND IN PRODUCTION ---

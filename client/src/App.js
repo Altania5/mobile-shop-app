@@ -65,33 +65,33 @@ function App() {
     }
   }, [handleLogout, fetchUser]);
 
-  // const handleLoginSuccess = (token) => {
-  //   localStorage.setItem('token', token);
-  //   setAuthToken(token);
-  //   const decodedUser = jwtDecode(token);
-  //   setUser({ ...decodedUser, token, role: decodedUser.role });
-  //   navigate('/history');
-  // };
-
-  const handleLoginSuccess = (token, from) => {
+  const handleLoginSuccess = (token) => {
     localStorage.setItem('token', token);
     setAuthToken(token);
-
-    try {
-        const decodedUser = jwtDecode(token);
-        setUser(decodedUser.user);
-    } catch (error) {
-        console.error("Failed to decode token on login", error);
-        handleLogout();
-        return;
-    }
-    
-    // This call will now work because fetchUser is defined above
-    fetchUser();
-    
-    const destination = from?.pathname || '/';
-    navigate(destination, { replace: true });
+    const decodedUser = jwtDecode(token);
+    setUser({ ...decodedUser, token, role: decodedUser.role });
+    navigate('/services');
   };
+
+  // const handleLoginSuccess = (token, from) => {
+  //   localStorage.setItem('token', token);
+  //   setAuthToken(token);
+
+  //   try {
+  //       const decodedUser = jwtDecode(token);
+  //       setUser(decodedUser.user);
+  //   } catch (error) {
+  //       console.error("Failed to decode token on login", error);
+  //       handleLogout();
+  //       return;
+  //   }
+    
+  //   // This call will now work because fetchUser is defined above
+  //   fetchUser();
+    
+  //   const destination = from?.pathname || '/';
+  //   navigate(destination, { replace: true });
+  // };
 
   return (
     <div className="App">
@@ -111,7 +111,7 @@ function App() {
 
           {/* Protected Routes */}
           <Route path="/history" element={<ProtectedRoute user={user}><ServiceHistoryPage /></ProtectedRoute>} />
-          <Route path="/book/:serviceId" element={<ProtectedRoute user={user}><BookingPage /></ProtectedRoute>} />
+          <Route path="/book/:serviceId" element={<ProtectedRoute user={user}><BookingPage user={user} /></ProtectedRoute>} />
           <Route path="/book/:serviceId/details" element={<ProtectedRoute user={user}><BookingFormPage user={user} /></ProtectedRoute>} />
           <Route path="/leave-review" element={<ProtectedRoute user={user}><LeaveReviewPage /></ProtectedRoute>} />
           <Route path="/account-settings" element={<ProtectedRoute user={user}><AccountSettingsPage /></ProtectedRoute>} />

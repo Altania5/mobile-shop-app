@@ -9,8 +9,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "square": "^43.0.2"
-  }
+  "license": "ISC"
 }

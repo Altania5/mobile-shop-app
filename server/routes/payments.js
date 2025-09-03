@@ -1,42 +1,22 @@
 const router = require('express').Router();
-const { Client, Environment } = require('square');
 const { randomUUID } = require('crypto');
 const auth = require('../middleware/auth');
 const User = require('../models/user.model');
+const { SquareClient, SquareEnvironment } = require('square');
 
-let squareClient;
-try {
-    const { Client, Environment } = require('square');
-    
-    // Check if the Environment variable exists before using it
-    if (!Environment) {
-        throw new Error("Square SDK's Environment object is undefined. Please check your installation.");
-    }
-
-    squareClient = new Client({
-        environment: process.env.NODE_ENV === 'production' ? Environment.Production : Environment.Sandbox,
-        accessToken: process.env.SQUARE_ACCESS_TOKEN,
-    });
-
-} catch (e) {
-    console.error("FATAL: Failed to initialize Square Client.", e.message);
-    console.error("Please ensure the 'square' package is installed correctly in the '/server' directory by running 'npm install square'.");
-    // We will not proceed to define routes if the client fails to load.
-    module.exports = router; 
-    return; // Stop execution of this file
+if (!process.env.SQUARE_ACCESS_TOKEN) {
+    throw new Error("FATAL: SQUARE_ACCESS_TOKEN is not defined in your .env file.");
 }
 
-// // Initialize Square Client
-// const squareClient = new Client({
-//     environment: process.env.NODE_ENV === 'production' ? Environment.Production : Environment.Sandbox,
-//     accessToken: process.env.SQUARE_ACCESS_TOKEN,
-// });
+// Initialize the client. This part is correct.
+const client = new SquareClient({
+    environment: process.env.NODE_ENV === 'production' ? SquareEnvironment.Production : SquareEnvironment.Sandbox,
+    accessToken: process.env.SQUARE_ACCESS_TOKEN,
+});
 
-// @route   POST /api/payments/save-card
-// @desc    Create a Square customer and save a card on file
-// @access  Private
+
 router.post('/save-card', auth, async (req, res) => {
-    const { sourceId } = req.body; // This is the nonce from the client
+    const { sourceId } = req.body;
     const userId = req.user.id;
 
     if (!sourceId) {
@@ -45,29 +25,28 @@ router.post('/save-card', auth, async (req, res) => {
 
     try {
         let user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found.' });
+        }
+        
         let squareCustomerId = user.squareCustomerId;
 
-        // 1. Create a Square Customer if one doesn't exist
+        // Use the client directly instead of destructuring
         if (!squareCustomerId) {
-            const { result: { customer } } = await squareClient.customersApi.createCustomer({
+            const { result: { customer } } = await client.customersApi.createCustomer({
                 idempotencyKey: randomUUID(),
                 givenName: user.username,
                 emailAddress: user.email,
             });
             squareCustomerId = customer.id;
-
-            // Save the new Square Customer ID to our database
             user.squareCustomerId = squareCustomerId;
             await user.save();
         }
 
-        // 2. Save the card on file for the customer
-        const { result: { card } } = await squareClient.cardsApi.createCard({
+        const { result: { card } } = await client.cardsApi.createCard({
             idempotencyKey: randomUUID(),
             sourceId: sourceId,
-            card: {
-                customerId: squareCustomerId,
-            },
+            card: { customerId: squareCustomerId },
         });
 
         res.status(200).json({
@@ -80,7 +59,9 @@ router.post('/save-card', auth, async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Square API Error:", error);
+        console.error("--- Full Square API Error ---");
+        console.error(error.result || error.body || error);
+        console.error("-----------------------------");
         res.status(500).json({ msg: 'Failed to save card. Please try again.' });
     }
 });

@@ -2,39 +2,20 @@ const router = require('express').Router();
 let Booking = require('../models/booking.model');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
-const User = require('../models/user.model'); 
-const Service = require('../models/service.model'); 
+const User = require('../models/user.model');
+const Service = require('../models/service.model');
 
-// CREATE A BOOKING
-// THE FIX: This route now correctly handles all fields from the booking form.
+// CREATE A BOOKING (Your existing code is correct here)
 router.post('/', auth, async (req, res) => {
     try {
-        // FIX: Change the destructured variables to match the client-side form data
         const {
-            serviceId,
-            date,
-            time,
-            notes, // Changed from customerNotes
-            clientFirstName, // Changed from firstName
-            clientLastName, // Changed from lastName
-            vehicleMake,
-            vehicleModel,
-            vehicleYear,
-            vehicleColor
+            serviceId, date, time, notes, clientFirstName, clientLastName,
+            vehicleMake, vehicleModel, vehicleYear, vehicleColor
         } = req.body;
 
         const newBooking = new Booking({
-            user: req.user.id,
-            service: serviceId,
-            date,
-            time,
-            notes, // Pass the notes field
-            clientFirstName, // Pass the correct variable
-            clientLastName,  // Pass the correct variable
-            vehicleMake,
-            vehicleModel,
-            vehicleYear,
-            vehicleColor
+            user: req.user.id, service: serviceId, date, time, notes,
+            clientFirstName, clientLastName, vehicleMake, vehicleModel, vehicleYear, vehicleColor
         });
 
         const savedBooking = await newBooking.save();
@@ -48,91 +29,79 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-// GET USER'S BOOKINGS
+// *** FIX: Updated and more resilient GET USER'S BOOKINGS route ***
 router.get('/', auth, async (req, res) => {
     try {
-        const bookings = await Booking.find({ user: req.user.id }).populate('service', 'name description price');
-        res.json(bookings);
+        const bookings = await Booking.find({ user: req.user.id })
+            .populate({ path: 'service', select: 'name description price' })
+            .sort({ createdAt: -1 });
+
+        // Filter out any bookings where the service might have been deleted
+        const validBookings = bookings.filter(booking => booking.service);
+        
+        res.json(validBookings);
     } catch (err) {
-        console.error("Error fetching user bookings:", err);
+        console.error("!!! FATAL ERROR fetching user bookings:", err);
         res.status(500).json({ msg: 'Server error while fetching user bookings.' });
     }
 });
 
-// GET ALL BOOKINGS (For Admin)
+
+// *** FIX: Updated and more resilient GET ALL BOOKINGS (For Admin) route ***
 router.get('/all', [auth, adminAuth], async (req, res) => {
     try {
         const { customerName, startDate, endDate, make, model, year, service } = req.query;
         const query = {};
 
-        if (startDate) {
-            // Add or initialize the date part of the query
-            query.date = { ...query.date, $gte: new Date(startDate) };
-        }
+        if (startDate) query.date = { ...query.date, $gte: new Date(startDate) };
         if (endDate) {
-            // To include the full end day, set to the end of that day
             const endOfDay = new Date(endDate);
             endOfDay.setHours(23, 59, 59, 999);
             query.date = { ...query.date, $lte: endOfDay };
         }
-
         if (make) query.vehicleMake = { $regex: make, $options: 'i' };
         if (model) query.vehicleModel = { $regex: model, $options: 'i' };
         if (year) query.vehicleYear = Number(year);
-
-        // Search by client's first or last name
         if (customerName) {
             const nameRegex = new RegExp(customerName, 'i');
-            query.$or = [
-                { 'clientFirstName': nameRegex },
-                { 'clientLastName': nameRegex }
-            ];
+            query.$or = [{ 'clientFirstName': nameRegex }, { 'clientLastName': nameRegex }];
         }
-
-        // Search by service name
         if (service) {
-            // Find service documents that match the service name search term
             const matchingServices = await Service.find({ name: { $regex: service, $options: 'i' } });
             if (matchingServices.length > 0) {
-                // If services are found, add a condition to match any of their IDs
                 query.service = { $in: matchingServices.map(s => s._id) };
             } else {
-                // If no service matches, return an empty array immediately
                 return res.json([]);
             }
         }
 
         const bookings = await Booking.find(query)
-            .populate('user', 'firstName lastName email')
-            .populate('service', 'name')
+            .populate({ path: 'user', select: 'firstName lastName email' })
+            .populate({ path: 'service', select: 'name' })
             .sort({ date: -1 });
-            
-        res.json(bookings);
+
+        // Filter out any bookings where the user or service might have been deleted
+        const validBookings = bookings.filter(booking => booking.user && booking.service);
+
+        res.json(validBookings);
+
     } catch (err) {
-        console.error("Error fetching all bookings:", err);
+        console.error("!!! FATAL ERROR in GET /all bookings route:", err);
         res.status(500).json({ msg: 'Server error while fetching all bookings.' });
     }
 });
 
-// UPDATE BOOKING STATUS (For Admin)
+
+// UPDATE BOOKING STATUS (Your existing code is correct)
 router.patch('/:id/status', [auth, adminAuth], async (req, res) => {
     try {
         const { status, serviceStatus } = req.body;
-        
         const updateData = {};
-        if (status) {
-            updateData.status = status;
-        }
-        // Allow serviceStatus to be an empty string
-        if (serviceStatus !== undefined) {
-            updateData.serviceStatus = serviceStatus;
-        }
+        if (status) updateData.status = status;
+        if (serviceStatus !== undefined) updateData.serviceStatus = serviceStatus;
 
         const booking = await Booking.findByIdAndUpdate(req.params.id, updateData, { new: true });
-
-        if (!booking) {
-            return res.status(404).json({ msg: 'Booking not found' });
-        }
+        if (!booking) return res.status(404).json({ msg: 'Booking not found' });
         res.json(booking);
     } catch (err) {
         console.error("Error updating booking status:", err);
@@ -140,16 +109,32 @@ router.patch('/:id/status', [auth, adminAuth], async (req, res) => {
     }
 });
 
-// @route   GET /api/bookings/mybookings
-// @desc    Get all bookings for the logged-in user
-// @access  Private
+// CANCEL BOOKING (Your existing code is correct)
+router.patch('/:id/cancel', auth, async (req, res) => {
+    try {
+        const booking = await Booking.findOneAndUpdate(
+            { _id: req.params.id, user: req.user.id },
+            { status: 'Cancelled' },
+            { new: true }
+        );
+        if (!booking) return res.status(404).json({ msg: 'Booking not found or not authorized.' });
+        res.json({ msg: 'Booking cancelled successfully.', booking });
+    } catch (err) {
+        console.error("Error cancelling booking:", err);
+        res.status(500).json({ msg: 'Server error while cancelling booking.' });
+    }
+});
+
+// This is a duplicate of the main GET route, updated as well
 router.get('/mybookings', auth, async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user.id })
-      .populate('service', 'name price')
+      .populate({ path: 'service', select: 'name price' })
       .sort({createdAt: -1 });
 
-    res.json(bookings);
+    const validBookings = bookings.filter(booking => booking.service);
+
+    res.json(validBookings);
   } catch (err) {
     console.error("Error fetching user bookings:", err);
     res.status(500).json({ error: 'Failed to fetch booking history.' });

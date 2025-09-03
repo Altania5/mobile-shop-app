@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 const adminAuth = (req, res, next) => {
     auth(req, res, async () => {
         try {
-            const user = await User.findById(req.user);
+            const user = await User.findById(req.user.id);
 
             if (!user) {
                 return res.status(404).json({ msg: 'User not found.' });

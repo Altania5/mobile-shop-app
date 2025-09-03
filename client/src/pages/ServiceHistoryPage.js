@@ -26,18 +26,23 @@ function ServiceHistoryPage() {
     fetchBookings();
   }, []);
 
-  const handleCancel = async (bookingId) => {
-    if (window.confirm('Are you sure you want to cancel this appointment?')) {
-      try {
-        const token = localStorage.getItem('token');
-        const headers = { 'x-auth-token': token };
-        await axios.put(`/api/bookings/${bookingId}/cancel`, {}, { headers });
-        fetchBookings(); // Refresh the list
-      } catch (err) {
-        setError(err.response?.data?.msg || 'Failed to cancel booking.');
-      }
+const handleCancelBooking = async (bookingId) => {
+    if (window.confirm('Are you sure you want to cancel this booking?')) {
+        try {
+            // *** FIX: Ensure you are using axios.patch to match the server route ***
+            await axios.patch(`/api/bookings/${bookingId}/cancel`);
+
+            // Refresh the bookings list to show the "Cancelled" status
+            setBookings(bookings.map(b =>
+                b._id === bookingId ? { ...b, status: 'Cancelled' } : b
+            ));
+            alert('Booking cancelled successfully.');
+        } catch (err) {
+            console.error('Failed to cancel booking:', err);
+            alert('Failed to cancel booking. Please try again.');
+        }
     }
-  };
+};
 
   if (loading) {
         return <div className="loader">Loading...</div>;
@@ -80,11 +85,11 @@ function ServiceHistoryPage() {
                     <>
                         {/* 4. The Edit button now opens the modal */}
                         <button onClick={() => setEditingBooking(booking)}>Edit Details</button>
-                        <button onClick={() => handleCancel(booking._id)} className="delete-btn">Cancel</button>
+                        <button onClick={() => handleCancelBooking(booking._id)}>Cancel</button>
                     </>
                 )}
                 {booking.status === 'Confirmed' && (
-                    <button onClick={() => handleCancel(booking._id)} className="delete-btn">Cancel</button>
+                    <button onClick={() => handleCancelBooking(booking._id)}>Cancel</button>
                 )}
                 {booking.status === 'Completed' && (
                   booking.service ? (
