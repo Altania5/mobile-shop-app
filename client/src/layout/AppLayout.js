@@ -24,7 +24,7 @@ export default function AppLayout({ user, onLogout }) {
           &#9776;
         </button>
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-          <NavLink to="/services" className="nav-link" onClick={closeMenu}>Services</NavLink>
+          <NavLink to="/services" className="nav-link" onClick={closeMenu}>Home</NavLink>
           <NavLink to="/testimonials" className="nav-link" onClick={closeMenu}>Testimonials</NavLink>
           <NavLink to="/blog" className="nav-link" onClick={closeMenu}>Blog</NavLink>
           <NavLink to="/about" className="nav-link" onClick={closeMenu}>About Us</NavLink>
@@ -32,8 +32,7 @@ export default function AppLayout({ user, onLogout }) {
 
           {user ? (
             <>
-              <NavLink to="/history" className="nav-link" onClick={closeMenu}>My Service History</NavLink>
-              <NavLink to="/account-settings" className="nav-link" onClick={closeMenu}>Account Settings</NavLink>
+              <NavLink to="/dashboard" className="nav-link" onClick={closeMenu}>My Account</NavLink>
               {user.role === 'admin' && (
                 <NavLink to="/admin" className="nav-link" onClick={closeMenu}>Admin</NavLink>
               )}

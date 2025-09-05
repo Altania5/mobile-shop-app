@@ -1,0 +1,448 @@
+﻿/* ===================================================== */
+/* MOBILE MECHANIC CUSTOMER CHECKLIST STYLING          */
+/* ===================================================== */
+
+.customer-checklist-container {
+    padding: 80px 0;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.customer-checklist-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-accent);
+}
+
+/* Checklist Header */
+.checklist-header {
+    text-align: center;
+    margin-bottom: 60px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+}
+
+.checklist-header .section-badge {
+    display: inline-block;
+    background: var(--gradient-accent);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.checklist-header h2 {
+    color: var(--text-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+}
+
+.checklist-header p {
+    color: var(--text-light-color);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Service Type Selector */
+.service-type-selector {
+    max-width: 800px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+}
+
+.service-type-selector h3 {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.service-type-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .service-type-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+.service-type-btn {
+    background: var(--surface-light);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: left;
+}
+
+.service-type-btn:hover,
+.service-type-btn.active {
+    border-color: var(--accent-color);
+    background: var(--surface-color);
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow-glow);
+}
+
+.service-type-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.service-type-content h4 {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    border: none;
+    padding: 0;
+}
+
+.service-type-content p {
+    color: var(--text-light-color);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Checklist Steps */
+.checklist-steps {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.checklist-step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 25px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.checklist-step:last-child {
+    margin-bottom: 0;
+}
+
+/* Step Number/Icon */
+.step-number {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--surface-light);
+    border: 3px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition-smooth);
+}
+
+.checklist-step.completed .step-number {
+    background: var(--gradient-accent);
+    border-color: var(--accent-color);
+    color: white;
+}
+
+.checklist-step.current .step-number {
+    border-color: var(--accent-color);
+    background: var(--surface-color);
+    animation: pulse 2s infinite;
+}
+
+.step-check {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.step-icon {
+    font-size: 1.3rem;
+}
+
+/* Step Content */
+.step-content {
+    background: var(--surface-light);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    transition: var(--transition-smooth);
+}
+
+.checklist-step.completed .step-content {
+    border-color: var(--accent-color);
+    background: var(--surface-color);
+}
+
+.checklist-step.current .step-content {
+    border-color: var(--accent-color);
+    box-shadow: var(--box-shadow-glow);
+}
+
+.step-header h4 {
+    color: var(--text-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    padding: 0;
+}
+
+.required-badge {
+    background: var(--warning-color);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.step-header p {
+    color: var(--text-light-color);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+}
+
+/* Step Note */
+.step-note {
+    background: rgba(255, 140, 66, 0.1);
+    border-left: 3px solid var(--accent-color);
+    padding: 12px 15px;
+    margin: 15px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9rem;
+    color: var(--text-light-color);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.note-icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
+/* Step Action */
+.step-action {
+    margin-top: 15px;
+}
+
+.step-action-btn {
+    background: var(--gradient-accent);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: var(--transition-smooth);
+    border: none;
+    cursor: pointer;
+}
+
+.step-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 140, 66, 0.4);
+    color: white;
+}
+
+/* Step Connector */
+.step-connector {
+    position: absolute;
+    left: 69px;
+    top: 60px;
+    width: 3px;
+    height: 60px;
+    z-index: 1;
+}
+
+.connector-line {
+    width: 100%;
+    height: 100%;
+    background: var(--border-color);
+    transition: var(--transition-smooth);
+}
+
+.connector-line.completed {
+    background: var(--accent-color);
+}
+
+/* Quick Actions */
+.checklist-actions {
+    max-width: 600px;
+    margin: 60px auto 0;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.checklist-actions h3 {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.primary-action-btn,
+.secondary-action-btn {
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition-smooth);
+}
+
+.primary-action-btn {
+    background: var(--gradient-accent);
+    color: white;
+    box-shadow: var(--box-shadow-glow);
+}
+
+.primary-action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 140, 66, 0.4);
+    color: white;
+}
+
+.secondary-action-btn {
+    background: var(--surface-light);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+}
+
+.secondary-action-btn:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow);
+    color: var(--text-color);
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 140, 66, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 140, 66, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 140, 66, 0);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .customer-checklist-container {
+        padding: 60px 0;
+        margin: 20px 0;
+    }
+    
+    .checklist-header {
+        margin-bottom: 40px;
+    }
+    
+    .checklist-header h2 {
+        font-size: 2rem;
+    }
+    
+    .service-type-selector {
+        margin-bottom: 40px;
+    }
+    
+    .service-type-btn {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .checklist-step {
+        grid-template-columns: 60px 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .step-number {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .step-content {
+        padding: 20px;
+    }
+    
+    .step-connector {
+        left: 59px;
+        height: 50px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .primary-action-btn,
+    .secondary-action-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .checklist-step {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .step-number {
+        margin: 0 auto;
+    }
+    
+    .step-connector {
+        display: none;
+    }
+}

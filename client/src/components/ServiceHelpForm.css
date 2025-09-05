@@ -1,96 +1,271 @@
+﻿/* ===================================================== */
+/* MOBILE MECHANIC SERVICE HELP FORM REDESIGN          */
+/* ===================================================== */
+
 .service-help-form-container {
-    background-color: #f9f9f9;
-    padding: 2rem;
-    border-radius: 8px;
-    margin: 2rem auto;
-    max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: var(--surface-color) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 50px 40px !important;
+    border-radius: var(--border-radius) !important;
+    margin: 40px auto !important;
+    max-width: 900px !important;
+    box-shadow: var(--box-shadow) !important;
+    color: var(--text-color) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Add subtle background pattern */
+.service-help-form-container::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 4px !important;
+    background: var(--gradient-accent) !important;
+    border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
 }
 
 .service-help-form-container h2 {
-    text-align: center;
-    margin-bottom: 0.5rem;
+    color: var(--text-color) !important;
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    margin-bottom: 15px !important;
+    text-shadow: none !important;
+    background: var(--gradient-accent) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
 }
 
 .service-help-form-container p {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #666;
+    color: var(--text-light-color) !important;
+    font-size: 1.1rem !important;
+    text-align: center !important;
+    margin-bottom: 40px !important;
+    line-height: 1.6 !important;
+    max-width: 600px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 .service-help-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.service-help-form .form-group {
-    flex: 1 1 auto; /* Allow items to grow and shrink */
-    display: flex;
-    flex-direction: column;
-    min-width: 200px; /* Prevent fields from becoming too small */
-}
-
-.service-help-form .full-width {
-    width: 100%;
+    display: grid !important;
+    gap: 25px !important;
+    grid-template-columns: 1fr !important;
 }
 
 .service-help-form .form-row {
-    display: contents; /* Allows children to participate in the parent flex layout */
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 20px !important;
+}
+
+.service-help-form .form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.service-help-form .full-width {
+    grid-column: 1 / -1 !important;
 }
 
 .service-help-form label {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
+    color: var(--text-color) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
 }
 
+.service-help-form label::before {
+    content: '🔧' !important;
+    font-size: 0.9rem !important;
+}
+
+/* Enhanced Input Styling */
 .service-help-form input,
 .service-help-form textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Important for consistent sizing */
+    background: var(--surface-light) !important;
+    border: 2px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    padding: 16px 20px !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+    font-family: var(--font-family) !important;
+    transition: var(--transition-smooth) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
+.service-help-form input:focus,
+.service-help-form textarea:focus {
+    outline: none !important;
+    border-color: var(--accent-color) !important;
+    background: var(--surface-color) !important;
+    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.2) !important;
+    transform: translateY(-2px) !important;
+}
+
+.service-help-form input::placeholder,
+.service-help-form textarea::placeholder {
+    color: var(--text-muted) !important;
+    font-style: italic !important;
+}
+
+/* Textarea specific styling */
 .service-help-form textarea {
-    resize: vertical;
+    resize: vertical !important;
+    min-height: 120px !important;
+    line-height: 1.6 !important;
 }
 
+/* Enhanced Submit Button */
 .service-help-form .submit-btn {
-    width: 100%;
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background: var(--gradient-accent) !important;
+    color: white !important;
+    border: none !important;
+    padding: 18px 40px !important;
+    border-radius: 12px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--transition-smooth) !important;
+    box-shadow: var(--box-shadow-glow) !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.service-help-form .submit-btn::before {
+    content: '🚗 ' !important;
+    margin-right: 10px !important;
 }
 
 .service-help-form .submit-btn:hover {
-    background-color: #0056b3;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(255, 140, 66, 0.4) !important;
 }
 
+.service-help-form .submit-btn:active {
+    transform: translateY(-1px) !important;
+}
+
+/* Status Messages Redesign */
 .status-message {
-    width: 100%;
-    margin-top: 1rem;
-    padding: 1rem;
-    border-radius: 4px;
-    text-align: center;
+    width: 100% !important;
+    margin-top: 25px !important;
+    padding: 20px 25px !important;
+    border-radius: 12px !important;
+    text-align: center !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+    border: none !important;
+    backdrop-filter: blur(10px) !important;
 }
 
 .status-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: rgba(72, 187, 120, 0.15) !important;
+    color: var(--success-color) !important;
+    border: 2px solid var(--success-color) !important;
+}
+
+.status-message.success::before {
+    content: '✅ ' !important;
+    margin-right: 10px !important;
 }
 
 .status-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: rgba(245, 101, 101, 0.15) !important;
+    color: var(--error-color) !important;
+    border: 2px solid var(--error-color) !important;
+}
+
+.status-message.error::before {
+    content: '⚠️ ' !important;
+    margin-right: 10px !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .service-help-form-container {
+        padding: 30px 20px !important;
+        margin: 20px auto !important;
+    }
+    
+    .service-help-form-container h2 {
+        font-size: 2rem !important;
+    }
+    
+    .service-help-form .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .service-help-form input,
+    .service-help-form textarea {
+        padding: 14px 16px !important;
+    }
+    
+    .service-help-form .submit-btn {
+        padding: 16px 32px !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* Enhanced Form Field Icons */
+.service-help-form input[name="name"] + label::before { content: '👤' !important; }
+.service-help-form input[name="email"] + label::before { content: '📧' !important; }
+.service-help-form input[name="generalIssue"] + label::before { content: '⚠️' !important; }
+.service-help-form textarea[name="detailedDescription"] + label::before { content: '📝' !important; }
+.service-help-form input[name="carMake"] + label::before { content: '🏭' !important; }
+.service-help-form input[name="carModel"] + label::before { content: '🚗' !important; }
+.service-help-form input[name="carTrim"] + label::before { content: '✨' !important; }
+.service-help-form input[name="vin"] + label::before { content: '🔢' !important; }
+
+/* Actually, let's fix the label icons properly */
+.service-help-form label[for="name"]::before { content: '👤' !important; }
+.service-help-form label[for="email"]::before { content: '📧' !important; }
+.service-help-form label[for="generalIssue"]::before { content: '⚠️' !important; }
+.service-help-form label[for="detailedDescription"]::before { content: '📝' !important; }
+.service-help-form label[for="carMake"]::before { content: '🏭' !important; }
+.service-help-form label[for="carModel"]::before { content: '🚗' !important; }
+.service-help-form label[for="carTrim"]::before { content: '✨' !important; }
+.service-help-form label[for="vin"]::before { content: '🔢' !important; }
+
+/* Loading State for Submit Button */
+.service-help-form .submit-btn:disabled {
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+.service-help-form .submit-btn:disabled::before {
+    content: '⏳ ' !important;
+}
+
+/* Enhanced Focus Indicators */
+.service-help-form input:focus::placeholder,
+.service-help-form textarea:focus::placeholder {
+    opacity: 0.5 !important;
+}
+
+/* Hover Effects for Interactive Elements */
+.service-help-form .form-group:hover label {
+    color: var(--accent-color) !important;
+    transition: var(--transition-smooth) !important;
+}
+
+.service-help-form input:hover,
+.service-help-form textarea:hover {
+    border-color: var(--accent-color) !important;
+    transform: translateY(-1px) !important;
 }

@@ -16,12 +16,8 @@ import BlogPage from './pages/BlogPage';
 import PostPage from './pages/PostPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-import ServiceHistoryPage from './pages/ServiceHistoryPage';
+import DashboardPage from './pages/DashboardPage';
 import AdminPage from './pages/AdminPage';
-import BookingPage from './pages/BookingPage';
-import BookingFormPage from './pages/BookingFormPage';
-import LeaveReviewPage from './pages/LeaveReviewPage';
-import AccountSettingsPage from './pages/AccountSettingsPage';
 
 import './App.css';
 
@@ -110,11 +106,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
 
           {/* Protected Routes */}
-          <Route path="/history" element={<ProtectedRoute user={user}><ServiceHistoryPage /></ProtectedRoute>} />
-          <Route path="/book/:serviceId" element={<ProtectedRoute user={user}><BookingPage user={user} /></ProtectedRoute>} />
-          <Route path="/book/:serviceId/details" element={<ProtectedRoute user={user}><BookingFormPage user={user} /></ProtectedRoute>} />
-          <Route path="/leave-review" element={<ProtectedRoute user={user}><LeaveReviewPage /></ProtectedRoute>} />
-          <Route path="/account-settings" element={<ProtectedRoute user={user}><AccountSettingsPage /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute user={user}><DashboardPage user={user} /></ProtectedRoute>} />
 
           {/* Admin-Only Route */}
           <Route path="/admin" element={<ProtectedRoute user={user} roles={['admin']}><AdminPage /></ProtectedRoute>} />

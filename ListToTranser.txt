@@ -11,16 +11,16 @@ Cloudinary
 Final Project
 --------------------------------------------
 proton/Brevo Account                                                                                                                      |DONE|
-General, I meed help, - Card info, General issue, Detailed Discription, Car make, model, trim, and VIN. 
-Square/Stripe
-Cancel booking fixed
-floating nav bar - Both dektop and mobile
-about me button in the Services AI generated pic+
-Rename Services to Home
-Links direct to footer, direct to nav bar instead
+General, I meed help, - Card info, General issue, Detailed Discription, Car make, model, trim, and VIN.                                   |DONE|
+Square/Stripe                                                                                                                             |DONE|
+Cancel booking fixed                                                                                                                      |DONE|  
+floating nav bar - Both dektop and mobile												  |DONE|
+about me button in the Services AI generated pic+											  |DONE|
+AI photo on service/home page take up entire width and height (HERO PAGE) - CHECK SCREENSHOTS						  |DONE|
+Rename Services to Home															  |DONE|
+Links direct to footer, direct to nav bar instead											  |DONE|
 Final bill making and downloading
 COMPLETE WORK ORDER - work order download and a way for the admin to write it (upload and download, A way to sign)
 Checklist on the Services/Home page
-AI photo on service/home page take up entire width and height (HERO PAGE) - CHECK SCREENSHOTS
 Change Login Page - Small text above for registering (get rid of regester box). Forgot Password option, See password, Logo to right
 --------------------------------------------

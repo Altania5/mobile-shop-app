@@ -1,16 +1,30 @@
-:root {
-  --primary-color: #0a2540;   /* Dark Navy Blue */
-  --accent-color: #007bff;    /* Bright Blue */
-  --background-color: #f8f9fa;/* Light Gray */
-  --surface-color: #ffffff;   /* White */
-  --text-color: #212529;      /* Off-black */
-  --text-light-color: #6c757d;/* Gray */
-  --border-color: #dee2e6;    /* Light Border Gray */
-  --success-color: #28a745;
-  --error-color: #dc3545;
+﻿:root {
+  /* Mobile Mechanic Theme - Balanced Dark */
+  --primary-color: #1e2833;   /* Steel Gray-Blue */
+  --secondary-color: #2a3441; /* Medium Steel */
+  --accent-color: #ff8c42;    /* Automotive Orange */
+  --accent-secondary: #4fc3f7; /* Light Blue */
+  --background-color: #121820; /* Dark Charcoal */
+  --surface-color: #1a202c;   /* Dark Surface */
+  --surface-light: #2d3748;   /* Lighter Surface */
+  --text-color: #e2e8f0;      /* Light Gray */
+  --text-light-color: #a0aec0;/* Medium Gray */
+  --text-muted: #718096;      /* Muted Gray */
+  --border-color: #4a5568;    /* Medium Border */
+  --border-light: #2d3748;    /* Light Border */
+  --success-color: #48bb78;
+  --warning-color: #ed8936;
+  --error-color: #f56565;
   --border-radius: 8px;
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --box-shadow-glow: 0 0 20px rgba(255, 140, 66, 0.2);
   --font-family: 'Poppins', sans-serif;
+  
+  /* Gradients for modern look */
+  --gradient-primary: linear-gradient(135deg, #1e2833 0%, #2a3441 100%);
+  --gradient-accent: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+  --gradient-surface: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  --transition-smooth: all 0.3s ease;
 }
 
 *, *::before, *::after {

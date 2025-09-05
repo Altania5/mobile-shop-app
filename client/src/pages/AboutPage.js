@@ -157,7 +157,7 @@ const AboutPage = () => {
             <section ref={addToRefs} className="cta-section">
                 <h2>Ready for the Ultimate Shine?</h2>
                 <p>Book your appointment today and experience the difference.</p>
-                <Link to="/booking" className="cta-button hover-glow">Book an Appointment</Link>
+                <Link to="/services" className="cta-button hover-glow">View Our Services</Link>
             </section>
         </div>
     );

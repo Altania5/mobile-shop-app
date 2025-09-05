@@ -10,3 +10,5 @@ client/build/
 .env
 client/.env
 server/.env
+
+WARP.md
