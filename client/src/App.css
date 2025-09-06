@@ -97,7 +97,7 @@ button:active {
   padding: 15px 30px;
   background-color: var(--surface-color);
   box-shadow: var(--box-shadow);
-  border-radius: var(--border-radius);
+  border-radius: 0;
   margin-bottom: 30px;
   position: fixed;
   top: 0;
@@ -2511,22 +2511,39 @@ button:active {
 }
 
 .card-1 {
-  top: 50px;
-  left: 20px;
+  top: 30px;
+  left: 10px;
   animation-delay: 0s;
 }
 
 .card-2 {
-  top: 150px;
-  right: 30px;
+  top: 30px;
+  right: 10px;
   animation-delay: 2s;
 }
 
 .card-3 {
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation-delay: 4s;
+  display: none;
+}
+
+/* Show only 2 cards on mobile to prevent overlap */
+@media (min-width: 768px) {
+  .card-1 {
+    top: 50px;
+    left: 20px;
+  }
+  
+  .card-2 {
+    top: 150px;
+    right: 30px;
+  }
+  
+  .card-3 {
+    display: block;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 /* Scroll Indicator */
