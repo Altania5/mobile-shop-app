@@ -2496,7 +2496,7 @@ button:active {
   color: white;
   text-align: center;
   box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-  /* Removed float animation to prevent overlap issues */
+  animation: gentleFloat 4s ease-in-out infinite;
 }
 
 .floating-card .card-icon {
@@ -2850,6 +2850,15 @@ button:active {
   }
   50% {
     transform: translateY(-20px);
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 
