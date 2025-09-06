@@ -2510,32 +2510,25 @@ button:active {
   font-weight: 500;
 }
 
-.card-1 {
-  top: 30px;
-  left: 10px;
-  animation-delay: 0s;
+/* Hide all floating cards on mobile to prevent overlap */
+@media (max-width: 767px) {
+  .floating-card {
+    display: none;
+  }
 }
 
-.card-2 {
-  top: 30px;
-  right: 10px;
-  animation-delay: 2s;
-}
-
-.card-3 {
-  display: none;
-}
-
-/* Show only 2 cards on mobile to prevent overlap */
+/* Show all 3 cards only on larger screens where they have space */
 @media (min-width: 768px) {
   .card-1 {
     top: 50px;
     left: 20px;
+    animation-delay: 0s;
   }
   
   .card-2 {
     top: 150px;
     right: 30px;
+    animation-delay: 2s;
   }
   
   .card-3 {
@@ -2543,6 +2536,7 @@ button:active {
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
+    animation-delay: 4s;
   }
 }
 
