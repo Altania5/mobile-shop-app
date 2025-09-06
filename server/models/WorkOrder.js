@@ -1,0 +1,164 @@
+const mongoose = require('mongoose');
+
+const workOrderSchema = new mongoose.Schema({
+  // Work Order Identification
+  workOrderNumber: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['draft', 'pending_approval', 'approved', 'in_progress', 'completed', 'billed', 'cancelled'],
+    default: 'draft'
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+
+  // Customer Information
+  customer: {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      zipCode: String
+    }
+  },
+
+  // Vehicle Information
+  vehicle: {
+    year: { type: String, required: true },
+    make: { type: String, required: true },
+    model: { type: String, required: true },
+    vin: String,
+    licensePlate: String,
+    mileage: String,
+    color: String
+  },
+
+  // Service Information
+  serviceDetails: {
+    description: { type: String, required: true },
+    customerComplaints: String,
+    diagnosis: String,
+    workPerformed: String,
+    recommendations: String
+  },
+
+  // Parts and Labor
+  laborItems: [{
+    description: { type: String, required: true },
+    hours: { type: Number, required: true },
+    hourlyRate: { type: Number, required: true },
+    total: { type: Number, required: true }
+  }],
+
+  partItems: [{
+    partNumber: String,
+    description: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    unitPrice: { type: Number, required: true },
+    total: { type: Number, required: true }
+  }],
+
+  // Pricing
+  pricing: {
+    laborSubtotal: { type: Number, default: 0 },
+    partsSubtotal: { type: Number, default: 0 },
+    subtotal: { type: Number, default: 0 },
+    taxRate: { type: Number, default: 0.08 }, // 8% default tax rate
+    taxAmount: { type: Number, default: 0 },
+    totalAmount: { type: Number, default: 0 }
+  },
+
+  // Authorization and Signatures
+  authorization: {
+    estimatedTotal: Number,
+    customerApproved: { type: Boolean, default: false },
+    customerSignature: String, // Base64 signature data
+    approvalDate: Date,
+    approvalMethod: {
+      type: String,
+      enum: ['in_person', 'email', 'phone'],
+      default: 'email'
+    }
+  },
+
+  // Related Records
+  relatedBooking: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking'
+  },
+  relatedServiceHelp: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ServiceHelpForm'
+  },
+
+  // Communication
+  emailSent: { type: Boolean, default: false },
+  emailSentDate: Date,
+  
+  // Timestamps
+  scheduledDate: Date,
+  completedDate: Date,
+  
+  // Notes
+  internalNotes: String,
+  customerNotes: String
+
+}, {
+  timestamps: true
+});
+
+// Generate work order number
+workOrderSchema.pre('save', async function(next) {
+  if (this.isNew && !this.workOrderNumber) {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    
+    // Find the highest work order number for this month
+    const lastWorkOrder = await this.constructor
+      .findOne({ 
+        workOrderNumber: new RegExp(`^WO-${year}${month}-`) 
+      })
+      .sort({ workOrderNumber: -1 });
+    
+    let sequence = 1;
+    if (lastWorkOrder) {
+      const lastSequence = parseInt(lastWorkOrder.workOrderNumber.split('-')[2]);
+      sequence = lastSequence + 1;
+    }
+    
+    this.workOrderNumber = `WO-${year}${month}-${String(sequence).padStart(4, '0')}`;
+  }
+  next();
+});
+
+// Calculate totals before saving
+workOrderSchema.pre('save', function(next) {
+  // Calculate labor subtotal
+  this.pricing.laborSubtotal = this.laborItems.reduce((sum, item) => sum + item.total, 0);
+  
+  // Calculate parts subtotal
+  this.pricing.partsSubtotal = this.partItems.reduce((sum, item) => sum + item.total, 0);
+  
+  // Calculate subtotal
+  this.pricing.subtotal = this.pricing.laborSubtotal + this.pricing.partsSubtotal;
+  
+  // Calculate tax
+  this.pricing.taxAmount = this.pricing.subtotal * this.pricing.taxRate;
+  
+  // Calculate total
+  this.pricing.totalAmount = this.pricing.subtotal + this.pricing.taxAmount;
+  
+  next();
+});
+
+module.exports = mongoose.model('WorkOrder', workOrderSchema);

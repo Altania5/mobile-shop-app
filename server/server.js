@@ -40,7 +40,8 @@ const routes = [
     'googleReviews', 
     'comments',
     'service-request',
-    'payments'
+    'payments',
+    'workOrders'
 ];
 routes.forEach(route => {
     try {
