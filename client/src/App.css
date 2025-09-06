@@ -2521,7 +2521,7 @@ button:active {
 }
 
 .card-3 {
-  display: none; /* Hide third card on all screen sizes to prevent overlap */
+  display: none; /* Hide third card on mobile */
 }
 
 /* Adjust positioning for larger screens */
@@ -2532,15 +2532,14 @@ button:active {
   }
   
   .card-2 {
-    top: 150px;
-    right: 200px;
+    top: 50px;
+    right: 50px;
   }
   
   .card-3 {
     display: block;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 200px;
+    left: 20px;
   }
 }
 
