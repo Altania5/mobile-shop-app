@@ -25,20 +25,27 @@ const WorkOrderManager = () => {
     try {
       setLoading(true);
       const skip = (currentPage - 1) * limit;
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
       const response = await axios.get('/api/workOrders', {
         params: {
           search: searchTerm,
           status: statusFilter,
           limit,
           skip
-        }
+        },
+        headers
       });
       
-      setWorkOrders(response.data.workOrders);
-      setTotalWorkOrders(response.data.total);
-      setHasMore(response.data.hasMore);
+      setWorkOrders(response.data.workOrders || []);
+      setTotalWorkOrders(response.data.total || 0);
+      setHasMore(response.data.hasMore || false);
     } catch (err) {
       setError('Failed to fetch work orders');
+      setWorkOrders([]);
+      setTotalWorkOrders(0);
+      setHasMore(false);
       console.error(err);
     } finally {
       setLoading(false);
@@ -58,12 +65,12 @@ const WorkOrderManager = () => {
   const handleFormSave = (savedWorkOrder) => {
     if (editingWorkOrder) {
       // Update existing work order in the list
-      setWorkOrders(prev => prev.map(wo => 
+      setWorkOrders(prev => (prev || []).map(wo => 
         wo._id === savedWorkOrder._id ? savedWorkOrder : wo
       ));
     } else {
       // Add new work order to the beginning of the list
-      setWorkOrders(prev => [savedWorkOrder, ...prev]);
+      setWorkOrders(prev => [savedWorkOrder, ...(prev || [])]);
     }
     setShowForm(false);
     setEditingWorkOrder(null);
@@ -80,8 +87,11 @@ const WorkOrderManager = () => {
     }
 
     try {
-      await axios.delete(`/api/workOrders/${workOrderId}`);
-      setWorkOrders(prev => prev.filter(wo => wo._id !== workOrderId));
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
+      await axios.delete(`/api/workOrders/${workOrderId}`, { headers });
+      setWorkOrders(prev => (prev || []).filter(wo => wo._id !== workOrderId));
     } catch (err) {
       setError('Failed to delete work order');
       console.error(err);
@@ -90,9 +100,12 @@ const WorkOrderManager = () => {
 
   const handleSendEmail = async (workOrderId) => {
     try {
-      await axios.post(`/api/workOrders/${workOrderId}/send-email`);
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
+      await axios.post(`/api/workOrders/${workOrderId}/send-email`, {}, { headers });
       // Update the work order in the list to show email sent status
-      setWorkOrders(prev => prev.map(wo => 
+      setWorkOrders(prev => (prev || []).map(wo => 
         wo._id === workOrderId 
           ? { ...wo, emailSent: true, emailSentDate: new Date().toISOString() }
           : wo
@@ -106,8 +119,12 @@ const WorkOrderManager = () => {
 
   const handleDownloadPDF = async (workOrderId, workOrderNumber) => {
     try {
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
       const response = await axios.get(`/api/workOrders/${workOrderId}/pdf`, {
-        responseType: 'blob'
+        responseType: 'blob',
+        headers
       });
       
       // Create download link
@@ -127,12 +144,15 @@ const WorkOrderManager = () => {
 
   const handleUpdateStatus = async (workOrderId, newStatus) => {
     try {
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
       const response = await axios.put(`/api/workOrders/${workOrderId}`, {
         status: newStatus
-      });
+      }, { headers });
       
       // Update the work order in the list
-      setWorkOrders(prev => prev.map(wo => 
+      setWorkOrders(prev => (prev || []).map(wo => 
         wo._id === workOrderId ? response.data : wo
       ));
     } catch (err) {
@@ -226,13 +246,13 @@ const WorkOrderManager = () => {
       {/* Results Summary */}
       <div className="results-summary">
         <span>
-          Showing {workOrders.length} of {totalWorkOrders} work orders
+          Showing {workOrders?.length || 0} of {totalWorkOrders} work orders
         </span>
       </div>
 
       {loading ? (
         <div className="loading">Loading work orders...</div>
-      ) : workOrders.length === 0 ? (
+      ) : !workOrders || workOrders.length === 0 ? (
         <div className="no-results">
           <p>No work orders found.</p>
           <button onClick={handleCreateNew} className="create-first-button">
@@ -257,7 +277,7 @@ const WorkOrderManager = () => {
                 </tr>
               </thead>
               <tbody>
-                {workOrders.map(workOrder => (
+                {(workOrders || []).map(workOrder => (
                   <tr key={workOrder._id}>
                     <td>
                       <span className="work-order-number">

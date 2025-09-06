@@ -56,7 +56,10 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
   const fetchWorkOrder = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/workOrders/${workOrderId}`);
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
+      const response = await axios.get(`/api/workOrders/${workOrderId}`, { headers });
       setWorkOrder(response.data);
     } catch (err) {
       setError('Failed to fetch work order');
@@ -191,11 +194,14 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
         }
       };
 
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
       let response;
       if (workOrderId) {
-        response = await axios.put(`/api/workOrders/${workOrderId}`, workOrderData);
+        response = await axios.put(`/api/workOrders/${workOrderId}`, workOrderData, { headers });
       } else {
-        response = await axios.post('/api/workOrders', workOrderData);
+        response = await axios.post('/api/workOrders', workOrderData, { headers });
       }
 
       onSave(response.data);
