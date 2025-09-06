@@ -64,25 +64,26 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
   font-size: 1rem;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s ease;
-  background: #fafbfc;
+  background: var(--surface-color);
+  color: var(--text-color);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: #ff8c42;
   box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
-  background: white;
+  background: var(--surface-color);
 }
 
 .form-group small {
@@ -185,7 +186,6 @@
   background: var(--surface-color);
   color: var(--text-color);
   border: 1px solid var(--border-color);
-  border: 1px solid #e9ecef;
 }
 
 .contact-item .icon {

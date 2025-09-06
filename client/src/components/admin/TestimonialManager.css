@@ -6,13 +6,15 @@
     max-width: 800px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 .testimonial-manager h3,
 .testimonial-manager h4 {
     text-align: center;
-    color: #333;
+    color: var(--text-color);
 }
 
 .testimonial-form {
@@ -30,7 +32,7 @@
 .form-group label {
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #555;
+    color: var(--text-color);
 }
 
 .testimonial-form input,
@@ -38,7 +40,9 @@
 .testimonial-form textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-color);
     border-radius: 4px;
     font-size: 1rem;
     box-sizing: border-box;
@@ -83,7 +87,7 @@
 
 hr {
     border: none;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
     margin: 2rem 0;
 }
 
@@ -98,9 +102,10 @@ hr {
     display: flex;
     gap: 1.5rem;
     align-items: flex-start;
-    background: #fff;
+    background: var(--surface-color);
+    color: var(--text-color);
     padding: 1.5rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
@@ -181,7 +186,9 @@ hr {
 
 .edit-author-input {
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-color);
     border-radius: 4px;
     flex-grow: 1;
 }
