@@ -45,12 +45,13 @@ const routes = [
 ];
 routes.forEach(route => {
     try {
+        console.log(`Attempting to load route: ./routes/${route}`);
         const router = require(`./routes/${route}`);
-        // This makes the API endpoint match the file name, e.g., /api/service-request
         app.use(`/api/${route}`, router);
-        console.log(`Loading router: ./routes/${route}`);
+        console.log(`✓ Successfully loaded route: /api/${route}`);
     } catch (error) {
-        console.error(`Error loading router for ${route}:`, error);
+        console.error(`✗ Error loading router for ${route}:`, error.message);
+        console.error(`Full error:`, error);
     }
 });
 

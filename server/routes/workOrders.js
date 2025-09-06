@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const WorkOrder = require('../models/WorkOrder');
-const Booking = require('../models/Booking');
+const Booking = require('../models/booking.model');
 const ServiceHelpForm = require('../models/ServiceHelpForm');
 const adminAuth = require('../middleware/adminAuth');
 const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 
-// @route   GET /api/work-orders
+// @route   GET /api/workOrders
 // @desc    Get all work orders
 // @access  Admin
 router.get('/', adminAuth, async (req, res) => {
@@ -53,7 +53,7 @@ router.get('/', adminAuth, async (req, res) => {
   }
 });
 
-// @route   GET /api/work-orders/:id
+// @route   GET /api/workOrders/:id
 // @desc    Get work order by ID
 // @access  Admin
 router.get('/:id', adminAuth, async (req, res) => {
@@ -74,7 +74,7 @@ router.get('/:id', adminAuth, async (req, res) => {
   }
 });
 
-// @route   POST /api/work-orders
+// @route   POST /api/workOrders
 // @desc    Create new work order
 // @access  Admin
 router.post('/', adminAuth, async (req, res) => {
@@ -98,7 +98,7 @@ router.post('/', adminAuth, async (req, res) => {
   }
 });
 
-// @route   POST /api/work-orders/from-booking/:bookingId
+// @route   POST /api/workOrders/from-booking/:bookingId
 // @desc    Create work order from booking
 // @access  Admin
 router.post('/from-booking/:bookingId', adminAuth, async (req, res) => {
