@@ -2,7 +2,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 30px;
-  background: #ffffff;
+  background: #f8fafc;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
@@ -64,17 +64,18 @@
 .form-section h3 {
   margin: -32px -32px 24px -32px;
   padding: 18px 32px;
-  color: #ffffff;
-  font-size: 1.3rem;
-  font-weight: 600;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #1f2937;
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   border-radius: 12px 12px 0 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  border: none;
+  border: 1px solid #cbd5e1;
+  border-bottom: 2px solid #3b82f6;
   display: flex;
   align-items: center;
   gap: 10px;
   letter-spacing: 0.025em;
+  text-shadow: none;
 }
 
 .section-header {
@@ -124,6 +125,15 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+.item-row .form-group input,
+.item-row .form-group select,
+.item-row .form-group textarea {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #1f2937;
+  font-weight: 600;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -167,7 +177,7 @@
 
 .item-row {
   background: #ffffff;
-  padding: 24px;
+  padding: 24px 24px 60px 24px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   margin-bottom: 20px;
@@ -188,18 +198,20 @@
 
 .remove-button {
   position: absolute;
-  top: 16px;
+  bottom: 16px;
   right: 16px;
   background: #f3f4f6;
   color: #6b7280;
   border: 1px solid #d1d5db;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  min-width: 80px;
+  text-align: center;
 }
 
 .remove-button:hover {
@@ -210,7 +222,7 @@
 }
 
 .pricing-summary {
-  background: #f8fafc;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 24px;
@@ -236,8 +248,8 @@
 }
 
 .pricing-row label {
-  font-weight: 600;
-  color: #374151;
+  font-weight: 700;
+  color: #1f2937;
   font-size: 1.1rem;
   display: flex;
   align-items: center;
@@ -245,9 +257,9 @@
 }
 
 .pricing-row span {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: #1f2937;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #111827;
 }
 
 .total-row {
