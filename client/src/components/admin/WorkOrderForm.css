@@ -2,11 +2,11 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 30px;
-  background: #f8fafc !important;
+  background: var(--background-color);
+  color: var(--text-color);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-  /* Force CSS refresh v2 */
+  border: 1px solid var(--border-color);
 }
 
 .form-header {
@@ -15,8 +15,8 @@
   align-items: center;
   margin-bottom: 40px;
   padding-bottom: 24px;
-  border-bottom: 2px solid #ff8c42;
-  background: linear-gradient(135deg, #f8f9ff 0%, #fff5f0 100%);
+  border-bottom: 2px solid var(--border-color);
+  background: var(--surface-color);
   margin: -30px -30px 40px -30px;
   padding: 30px 30px 24px 30px;
   border-radius: 16px 16px 0 0;
@@ -24,10 +24,10 @@
 
 .form-header h2 {
   margin: 0;
-  color: #1f2937;
+  color: var(--text-color);
   font-size: 2.5rem;
   font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
 }
 
 .work-order-number {
@@ -48,10 +48,10 @@
 }
 
 .form-section {
-  background: #ffffff;
+  background: var(--surface-color);
   padding: 32px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
   position: relative;
@@ -65,12 +65,12 @@
 .form-section h3 {
   margin: -32px -32px 24px -32px;
   padding: 18px 32px;
-  color: #1f2937;
+  color: var(--text-color);
   font-size: 1.4rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  background: var(--surface-light);
   border-radius: 12px 12px 0 0;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-color);
   border-bottom: 2px solid #3b82f6;
   display: flex;
   align-items: center;
@@ -85,8 +85,8 @@
   align-items: center;
   margin: -32px -32px 24px -32px;
   padding: 18px 32px;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  border: 1px solid #cbd5e1;
+  background: var(--surface-light);
+  border: 1px solid var(--border-color);
   border-bottom: 2px solid #3b82f6;
   border-radius: 12px 12px 0 0;
 }
@@ -96,7 +96,7 @@
   padding: 0 !important;
   background: none !important;
   border: none !important;
-  color: #1f2937;
+  color: var(--text-color);
   font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: 0.025em;
@@ -118,7 +118,7 @@
 .form-group label {
   font-weight: 700;
   margin-bottom: 10px;
-  color: #374151;
+  color: var(--text-color);
   font-size: 1rem;
   letter-spacing: 0.025em;
 }
@@ -127,12 +127,12 @@
 .form-group select,
 .form-group textarea {
   padding: 16px 18px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
+  background-color: var(--surface-color);
+  color: var(--text-color);
   font-weight: 500;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -140,10 +140,10 @@
 .item-row .form-group input,
 .item-row .form-group select,
 .item-row .form-group textarea {
-  background-color: #f8fafc !important;
-  border: 1px solid #cbd5e1 !important;
-  color: #1f2937 !important;
-  font-weight: 600 !important;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-weight: 600;
 }
 
 .form-group input:focus,
@@ -152,7 +152,7 @@
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background-color: #fefffe;
+  background-color: var(--surface-color);
 }
 
 .form-group textarea {
@@ -162,10 +162,10 @@
 }
 
 .form-group input.readonly {
-  background-color: #f8f9fa;
+  background-color: var(--surface-light);
   cursor: not-allowed;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--text-color);
 }
 
 .add-button {
@@ -188,10 +188,10 @@
 }
 
 .item-row {
-  background: #ffffff;
+  background: var(--surface-color);
   padding: 24px 24px 60px 24px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   margin-bottom: 20px;
   position: relative;
   transition: all 0.3s ease;
@@ -234,8 +234,8 @@
 }
 
 .pricing-summary {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
@@ -252,7 +252,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .pricing-row:last-child {
@@ -260,8 +260,8 @@
 }
 
 .pricing-row label {
-  font-weight: 700 !important;
-  color: #1f2937 !important;
+  font-weight: 700;
+  color: var(--text-color);
   font-size: 1.1rem;
   display: flex;
   align-items: center;
@@ -269,8 +269,8 @@
 }
 
 .pricing-row span {
-  font-weight: 800 !important;
-  color: #111827 !important;
+  font-weight: 800;
+  color: var(--text-color);
   font-size: 1.3rem;
 }
 
