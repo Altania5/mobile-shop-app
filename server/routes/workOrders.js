@@ -272,7 +272,7 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
     }
     
     // Create transporter
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: 587,
       secure: false,

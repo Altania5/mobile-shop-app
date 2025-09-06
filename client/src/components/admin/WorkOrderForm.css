@@ -49,32 +49,32 @@
 .form-section {
   background: #ffffff;
   padding: 32px;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
   position: relative;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .form-section:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .form-section h3 {
   margin: -32px -32px 24px -32px;
-  padding: 20px 32px;
+  padding: 18px 32px;
   color: #ffffff;
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
-  border-radius: 16px 16px 0 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 1.3rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 12px 12px 0 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   border: none;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  letter-spacing: 0.025em;
 }
 
 .section-header {
@@ -114,23 +114,23 @@
 .form-group select,
 .form-group textarea {
   padding: 16px 18px;
-  border: 2px solid #d1d5db;
-  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
   background-color: #ffffff;
-  color: #111827;
+  color: #1f2937;
   font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #ff8c42;
-  box-shadow: 0 0 0 4px rgba(255, 140, 66, 0.15);
-  background-color: #fffbf7;
-  transform: translateY(-1px);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background-color: #fefffe;
 }
 
 .form-group textarea {
@@ -147,40 +147,38 @@
 }
 
 .add-button {
-  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  padding: 14px 28px;
-  border-radius: 12px;
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   letter-spacing: 0.025em;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255, 140, 66, 0.25);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .add-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 140, 66, 0.35);
-  background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
 }
 
 .item-row {
-  background: #f9fafb;
+  background: #ffffff;
   padding: 24px;
-  border-radius: 16px;
-  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
   margin-bottom: 20px;
   position: relative;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .item-row:hover {
-  background: #f3f4f6;
   border-color: #d1d5db;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .item-row .form-grid {
@@ -192,30 +190,31 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .remove-button:hover {
-  transform: translateY(-1px);
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .pricing-summary {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 2px solid #ff8c42;
-  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 8px 24px rgba(255, 140, 66, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .pricing-grid {
@@ -252,20 +251,20 @@
 }
 
 .total-row {
-  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 18px;
+  border-radius: 8px;
   margin-top: 16px;
-  box-shadow: 0 4px 16px rgba(255, 140, 66, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .total-row label,
 .total-row span {
   color: white;
-  font-size: 1.4rem;
-  font-weight: 800;
+  font-size: 1.3rem;
+  font-weight: 700;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
