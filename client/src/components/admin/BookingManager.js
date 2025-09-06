@@ -1,21 +1,32 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import WorkOrderForm from './WorkOrderForm';
+import WorkOrderManager from './WorkOrderManager';
 
-// AdminBookingCard component remains the same
-const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusTextChange, onSaveStatus }) => (
+// AdminBookingCard component with Work Order functionality
+const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusTextChange, onSaveStatus, onCreateWorkOrder }) => (
     <div className="admin-booking-card">
         <div className="card-header">
             <h4>{booking.service ? booking.service.name : 'Service Not Available'}</h4>
-            <select
-                value={booking.status}
-                onChange={(e) => onStatusChange(booking._id, e.target.value)}
-                className={`status-select status-${booking.status.toLowerCase()}`}
-            >
-                <option value="Pending">Pending</option>
-                <option value="Confirmed">Confirmed</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-            </select>
+            <div className="header-controls">
+                <select
+                    value={booking.status}
+                    onChange={(e) => onStatusChange(booking._id, e.target.value)}
+                    className={`status-select status-${booking.status.toLowerCase()}`}
+                >
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <button 
+                    className="create-work-order-btn"
+                    onClick={() => onCreateWorkOrder(booking)}
+                    title="Create Work Order for this booking"
+                >
+                    📋 Work Order
+                </button>
+            </div>
         </div>
         
         {(booking.status === 'Pending' || booking.status === 'Confirmed') && (
@@ -58,6 +69,11 @@ function BookingManager() {
     const [makes, setMakes] = useState([]);
     const [models, setModels] = useState([]);
     const [isLoadingModels, setIsLoadingModels] = useState(false);
+    
+    // Work Order related state
+    const [showWorkOrderForm, setShowWorkOrderForm] = useState(false);
+    const [showWorkOrderManager, setShowWorkOrderManager] = useState(false);
+    const [selectedBookingForWorkOrder, setSelectedBookingForWorkOrder] = useState(null);
 
     const fetchAllBookings = useCallback(async () => {
         try {
@@ -175,6 +191,30 @@ function BookingManager() {
         }
     };
 
+    const handleCreateWorkOrder = (booking) => {
+        setSelectedBookingForWorkOrder(booking);
+        setShowWorkOrderForm(true);
+        setShowWorkOrderManager(false);
+    };
+
+    const handleWorkOrderSaved = () => {
+        setShowWorkOrderForm(false);
+        setSelectedBookingForWorkOrder(null);
+        // Optionally refresh bookings to update any related data
+        fetchAllBookings();
+    };
+
+    const handleShowWorkOrderManager = () => {
+        setShowWorkOrderManager(true);
+        setShowWorkOrderForm(false);
+    };
+
+    const handleBackToBookings = () => {
+        setShowWorkOrderForm(false);
+        setShowWorkOrderManager(false);
+        setSelectedBookingForWorkOrder(null);
+    };
+
     const activeBookings = Array.isArray(allBookings)
         ? allBookings.filter(b => b.status !== 'Cancelled' && b.status !== 'Completed')
         : [];
@@ -187,12 +227,51 @@ function BookingManager() {
             serviceStatus={serviceStatuses[booking._id] || ''}
             onStatusTextChange={(e) => handleStatusTextChange(e, booking._id)}
             onSaveStatus={() => handleSaveStatus(booking._id)}
+            onCreateWorkOrder={handleCreateWorkOrder}
         />
     );
 
+    // Conditional rendering based on current view
+    if (showWorkOrderForm) {
+        return (
+            <div className="manager-container">
+                <div className="manager-header">
+                    <button onClick={handleBackToBookings} className="back-button">
+                        ← Back to Bookings
+                    </button>
+                    <h3>Create Work Order</h3>
+                </div>
+                <WorkOrderForm 
+                    booking={selectedBookingForWorkOrder}
+                    onSave={handleWorkOrderSaved}
+                    onCancel={handleBackToBookings}
+                />
+            </div>
+        );
+    }
+
+    if (showWorkOrderManager) {
+        return (
+            <div className="manager-container">
+                <div className="manager-header">
+                    <button onClick={handleBackToBookings} className="back-button">
+                        ← Back to Bookings
+                    </button>
+                    <h3>Work Order Manager</h3>
+                </div>
+                <WorkOrderManager onBack={handleBackToBookings} />
+            </div>
+        );
+    }
+
     return (
         <div className="manager-container">
-            <h3>Manage Bookings</h3>
+            <div className="manager-header">
+                <h3>Manage Bookings</h3>
+                <button onClick={handleShowWorkOrderManager} className="work-order-manager-btn">
+                    📋 Work Order Manager
+                </button>
+            </div>
             {error && <p className="error-message">{error}</p>}
             
             <div className="manager-section">

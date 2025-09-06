@@ -276,6 +276,82 @@ h2:contains("Admin Dashboard"),
     padding: 0 !important;
 }
 
+/* Work Order Header Controls */
+.header-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+}
+
+/* Create Work Order Button */
+.create-work-order-btn {
+    background: var(--success-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 15px !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    cursor: pointer !important;
+    transition: var(--transition-smooth) !important;
+    white-space: nowrap !important;
+}
+
+.create-work-order-btn:hover {
+    background: #218838 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Work Order Manager Button in Header */
+.work-order-manager-btn {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--transition-smooth) !important;
+    font-size: 0.95rem !important;
+}
+
+.work-order-manager-btn:hover {
+    background: var(--primary-color) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 140, 66, 0.4) !important;
+}
+
+/* Manager Header Layout */
+.manager-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 30px !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+}
+
+/* Back Button */
+.back-button {
+    background: var(--text-muted) !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 16px !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--transition-smooth) !important;
+    font-size: 0.9rem !important;
+}
+
+.back-button:hover {
+    background: var(--text-light-color) !important;
+    transform: translateY(-1px) !important;
+}
+
 .admin-booking-card .card-body {
     padding: 20px !important;
     color: var(--text-light-color) !important;

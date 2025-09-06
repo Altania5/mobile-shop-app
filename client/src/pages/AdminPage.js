@@ -3,7 +3,7 @@ import ServiceManager from '../components/admin/ServiceManager';
 import BookingManager from '../components/admin/BookingManager';
 import TestimonialManager from '../components/admin/TestimonialManager';
 import BlogManager from '../components/admin/BlogManager';
-import '../components/admin/AdminTheme.css';
+import WorkOrderManager from '../components/admin/WorkOrderManager';
 import '../components/admin/AdminTheme.css';
 
 function AdminPage() {
@@ -13,6 +13,7 @@ function AdminPage() {
       <div className="admin-panel">
         <BookingManager />
         <ServiceManager />
+        <WorkOrderManager />
         <TestimonialManager />
         <BlogManager />
       </div>
