@@ -18,6 +18,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import DashboardPage from './pages/DashboardPage';
 import AdminPage from './pages/AdminPage';
+import WorkOrderPortal from './pages/WorkOrderPortal';
 
 import './App.css';
 
@@ -104,6 +105,7 @@ function App() {
           <Route path="/blog/:slug" element={<PostPage user={user} />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/work-order-portal" element={<WorkOrderPortal />} />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={<ProtectedRoute user={user}><DashboardPage user={user} /></ProtectedRoute>} />

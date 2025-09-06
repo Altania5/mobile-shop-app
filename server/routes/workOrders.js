@@ -281,17 +281,95 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
     const pdfBuffer = await generateWorkOrderPDF(workOrder);
     
     // Email content
+    // Create download link based on environment
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://hardworkmobile-0bf9805ba163.herokuapp.com'
+      : 'http://localhost:3000';
+    const downloadLink = `${baseUrl}/api/workOrders/public/${workOrder.workOrderNumber}/pdf?email=${encodeURIComponent(workOrder.customer.email)}`;
+    
     const emailContent = `
-      <h2>Work Order: ${workOrder.workOrderNumber}</h2>
-      <p>Dear ${workOrder.customer.name},</p>
-      <p>Please find attached your work order for the automotive services requested.</p>
-      <p><strong>Vehicle:</strong> ${workOrder.vehicle.year} ${workOrder.vehicle.make} ${workOrder.vehicle.model}</p>
-      <p><strong>Service Description:</strong> ${workOrder.serviceDetails.description}</p>
-      <p><strong>Status:</strong> ${workOrder.status.replace('_', ' ').toUpperCase()}</p>
-      ${workOrder.pricing.totalAmount > 0 ? `<p><strong>Total Amount:</strong> $${workOrder.pricing.totalAmount.toFixed(2)}</p>` : ''}
-      <br>
-      <p>If you have any questions, please don't hesitate to contact us.</p>
-      <p>Best regards,<br>Mobile Shop Team</p>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .header { background-color: #ff8c42; color: white; padding: 20px; text-align: center; }
+          .content { padding: 30px; background-color: #f9f9f9; }
+          .work-order-details { background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
+          .label { font-weight: bold; color: #555; }
+          .download-button { 
+            display: inline-block; 
+            padding: 12px 25px; 
+            background-color: #ff8c42; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            margin: 20px 0;
+            font-weight: bold;
+          }
+          .footer { text-align: center; color: #777; font-size: 12px; margin-top: 30px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>Mobile Shop</h1>
+          <p>Professional Mobile Automotive Service</p>
+        </div>
+        
+        <div class="content">
+          <h2>Work Order: ${workOrder.workOrderNumber}</h2>
+          <p>Dear <strong>${workOrder.customer.name}</strong>,</p>
+          
+          <p>We're pleased to provide you with your work order for the automotive services. Please review the details below and keep this for your records.</p>
+          
+          <div class="work-order-details">
+            <h3>Service Details</h3>
+            <div class="detail-row">
+              <span class="label">Vehicle:</span>
+              <span>${workOrder.vehicle.year} ${workOrder.vehicle.make} ${workOrder.vehicle.model}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Service:</span>
+              <span>${workOrder.serviceDetails.description}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Status:</span>
+              <span>${workOrder.status.replace('_', ' ').toUpperCase()}</span>
+            </div>
+            ${workOrder.pricing.totalAmount > 0 ? `
+            <div class="detail-row">
+              <span class="label">Total Amount:</span>
+              <span style="font-size: 18px; font-weight: bold; color: #28a745;">$${workOrder.pricing.totalAmount.toFixed(2)}</span>
+            </div>` : ''}
+            ${workOrder.scheduledDate ? `
+            <div class="detail-row">
+              <span class="label">Scheduled Date:</span>
+              <span>${new Date(workOrder.scheduledDate).toLocaleDateString()}</span>
+            </div>` : ''}
+          </div>
+          
+          <div style="text-align: center;">
+            <a href="${downloadLink}" class="download-button">📄 Download Work Order PDF</a>
+          </div>
+          
+          <p><strong>Important:</strong> The attached PDF contains the complete work order with all details. You can also download it anytime using the link above.</p>
+          
+          <p>If you have any questions about this work order or need to schedule additional services, please don't hesitate to contact us:</p>
+          <ul>
+            <li>📞 Phone: (555) 123-4567</li>
+            <li>📧 Email: contact@mobileshop.com</li>
+          </ul>
+          
+          <p>Thank you for choosing Mobile Shop for your automotive needs!</p>
+          
+          <div class="footer">
+            <p>Mobile Shop - Professional Mobile Automotive Service<br>
+            This is an automated message. Please do not reply to this email.</p>
+          </div>
+        </div>
+      </body>
+      </html>
     `;
     
     // Send email
@@ -342,6 +420,37 @@ router.get('/:id/pdf', adminAuth, async (req, res) => {
   }
 });
 
+// @route   GET /api/work-orders/public/:workOrderNumber/pdf
+// @desc    Generate and download work order PDF for customers (public access)
+// @access  Public
+router.get('/public/:workOrderNumber/pdf', async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({ message: 'Email parameter is required' });
+    }
+    
+    const workOrder = await WorkOrder.findOne({ 
+      workOrderNumber: req.params.workOrderNumber,
+      'customer.email': email.toLowerCase()
+    });
+    
+    if (!workOrder) {
+      return res.status(404).json({ message: 'Work order not found or email does not match' });
+    }
+    
+    const pdfBuffer = await generateWorkOrderPDF(workOrder);
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=WorkOrder-${workOrder.workOrderNumber}.pdf`);
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error('Error generating customer PDF:', err);
+    res.status(500).json({ message: 'Failed to generate PDF' });
+  }
+});
+
 // Helper function to generate PDF
 async function generateWorkOrderPDF(workOrder) {
   return new Promise((resolve, reject) => {
@@ -352,56 +461,156 @@ async function generateWorkOrderPDF(workOrder) {
       doc.on('data', chunk => chunks.push(chunk));
       doc.on('end', () => resolve(Buffer.concat(chunks)));
       
-      // Header
-      doc.fontSize(20).text('WORK ORDER', { align: 'center' });
+      // Add orange header bar
+      doc.rect(0, 0, doc.page.width, 80).fill('#FF8C42');
+      
+      // Header with company info
+      doc.fillColor('white')
+         .fontSize(24)
+         .text('MOBILE SHOP', 50, 20, { align: 'left' });
+      
+      doc.fontSize(12)
+         .text('Professional Mobile Automotive Service', 50, 45);
+      
+      // Work Order title
+      doc.fillColor('black')
+         .fontSize(20)
+         .text('WORK ORDER', 0, 100, { align: 'center' });
+      
+      // Reset position after header
+      doc.y = 130;
+      
+      // Company contact info
+      doc.fontSize(10)
+         .text('📧 contact@mobileshop.com  |  📞 (555) 123-4567  |  🌐 www.mobileshop.com', { align: 'center' });
+      doc.moveDown(2);
+      
+      // Work Order Details Box
+      const detailsY = doc.y;
+      doc.rect(doc.page.width - 200, detailsY - 5, 180, 70).stroke();
+      
+      doc.fontSize(12).font('Helvetica-Bold')
+         .text('Work Order #:', doc.page.width - 190, detailsY + 5)
+         .font('Helvetica')
+         .text(workOrder.workOrderNumber, doc.page.width - 100, detailsY + 5);
+      
+      doc.font('Helvetica-Bold')
+         .text('Date:', doc.page.width - 190, detailsY + 20)
+         .font('Helvetica')
+         .text(new Date(workOrder.createdAt).toLocaleDateString(), doc.page.width - 100, detailsY + 20);
+      
+      doc.font('Helvetica-Bold')
+         .text('Status:', doc.page.width - 190, detailsY + 35)
+         .font('Helvetica')
+         .fillColor('#FF8C42')
+         .text(workOrder.status.replace('_', ' ').toUpperCase(), doc.page.width - 100, detailsY + 35)
+         .fillColor('black');
+      
+      doc.y = detailsY + 80;
       doc.moveDown();
       
-      // Company Info
-      doc.fontSize(14).text('Mobile Shop', { align: 'left' });
-      doc.fontSize(10).text('Professional Mobile Automotive Service');
-      doc.text('Email: contact@mobileshop.com | Phone: (555) 123-4567');
-      doc.moveDown();
+      // Customer Information Section
+      const customerY = doc.y;
+      doc.fontSize(14).font('Helvetica-Bold')
+         .fillColor('#FF8C42')
+         .text('👤 CUSTOMER INFORMATION', 50, customerY)
+         .fillColor('black');
       
-      // Work Order Details
-      doc.fontSize(12).text(`Work Order #: ${workOrder.workOrderNumber}`, { align: 'right' });
-      doc.text(`Date: ${new Date(workOrder.createdAt).toLocaleDateString()}`, { align: 'right' });
-      doc.text(`Status: ${workOrder.status.replace('_', ' ').toUpperCase()}`, { align: 'right' });
-      doc.moveDown();
+      // Customer info box
+      doc.rect(50, customerY + 20, 250, 80).stroke();
+      doc.fontSize(10).font('Helvetica');
+      let customerInfoY = customerY + 30;
       
-      // Customer Information
-      doc.fontSize(14).text('CUSTOMER INFORMATION', { underline: true });
-      doc.fontSize(10);
-      doc.text(`Name: ${workOrder.customer.name}`);
-      doc.text(`Email: ${workOrder.customer.email}`);
-      doc.text(`Phone: ${workOrder.customer.phone}`);
+      doc.font('Helvetica-Bold').text('Name:', 60, customerInfoY)
+         .font('Helvetica').text(workOrder.customer.name, 100, customerInfoY);
+      customerInfoY += 15;
+      
+      doc.font('Helvetica-Bold').text('Email:', 60, customerInfoY)
+         .font('Helvetica').text(workOrder.customer.email, 100, customerInfoY);
+      customerInfoY += 15;
+      
+      doc.font('Helvetica-Bold').text('Phone:', 60, customerInfoY)
+         .font('Helvetica').text(workOrder.customer.phone, 100, customerInfoY);
+      
       if (workOrder.customer.address.street) {
-        doc.text(`Address: ${workOrder.customer.address.street}`);
-        doc.text(`${workOrder.customer.address.city}, ${workOrder.customer.address.state} ${workOrder.customer.address.zipCode}`);
+        customerInfoY += 15;
+        doc.font('Helvetica-Bold').text('Address:', 60, customerInfoY)
+           .font('Helvetica').text(`${workOrder.customer.address.street}, ${workOrder.customer.address.city}, ${workOrder.customer.address.state} ${workOrder.customer.address.zipCode}`, 120, customerInfoY, { width: 170 });
       }
+      
+      // Vehicle Information Section
+      const vehicleY = customerY;
+      doc.fontSize(14).font('Helvetica-Bold')
+         .fillColor('#FF8C42')
+         .text('🚗 VEHICLE INFORMATION', 320, vehicleY)
+         .fillColor('black');
+      
+      // Vehicle info box
+      doc.rect(320, vehicleY + 20, 250, 80).stroke();
+      doc.fontSize(10).font('Helvetica');
+      let vehicleInfoY = vehicleY + 30;
+      
+      doc.font('Helvetica-Bold').text('Vehicle:', 330, vehicleInfoY)
+         .font('Helvetica').text(`${workOrder.vehicle.year} ${workOrder.vehicle.make} ${workOrder.vehicle.model}`, 380, vehicleInfoY);
+      
+      if (workOrder.vehicle.vin) {
+        vehicleInfoY += 15;
+        doc.font('Helvetica-Bold').text('VIN:', 330, vehicleInfoY)
+           .font('Helvetica').text(workOrder.vehicle.vin, 380, vehicleInfoY);
+      }
+      
+      if (workOrder.vehicle.licensePlate) {
+        vehicleInfoY += 15;
+        doc.font('Helvetica-Bold').text('License:', 330, vehicleInfoY)
+           .font('Helvetica').text(workOrder.vehicle.licensePlate, 380, vehicleInfoY);
+      }
+      
+      if (workOrder.vehicle.mileage) {
+        vehicleInfoY += 15;
+        doc.font('Helvetica-Bold').text('Mileage:', 330, vehicleInfoY)
+           .font('Helvetica').text(workOrder.vehicle.mileage, 380, vehicleInfoY);
+      }
+      
+      doc.y = Math.max(customerY + 110, vehicleY + 110);
       doc.moveDown();
       
-      // Vehicle Information
-      doc.fontSize(14).text('VEHICLE INFORMATION', { underline: true });
-      doc.fontSize(10);
-      doc.text(`Vehicle: ${workOrder.vehicle.year} ${workOrder.vehicle.make} ${workOrder.vehicle.model}`);
-      if (workOrder.vehicle.vin) doc.text(`VIN: ${workOrder.vehicle.vin}`);
-      if (workOrder.vehicle.licensePlate) doc.text(`License Plate: ${workOrder.vehicle.licensePlate}`);
-      if (workOrder.vehicle.mileage) doc.text(`Mileage: ${workOrder.vehicle.mileage}`);
-      doc.moveDown();
+      // Service Details Section
+      doc.fontSize(14).font('Helvetica-Bold')
+         .fillColor('#FF8C42')
+         .text('🔧 SERVICE DETAILS', 50, doc.y)
+         .fillColor('black');
+      doc.moveDown(0.5);
       
-      // Service Details
-      doc.fontSize(14).text('SERVICE DETAILS', { underline: true });
-      doc.fontSize(10);
-      doc.text(`Description: ${workOrder.serviceDetails.description}`);
+      // Service details box
+      const serviceDetailsY = doc.y;
+      const serviceBoxHeight = 120;
+      doc.rect(50, serviceDetailsY, doc.page.width - 100, serviceBoxHeight).stroke();
+      
+      doc.fontSize(10).font('Helvetica');
+      let serviceY = serviceDetailsY + 10;
+      
+      doc.font('Helvetica-Bold').text('Service Description:', 60, serviceY)
+         .font('Helvetica').text(workOrder.serviceDetails.description, 160, serviceY, { width: doc.page.width - 220 });
+      serviceY += 20;
+      
       if (workOrder.serviceDetails.customerComplaints) {
-        doc.text(`Customer Complaints: ${workOrder.serviceDetails.customerComplaints}`);
+        doc.font('Helvetica-Bold').text('Customer Complaints:', 60, serviceY)
+           .font('Helvetica').text(workOrder.serviceDetails.customerComplaints, 180, serviceY, { width: doc.page.width - 240 });
+        serviceY += 20;
       }
+      
       if (workOrder.serviceDetails.diagnosis) {
-        doc.text(`Diagnosis: ${workOrder.serviceDetails.diagnosis}`);
+        doc.font('Helvetica-Bold').text('Diagnosis:', 60, serviceY)
+           .font('Helvetica').text(workOrder.serviceDetails.diagnosis, 120, serviceY, { width: doc.page.width - 180 });
+        serviceY += 20;
       }
+      
       if (workOrder.serviceDetails.workPerformed) {
-        doc.text(`Work Performed: ${workOrder.serviceDetails.workPerformed}`);
+        doc.font('Helvetica-Bold').text('Work Performed:', 60, serviceY)
+           .font('Helvetica').text(workOrder.serviceDetails.workPerformed, 150, serviceY, { width: doc.page.width - 210 });
       }
+      
+      doc.y = serviceDetailsY + serviceBoxHeight + 10;
       doc.moveDown();
       
       // Labor Items
@@ -432,8 +641,21 @@ async function generateWorkOrderPDF(workOrder) {
         doc.fontSize(14).text(`TOTAL: $${workOrder.pricing.totalAmount.toFixed(2)}`, { align: 'right' });
       }
       
-      // Footer
-      doc.fontSize(8).text('Thank you for choosing Mobile Shop for your automotive needs!', 50, doc.page.height - 50);
+      // Professional Footer
+      const footerY = doc.page.height - 80;
+      doc.rect(0, footerY, doc.page.width, 80).fill('#F5F5F5');
+      
+      doc.fillColor('#666')
+         .fontSize(10)
+         .font('Helvetica-Bold')
+         .text('Thank you for choosing Mobile Shop!', 0, footerY + 15, { align: 'center' })
+         .fontSize(8)
+         .font('Helvetica')
+         .text('Professional Mobile Automotive Service - Bringing quality service to your location', 0, footerY + 30, { align: 'center' })
+         .text('📧 contact@mobileshop.com  |  📞 (555) 123-4567  |  🌐 www.mobileshop.com', 0, footerY + 45, { align: 'center' })
+         .fontSize(7)
+         .fillColor('#999')
+         .text(`Document generated on ${new Date().toLocaleString()}`, 0, footerY + 60, { align: 'center' });
       
       doc.end();
     } catch (error) {

@@ -29,6 +29,7 @@ export default function AppLayout({ user, onLogout }) {
           <NavLink to="/blog" className="nav-link" onClick={closeMenu}>Blog</NavLink>
           <NavLink to="/about" className="nav-link" onClick={closeMenu}>About Us</NavLink>
           <NavLink to="/contact" className="nav-link" onClick={closeMenu}>Contact</NavLink>
+          <NavLink to="/work-order-portal" className="nav-link work-order-link" onClick={closeMenu}>📄 Work Orders</NavLink>
 
           {user ? (
             <>

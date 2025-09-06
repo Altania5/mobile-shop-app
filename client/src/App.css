@@ -324,6 +324,29 @@ button:active {
   text-decoration: underline;
 }
 
+/* Work Order Portal Link Styling */
+.work-order-link {
+  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+  color: white !important;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 140, 66, 0.2);
+}
+
+.work-order-link:hover {
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+  text-decoration: none;
+}
+
+.work-order-link.active {
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+}
+
 /* A generic container for our pages */
 .page-container {
     max-width: 800px;
