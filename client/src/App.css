@@ -2513,13 +2513,11 @@ button:active {
 .card-1 {
   top: 20px;
   left: 20px;
-  animation-delay: 0s;
 }
 
 .card-2 {
   bottom: 100px;
   right: 20px;
-  animation-delay: 2s;
 }
 
 .card-3 {
@@ -2543,7 +2541,6 @@ button:active {
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-    animation-delay: 4s;
   }
 }
 
