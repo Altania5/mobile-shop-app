@@ -79,12 +79,17 @@ router.get('/:id', adminAuth, async (req, res) => {
 // @access  Admin
 router.post('/', adminAuth, async (req, res) => {
   try {
+    console.log('Creating work order with data:', JSON.stringify(req.body, null, 2));
+    console.log('User ID:', req.user.id);
+    
     const workOrder = new WorkOrder({
       ...req.body,
       createdBy: req.user.id
     });
     
+    console.log('Work order before save:', JSON.stringify(workOrder.toObject(), null, 2));
     await workOrder.save();
+    console.log('Work order saved successfully with number:', workOrder.workOrderNumber);
     
     const populatedWorkOrder = await WorkOrder.findById(workOrder._id)
       .populate('createdBy', 'firstName lastName email')
