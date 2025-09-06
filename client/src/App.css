@@ -2647,13 +2647,14 @@ button:active {
 }
 
 .feature-card {
-  background: white;
+  background: var(--surface-color);
+  color: var(--text-color);
   padding: 40px 30px;
   border-radius: var(--border-radius-modern);
   box-shadow: var(--shadow-modern);
   text-align: center;
   transition: var(--transition-smooth);
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
 }
 
 .feature-card:hover {
@@ -2731,7 +2732,7 @@ button:active {
 
 .help-form-section {
   padding: 100px 0;
-  background: white;
+  background: var(--background-color);
 }
 
 /* ========================================= */
@@ -2751,10 +2752,12 @@ button:active {
 }
 
 .filter-sidebar-modern {
-  background: white;
+  background: var(--surface-color);
+  color: var(--text-color);
   padding: 30px;
   border-radius: var(--border-radius-modern);
   box-shadow: var(--shadow-modern);
+  border: 1px solid var(--border-color);
   height: fit-content;
   position: sticky;
   top: 100px;
@@ -2842,10 +2845,12 @@ button:active {
 }
 
 .services-main-content-modern {
-  background: white;
+  background: var(--surface-color);
+  color: var(--text-color);
   border-radius: var(--border-radius-modern);
   padding: 30px;
   box-shadow: var(--shadow-modern);
+  border: 1px solid var(--border-color);
 }
 
 /* ========================================= */
@@ -3043,12 +3048,13 @@ input[type="email"],
 input[type="password"],
 select,
 textarea {
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   padding: 14px 16px;
   font-size: 1rem;
   transition: var(--transition-smooth);
-  background: white;
+  background: var(--surface-color);
+  color: var(--text-color);
 }
 
 input[type="text"]:focus,

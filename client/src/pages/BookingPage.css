@@ -4,9 +4,11 @@
   padding: 2rem;
   max-width: 900px;
   margin: 2rem auto;
-  background-color: #f9f9f9;
+  background-color: var(--surface-color);
+  color: var(--text-color);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .booking-layout {
@@ -35,7 +37,8 @@
 }
 
 .react-calendar__tile {
-  background: #fff;
+  background: var(--surface-color);
+  color: var(--text-color);
   border-radius: 4px;
   transition: all 0.2s ease-in-out;
 }
@@ -76,8 +79,9 @@
 .time-slot-btn {
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  color: var(--text-color);
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
@@ -122,10 +126,10 @@
 
 /* Add to client/src/pages/BookingPage.css */
 .notice-card {
-    background-color: #fff3cd;
-    color: #664d03;
+    background-color: var(--surface-color);
+    color: var(--text-color);
     padding: 2rem;
-    border: 1px solid #ffecb5;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     text-align: center;
     max-width: 600px;

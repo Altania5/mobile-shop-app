@@ -1,11 +1,13 @@
 /* client/src/components/admin/ServiceManager.css */
 
 .service-manager-container {
-    background-color: #ffffff; /* White background */
-    border-radius: 8px; /* Rounded corners */
-    padding: 1.5rem; /* Spacing inside the box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    margin: 1rem; /* Space around the component */
+    background-color: var(--surface-color); 
+    color: var(--text-color);
+    border-radius: 8px; 
+    padding: 1.5rem; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border: 1px solid var(--border-color);
+    margin: 1rem; 
 }
 
 .table-responsive-container {

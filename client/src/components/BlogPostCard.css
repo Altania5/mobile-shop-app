@@ -1,6 +1,7 @@
 .blog-post-card {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   /* UPDATED: Remove padding from the main card to allow image to touch edges */
   padding: 0; 

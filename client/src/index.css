@@ -55,12 +55,14 @@ body {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--surface-color);
+  color: var(--text-color);
   padding: 30px;
   border-radius: var(--border-radius);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 500px;
+  border: 1px solid var(--border-color);
 }
 
 .modal-content h2 {
