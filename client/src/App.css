@@ -2496,7 +2496,7 @@ button:active {
   color: white;
   text-align: center;
   box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-  animation: float 6s ease-in-out infinite;
+  /* Removed float animation to prevent overlap issues */
 }
 
 .floating-card .card-icon {
@@ -2510,25 +2510,32 @@ button:active {
   font-weight: 500;
 }
 
-/* Hide all floating cards on mobile to prevent overlap */
-@media (max-width: 767px) {
-  .floating-card {
-    display: none;
-  }
+.card-1 {
+  top: 20px;
+  left: 20px;
+  animation-delay: 0s;
 }
 
-/* Show all 3 cards only on larger screens where they have space */
+.card-2 {
+  bottom: 100px;
+  right: 20px;
+  animation-delay: 2s;
+}
+
+.card-3 {
+  display: none; /* Hide third card on all screen sizes to prevent overlap */
+}
+
+/* Adjust positioning for larger screens */
 @media (min-width: 768px) {
   .card-1 {
     top: 50px;
     left: 20px;
-    animation-delay: 0s;
   }
   
   .card-2 {
     top: 150px;
     right: 30px;
-    animation-delay: 2s;
   }
   
   .card-3 {
@@ -2537,6 +2544,23 @@ button:active {
     left: 50%;
     transform: translateX(-50%);
     animation-delay: 4s;
+  }
+}
+
+/* Make cards smaller on mobile */
+@media (max-width: 767px) {
+  .floating-card {
+    padding: 15px;
+    font-size: 0.85rem;
+  }
+  
+  .floating-card .card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  
+  .floating-card span {
+    font-size: 0.8rem;
   }
 }
 
