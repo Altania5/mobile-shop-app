@@ -93,15 +93,33 @@ router.get('/:id/availability', async (req, res) => {
         // Import TimeSlot model
         const TimeSlot = require('../models/TimeSlot');
         
-        // First, try to find available time slots in the new TimeSlot system
-        const availableSlots = await TimeSlot.findAvailableSlots(req.params.id, date);
+        // Check if we have ANY time slots for this service (not just for this date)
+        const hasTimeSlots = await TimeSlot.countDocuments({ service: req.params.id });
         
-        if (availableSlots.length > 0) {
+        if (hasTimeSlots > 0) {
+            // TimeSlot system is active for this service - use it exclusively
+            const availableSlots = await TimeSlot.findAvailableSlots(req.params.id, date);
             const times = availableSlots.map(slot => slot.time);
-            return res.json(times);
+            
+            // Return response with metadata indicating system used
+            return res.json({
+                times: times,
+                system: 'timeslot',
+                message: times.length === 0 ? 'No time slots available for this date. Admin needs to create time slots.' : null
+            });
         }
         
         // Fallback to the old system for backward compatibility
+        console.log(`Service ${req.params.id}: No time slots found, using legacy availability system`);
+        
+        if (!service.availableTimes || service.availableTimes.length === 0) {
+            return res.json({
+                times: [],
+                system: 'legacy',
+                message: 'No availability configured for this service. Admin needs to set available times or create time slots.'
+            });
+        }
+        
         const selectedDate = new Date(date);
         const dayStart = startOfDay(selectedDate);
         const dayEnd = endOfDay(selectedDate);
@@ -115,7 +133,11 @@ router.get('/:id/availability', async (req, res) => {
         const bookedTimes = bookingsOnDate.map(booking => booking.time);
         const availableTimes = service.availableTimes.filter(time => !bookedTimes.includes(time));
 
-        res.json(availableTimes);
+        res.json({
+            times: availableTimes,
+            system: 'legacy',
+            message: availableTimes.length === 0 ? 'All time slots are booked for this date.' : null
+        });
     } catch (err) {
         console.error("Availability check error:", err);
         res.status(500).json({ error: 'Server error while checking availability.' });

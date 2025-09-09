@@ -75,3 +75,106 @@
         border-bottom: 0;
     }
 }
+
+/* TimeSlot Integration Styles */
+.timeslot-notice {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.timeslot-notice p {
+    margin: 0;
+}
+
+.service-admin-item.enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.service-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.service-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.service-scheduling-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.stat-badge.active {
+    background: #10b981;
+    color: white;
+}
+
+.stat-badge.legacy {
+    background: #f59e0b;
+    color: white;
+}
+
+.stat-detail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.item-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.create-slots-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.create-slots-btn:hover {
+    background: #2563eb;
+}
+
+@media (max-width: 768px) {
+    .service-admin-item.enhanced {
+        padding: 0.75rem;
+    }
+    
+    .item-actions {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+    
+    .create-slots-btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+}

@@ -178,6 +178,93 @@ router.post('/', adminAuth, async (req, res) => {
   }
 });
 
+// @route   POST /api/timeslots/bulk-create
+// @desc    Create time slots from service availability settings
+// @access  Admin
+router.post('/bulk-create', adminAuth, async (req, res) => {
+  try {
+    const {
+      serviceId,
+      availableTimes,
+      availableDays,
+      startDate,
+      endDate,
+      notes = ''
+    } = req.body;
+
+    if (!serviceId || !availableTimes || !availableDays || !startDate || !endDate) {
+      return res.status(400).json({ 
+        msg: 'Service ID, available times, available days, start date, and end date are required' 
+      });
+    }
+
+    // Verify service exists
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ msg: 'Service not found' });
+    }
+
+    const slots = [];
+    const errors = [];
+    let currentDate = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    // Map day names to day indices
+    const dayMap = {
+      'Sunday': 0,
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6
+    };
+
+    const availableDayIndices = availableDays.map(day => dayMap[day]).filter(day => day !== undefined);
+
+    while (currentDate <= endDateObj) {
+      const dayIndex = currentDate.getDay();
+      
+      // Check if current day is in available days
+      if (availableDayIndices.includes(dayIndex)) {
+        for (const time of availableTimes) {
+          try {
+            const slot = new TimeSlot({
+              service: serviceId,
+              date: new Date(currentDate),
+              time,
+              createdBy: req.user.id,
+              notes: notes || `Auto-created from service ${service.name}`
+            });
+            
+            await slot.save();
+            slots.push(slot);
+          } catch (error) {
+            if (error.code === 11000) {
+              // Skip duplicate slots
+            } else {
+              errors.push(`Error creating slot ${format(currentDate, 'yyyy-MM-dd')} at ${time}: ${error.message}`);
+            }
+          }
+        }
+      }
+      
+      // Move to next day
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    res.status(201).json({
+      msg: `${slots.length} time slots created successfully`,
+      slots,
+      errors: errors.length > 0 ? errors : undefined
+    });
+    
+  } catch (err) {
+    console.error('Error creating bulk time slots from service:', err);
+    res.status(500).json({ msg: 'Server error while creating time slots' });
+  }
+});
+
 // @route   POST /api/timeslots/bulk
 // @desc    Create multiple time slots at once
 // @access  Admin
@@ -341,6 +428,61 @@ router.delete('/bulk', adminAuth, async (req, res) => {
   } catch (err) {
     console.error('Error deleting time slots:', err);
     res.status(500).json({ msg: 'Server error while deleting time slots' });
+  }
+});
+
+// @route   GET /api/timeslots/system-stats
+// @desc    Get overall TimeSlot system statistics
+// @access  Admin
+router.get('/system-stats', adminAuth, async (req, res) => {
+  try {
+    // Get overall system statistics
+    const totalSlots = await TimeSlot.countDocuments();
+    const availableSlots = await TimeSlot.countDocuments({ isAvailable: true, isBooked: false });
+    const bookedSlots = await TimeSlot.countDocuments({ isBooked: true });
+    const servicesWithSlots = await TimeSlot.distinct('service').then(services => services.length);
+    
+    res.json({
+      totalSlots,
+      availableSlots,
+      bookedSlots,
+      servicesWithSlots,
+      utilizationRate: totalSlots > 0 ? ((bookedSlots / totalSlots) * 100).toFixed(2) : 0
+    });
+    
+  } catch (err) {
+    console.error('Error fetching system statistics:', err);
+    res.status(500).json({ msg: 'Server error while fetching system statistics' });
+  }
+});
+
+// @route   GET /api/timeslots/stats
+// @desc    Get time slot statistics for a specific service
+// @access  Admin
+router.get('/stats', adminAuth, async (req, res) => {
+  try {
+    const { serviceId } = req.query;
+    
+    if (!serviceId) {
+      return res.status(400).json({ msg: 'Service ID is required' });
+    }
+    
+    const total = await TimeSlot.countDocuments({ service: serviceId });
+    const available = await TimeSlot.countDocuments({ 
+      service: serviceId, 
+      isAvailable: true, 
+      isBooked: false 
+    });
+    const booked = await TimeSlot.countDocuments({ 
+      service: serviceId, 
+      isBooked: true 
+    });
+    
+    res.json({ total, available, booked });
+    
+  } catch (err) {
+    console.error('Error fetching service statistics:', err);
+    res.status(500).json({ msg: 'Server error while fetching service statistics' });
   }
 });
 

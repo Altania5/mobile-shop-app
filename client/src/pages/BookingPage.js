@@ -16,6 +16,8 @@ function BookingPage({ user }) {
   const [selectedTime, setSelectedTime] = useState('');
   const [availableTimes, setAvailableTimes] = useState([]);
   const [timesLoading, setTimesLoading] = useState(false);
+  const [availabilitySystem, setAvailabilitySystem] = useState(null);
+  const [availabilityMessage, setAvailabilityMessage] = useState('');
 
   const [loading, setLoading] = useState(!service);
   const [error, setError] = useState('');
@@ -41,11 +43,25 @@ function BookingPage({ user }) {
                 try {
                     const formattedDate = format(date, 'yyyy-MM-dd');
                     const response = await axios.get(`/api/services/${serviceId}/availability?date=${formattedDate}`);
-                    setAvailableTimes(response.data);
+                    
+                    // Handle both old and new response formats
+                    if (Array.isArray(response.data)) {
+                        // Old format - just an array of times
+                        setAvailableTimes(response.data);
+                        setAvailabilitySystem('legacy');
+                        setAvailabilityMessage('');
+                    } else {
+                        // New format - object with times, system, and message
+                        setAvailableTimes(response.data.times || []);
+                        setAvailabilitySystem(response.data.system);
+                        setAvailabilityMessage(response.data.message || '');
+                    }
+                    
                     setSelectedTime('');
                 } catch (err) {
                     setError('Could not fetch available times.');
-                } finally {
+                    setAvailabilityMessage('');
+                }
                     setTimesLoading(false); // <-- 3. Set loading to false after fetching
                 }
             };
@@ -115,6 +131,13 @@ const handleProceedToBooking = () => {
         </div>
         <div className="booking-details">
           <h3>2. Select a Time</h3>
+          {availabilitySystem && (
+            <div className={`system-indicator ${availabilitySystem}`}>
+              <span className="system-badge">
+                {availabilitySystem === 'timeslot' ? '📅 TimeSlot System' : '📝 Legacy System'}
+              </span>
+            </div>
+          )}
           <div className="time-slots-container">
             {timesLoading ? (
                     <p>Loading times...</p>
@@ -129,7 +152,10 @@ const handleProceedToBooking = () => {
                 </button>
               ))
             ) : (
-              <p>No available time slots for this date.</p>
+              <div className="no-times-message">
+                <p>No available time slots for this date.</p>
+                {availabilityMessage && <p className="availability-message">{availabilityMessage}</p>}
+              </div>
             )}
           </div>
           <button 

@@ -101,11 +101,11 @@ function App() {
         <Route element={<AppLayout user={user} onLogout={handleLogout} />}>
           
           {/* Public Routes */}
-          <Route path="/" element={<ServicesPage />} />
+          <Route path="/" element={<ServicesPage user={user} />} />
           <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email/:token" element={<EmailVerificationPage />} />
-          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services" element={<ServicesPage user={user} />} />
           <Route path="/testimonials" element={<TestimonialsPage user={user} />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<PostPage user={user} />} />

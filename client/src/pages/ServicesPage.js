@@ -8,11 +8,12 @@ import CustomerChecklist from '../components/CustomerChecklist';
 import axios from 'axios';
 import { animateCounters, initScrollAnimations } from '../utils/animations';
 
-const ServicesPage = () => {
+const ServicesPage = ({ user }) => {
     const [services, setServices] = useState([]);
     const [filteredServices, setFilteredServices] = useState([]);
     const [error, setError] = useState('');
     const [isLoaded, setIsLoaded] = useState(false);
+    const [timeSlotSystemStats, setTimeSlotSystemStats] = useState(null);
 
     // Active filter states (updated when 'Apply' is clicked)
     const [searchTerm, setSearchTerm] = useState('');
@@ -38,13 +39,31 @@ const ServicesPage = () => {
                 const res = await axios.get('/api/services');
                 setServices(res.data);
                 setFilteredServices(res.data);
+                
+                // Fetch TimeSlot system stats for admin users
+                if (user && user.role === 'admin') {
+                    await fetchTimeSlotSystemStats();
+                }
             } catch (err){
                 setError('Could not fetch services.');
                 console.error(err);
             }
         };
         fetchServices();
-    }, []);
+    }, [user]);
+    
+    const fetchTimeSlotSystemStats = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            
+            const headers = { 'x-auth-token': token };
+            const response = await axios.get('/api/timeslots/system-stats', { headers });
+            setTimeSlotSystemStats(response.data);
+        } catch (err) {
+            console.warn('Could not fetch TimeSlot system statistics:', err);
+        }
+    };
 
     // Helper function to parse duration
     const getDurationInMinutes = (duration) => {
@@ -265,7 +284,11 @@ const ServicesPage = () => {
 
                         <main className="services-main-content-modern">
                             {error && <p className="error-message">{error}</p>}
-                            <ServicesList services={filteredServices} />
+                            <ServicesList 
+                                services={filteredServices} 
+                                user={user}
+                                timeSlotSystemStats={timeSlotSystemStats}
+                            />
                         </main>
                     </div>
                 </div>

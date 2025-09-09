@@ -4934,3 +4934,100 @@ label {
         width: 100% !important;
     }
 }
+
+/* Admin TimeSlot Overview Styles */
+.admin-timeslot-overview {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.overview-header h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.manage-link {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.manage-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.overview-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .admin-timeslot-overview {
+    padding: 1rem;
+  }
+  
+  .overview-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .overview-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .stat-item {
+    padding: 0.75rem;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+}
