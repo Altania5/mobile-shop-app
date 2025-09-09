@@ -61,7 +61,7 @@ function BookingPage({ user }) {
                 } catch (err) {
                     setError('Could not fetch available times.');
                     setAvailabilityMessage('');
-                }
+                } finally {
                     setTimesLoading(false); // <-- 3. Set loading to false after fetching
                 }
             };
