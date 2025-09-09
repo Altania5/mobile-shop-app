@@ -21,6 +21,8 @@ import ContactPage from './pages/ContactPage';
 import DashboardPage from './pages/DashboardPage';
 import AdminPage from './pages/AdminPage';
 import WorkOrderPortal from './pages/WorkOrderPortal';
+import BookingPage from './pages/BookingPage';
+import BookingFormPage from './pages/BookingFormPage';
 
 import './App.css';
 
@@ -110,6 +112,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/work-order-portal" element={<WorkOrderPortal />} />
+          <Route path="/book/:serviceId" element={<BookingPage user={user} />} />
+          <Route path="/book/:serviceId/details" element={<BookingFormPage user={user} />} />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={<ProtectedRoute user={user}><DashboardPage user={user} /></ProtectedRoute>} />
