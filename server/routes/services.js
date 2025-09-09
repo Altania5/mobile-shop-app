@@ -90,6 +90,18 @@ router.get('/:id/availability', async (req, res) => {
             return res.status(404).json({ msg: 'Service not found.' });
         }
 
+        // Import TimeSlot model
+        const TimeSlot = require('../models/TimeSlot');
+        
+        // First, try to find available time slots in the new TimeSlot system
+        const availableSlots = await TimeSlot.findAvailableSlots(req.params.id, date);
+        
+        if (availableSlots.length > 0) {
+            const times = availableSlots.map(slot => slot.time);
+            return res.json(times);
+        }
+        
+        // Fallback to the old system for backward compatibility
         const selectedDate = new Date(date);
         const dayStart = startOfDay(selectedDate);
         const dayEnd = endOfDay(selectedDate);
@@ -97,6 +109,7 @@ router.get('/:id/availability', async (req, res) => {
         const bookingsOnDate = await Booking.find({
             service: req.params.id,
             date: { $gte: dayStart, $lte: dayEnd },
+            status: { $nin: ['Cancelled'] }
         });
 
         const bookedTimes = bookingsOnDate.map(booking => booking.time);

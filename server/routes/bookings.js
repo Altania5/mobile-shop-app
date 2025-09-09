@@ -4,8 +4,9 @@ const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const User = require('../models/user.model');
 const Service = require('../models/service.model');
+const TimeSlot = require('../models/TimeSlot');
 
-// CREATE A BOOKING (Your existing code is correct here)
+// CREATE A BOOKING - Updated to integrate with TimeSlot model
 router.post('/', auth, async (req, res) => {
     try {
         const {
@@ -13,12 +14,31 @@ router.post('/', auth, async (req, res) => {
             vehicleMake, vehicleModel, vehicleYear, vehicleColor
         } = req.body;
 
+        // Check if there's a corresponding TimeSlot and mark it as booked
+        const bookingDate = new Date(date);
+        const timeSlot = await TimeSlot.findOne({
+            service: serviceId,
+            date: {
+                $gte: new Date(bookingDate.setHours(0, 0, 0, 0)),
+                $lte: new Date(bookingDate.setHours(23, 59, 59, 999))
+            },
+            time: time,
+            isAvailable: true,
+            isBooked: false
+        });
+
         const newBooking = new Booking({
             user: req.user.id, service: serviceId, date, time, notes,
             clientFirstName, clientLastName, vehicleMake, vehicleModel, vehicleYear, vehicleColor
         });
 
         const savedBooking = await newBooking.save();
+        
+        // Mark the TimeSlot as booked if found
+        if (timeSlot) {
+            await timeSlot.markAsBooked(savedBooking._id);
+        }
+        
         res.status(201).json(savedBooking);
     } catch (err) {
         console.error("Error creating booking:", err);
@@ -109,7 +129,7 @@ router.patch('/:id/status', [auth, adminAuth], async (req, res) => {
     }
 });
 
-// CANCEL BOOKING (Your existing code is correct)
+// CANCEL BOOKING - Updated to free up TimeSlot
 router.patch('/:id/cancel', auth, async (req, res) => {
     try {
         const booking = await Booking.findOneAndUpdate(
@@ -117,7 +137,18 @@ router.patch('/:id/cancel', auth, async (req, res) => {
             { status: 'Cancelled' },
             { new: true }
         );
+        
         if (!booking) return res.status(404).json({ msg: 'Booking not found or not authorized.' });
+        
+        // Free up the corresponding TimeSlot
+        const timeSlot = await TimeSlot.findOne({
+            booking: booking._id
+        });
+        
+        if (timeSlot) {
+            await timeSlot.markAsAvailable();
+        }
+        
         res.json({ msg: 'Booking cancelled successfully.', booking });
     } catch (err) {
         console.error("Error cancelling booking:", err);

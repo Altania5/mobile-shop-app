@@ -4,6 +4,7 @@ import BookingManager from '../components/admin/BookingManager';
 import TestimonialManager from '../components/admin/TestimonialManager';
 import BlogManager from '../components/admin/BlogManager';
 import WorkOrderManager from '../components/admin/WorkOrderManager';
+import TimeSlotManager from '../components/admin/TimeSlotManager';
 import '../components/admin/AdminTheme.css';
 
 function AdminPage() {
@@ -12,6 +13,7 @@ function AdminPage() {
       <h2>Admin Dashboard</h2>
       <div className="admin-panel">
         <BookingManager />
+        <TimeSlotManager />
         <ServiceManager />
         <WorkOrderManager />
         <TestimonialManager />
