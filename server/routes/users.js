@@ -9,22 +9,116 @@ const adminAuth = require('../middleware/adminAuth');
 // @desc    Register a new user
 // @access  Public
 router.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
+    
     try {
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ msg: 'User already exists' });
+        // Check if user already exists
+        let existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ msg: 'User with this email already exists' });
         }
-        user = new User({ username, email, password });
-        await user.save();
-        const payload = { user: { id: user.id, role: user.role } };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
-            if (err) throw err;
-            res.json({ token });
+        
+        // Create new user with verification token
+        const user = new User({
+            firstName,
+            lastName,
+            email,
+            password
         });
+        
+        // Generate email verification token
+        const verificationToken = user.generateEmailVerificationToken();
+        
+        // Save user
+        await user.save();
+        
+        // Send verification email
+        const { sendVerificationEmail } = require('../services/emailVerificationService');
+        await sendVerificationEmail(user, verificationToken);
+        
+        res.status(201).json({ 
+            msg: 'Registration successful! Please check your email to verify your account.' 
+        });
+        
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        if (err.code === 11000) {
+            return res.status(400).json({ msg: 'User with this email already exists' });
+        }
+        res.status(500).json({ msg: 'Server error during registration' });
+    }
+});
+
+// @route   GET /api/users/verify-email/:token
+// @desc    Verify user's email address
+// @access  Public
+router.get('/verify-email/:token', async (req, res) => {
+    try {
+        const { token } = req.params;
+        
+        // Find user with matching token that hasn't expired
+        const user = await User.findOne({
+            emailVerificationToken: token,
+            emailVerificationExpires: { $gt: Date.now() }
+        });
+        
+        if (!user) {
+            return res.status(400).json({ msg: 'Invalid or expired verification token' });
+        }
+        
+        // Update user verification status
+        user.isEmailVerified = true;
+        user.emailVerificationToken = null;
+        user.emailVerificationExpires = null;
+        
+        await user.save();
+        
+        // Send welcome email
+        const { sendWelcomeEmail } = require('../services/emailVerificationService');
+        await sendWelcomeEmail(user);
+        
+        res.json({ msg: 'Email verified successfully! Welcome to MobileTech Solutions.' });
+        
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server error during verification' });
+    }
+});
+
+// @route   POST /api/users/resend-verification
+// @desc    Resend verification email
+// @access  Public
+router.post('/resend-verification', async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({ msg: 'Email is required' });
+        }
+        
+        const user = await User.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        
+        if (user.isEmailVerified) {
+            return res.status(400).json({ msg: 'Email is already verified' });
+        }
+        
+        // Generate new verification token
+        const verificationToken = user.generateEmailVerificationToken();
+        await user.save();
+        
+        // Resend verification email
+        const { sendVerificationEmail } = require('../services/emailVerificationService');
+        await sendVerificationEmail(user, verificationToken);
+        
+        res.json({ msg: 'Verification email sent! Please check your inbox.' });
+        
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server error while resending verification' });
     }
 });
 

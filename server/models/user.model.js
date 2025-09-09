@@ -4,9 +4,19 @@ const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    username: {
+    firstName: {
         type: String,
         required: true,
+        trim: true
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    username: {
+        type: String,
+        required: false, // Make optional since we'll use firstName + lastName
         unique: true,
         trim: true,
         minlength: 3
@@ -33,13 +43,41 @@ const userSchema = new Schema({
     squareCustomerId: {
         type: String,
         default: null
+    },
+    isEmailVerified: {
+        type: Boolean,
+        default: false
+    },
+    emailVerificationToken: {
+        type: String,
+        default: null
+    },
+    emailVerificationExpires: {
+        type: Date,
+        default: null
     }
 }, {
     timestamps: true,
 });
 
-// This function runs before saving a user to hash the password
+// This function runs before saving a user to hash the password and generate username
 userSchema.pre('save', async function(next) {
+    // Generate username from firstName and lastName if not provided
+    if (!this.username) {
+        const baseUsername = (this.firstName + this.lastName).toLowerCase().replace(/[^a-z0-9]/g, '');
+        let username = baseUsername;
+        let counter = 1;
+        
+        // Ensure username is unique
+        while (await mongoose.models.User.findOne({ username: username })) {
+            username = baseUsername + counter;
+            counter++;
+        }
+        
+        this.username = username;
+    }
+    
+    // Hash password if modified
     if (!this.isModified('password')) {
         return next();
     }
@@ -51,6 +89,17 @@ userSchema.pre('save', async function(next) {
 // This method is used by the login route to compare passwords
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Method to generate email verification token
+userSchema.methods.generateEmailVerificationToken = function() {
+    const crypto = require('crypto');
+    const token = crypto.randomBytes(32).toString('hex');
+    
+    this.emailVerificationToken = token;
+    this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    
+    return token;
 };
 
 

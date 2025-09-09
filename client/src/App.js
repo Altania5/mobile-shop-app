@@ -7,6 +7,8 @@ import axios from 'axios';
 // Layout and Authentication
 import AppLayout from './layout/AppLayout';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import EmailVerificationPage from './pages/EmailVerificationPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Page Imports
@@ -99,6 +101,8 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<ServicesPage />} />
           <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email/:token" element={<EmailVerificationPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/testimonials" element={<TestimonialsPage user={user} />} />
           <Route path="/blog" element={<BlogPage />} />
