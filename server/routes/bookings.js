@@ -15,17 +15,30 @@ router.post('/', auth, async (req, res) => {
         } = req.body;
 
         // Check if there's a corresponding TimeSlot and mark it as booked
+        console.log('Creating booking with data:', { serviceId, date, time, clientFirstName, clientLastName });
+        
         const bookingDate = new Date(date);
+        const startOfDay = new Date(bookingDate.getFullYear(), bookingDate.getMonth(), bookingDate.getDate(), 0, 0, 0, 0);
+        const endOfDay = new Date(bookingDate.getFullYear(), bookingDate.getMonth(), bookingDate.getDate(), 23, 59, 59, 999);
+        
+        console.log('Looking for TimeSlot with:', {
+            service: serviceId,
+            date: { start: startOfDay, end: endOfDay },
+            time: time
+        });
+        
         const timeSlot = await TimeSlot.findOne({
             service: serviceId,
             date: {
-                $gte: new Date(bookingDate.setHours(0, 0, 0, 0)),
-                $lte: new Date(bookingDate.setHours(23, 59, 59, 999))
+                $gte: startOfDay,
+                $lte: endOfDay
             },
             time: time,
             isAvailable: true,
             isBooked: false
         });
+        
+        console.log('Found TimeSlot:', timeSlot ? 'Yes' : 'No');
 
         const newBooking = new Booking({
             user: req.user.id, service: serviceId, date, time, notes,
@@ -33,10 +46,14 @@ router.post('/', auth, async (req, res) => {
         });
 
         const savedBooking = await newBooking.save();
+        console.log('Booking saved successfully:', savedBooking._id);
         
         // Mark the TimeSlot as booked if found
         if (timeSlot) {
             await timeSlot.markAsBooked(savedBooking._id);
+            console.log('TimeSlot marked as booked');
+        } else {
+            console.log('No TimeSlot found - booking created without slot reservation');
         }
         
         res.status(201).json(savedBooking);
