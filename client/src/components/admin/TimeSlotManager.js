@@ -50,9 +50,7 @@ const TimeSlotManager = () => {
   }, []);
 
   useEffect(() => {
-    if (Object.values(filters).some(val => val !== '')) {
-      fetchTimeSlots();
-    }
+    fetchTimeSlots();
   }, [filters]);
 
   const fetchServices = async () => {
@@ -342,7 +340,9 @@ const TimeSlotManager = () => {
           </select>
           
           <button 
-            onClick={() => setFilters({serviceId: '', startDate: '', endDate: '', isAvailable: '', isBooked: ''})}
+            onClick={() => {
+              setFilters({serviceId: '', startDate: '', endDate: '', isAvailable: '', isBooked: ''});
+            }}
             className="btn-outline"
           >
             Clear Filters

@@ -1,7 +1,7 @@
 const sendEmail = require('../utils/sendEmail');
 
 const sendVerificationEmail = async (user, verificationToken) => {
-  const verificationUrl = `${process.env.CLIENT_URL || 'http://localhost:3000'}/verify-email/${verificationToken}`;
+  const verificationUrl = `${process.env.CLIENT_URL || 'https://hardworkmobile-0bf9805ba163.herokuapp.com'}/verify-email/${verificationToken}`;
   
   const htmlTemplate = `
     <!DOCTYPE html>
@@ -330,7 +330,7 @@ const sendWelcomeEmail = async (user) => {
                     </div>
                 </div>
                 
-                <p>Ready to get started? <a href="${process.env.CLIENT_URL || 'http://localhost:3000'}/services" style="color: #3b82f6; font-weight: 600;">Explore our services</a></p>
+                <p>Ready to get started? <a href="${process.env.CLIENT_URL || 'https://hardworkmobile-0bf9805ba163.herokuapp.com'}/services" style="color: #3b82f6; font-weight: 600;">Explore our services</a></p>
             </div>
         </div>
     </body>
