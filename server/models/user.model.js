@@ -44,6 +44,10 @@ const userSchema = new Schema({
         type: String,
         default: null
     },
+    hasCardOnFile: {
+        type: Boolean,
+        default: false
+    },
     isEmailVerified: {
         type: Boolean,
         default: false

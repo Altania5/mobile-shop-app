@@ -129,7 +129,7 @@ const WorkOrderPortal = () => {
               </div>
               <div className="contact-item">
                 <span className="icon">📧</span>
-                <span>contact@mobileshop.com</span>
+                <span>JamesFerzanden@hardworkmobile.com</span>
               </div>
             </div>
           </div>

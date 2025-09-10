@@ -24,8 +24,8 @@ const SquarePaymentForm = () => {
             // Mark as initialized immediately.
             isSquareFormInitialized = true;
 
-            const appId = 'sq0idp-q-vzV4gSPquTpMuWUE65cg';
-            const locationId = 'L3RJ8MENJB14Q';
+            const appId = 'sandbox-sq0idb-1q8VlfKxP7diXgxW0kPfOQ';
+            const locationId = 'LC7GVN94B0H54';
 
             try {
                 const payments = window.Square.payments(appId, locationId);
@@ -59,7 +59,11 @@ const SquarePaymentForm = () => {
             const result = await cardRef.current.tokenize();
             if (result.status === 'OK') {
                 const token = result.token;
-                const response = await axios.post('/api/payments/save-card', { sourceId: token });
+                const authToken = localStorage.getItem('token');
+                const response = await axios.post('/api/payments/save-card', 
+                    { sourceId: token },
+                    { headers: { 'Authorization': `Bearer ${authToken}` } }
+                );
                 setStatus({ message: response.data.msg, type: 'success' });
             } else {
                 setStatus({ message: `Tokenization failed: ${result.errors[0].message}`, type: 'error' });

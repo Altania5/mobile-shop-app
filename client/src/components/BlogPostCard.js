@@ -15,7 +15,7 @@ const truncateText = (text, maxLength) => {
 function BlogPostCard({ post }) {
   const authorName = post.author ? `${post.author.firstName} ${post.author.lastName}` : 'Admin';
   // Construct the full URL for the image
-  const imageUrl = post.heroImage ? `http://localhost:5000${post.heroImage}` : null;
+  const imageUrl = post.heroImage ? `${post.heroImage}` : null;
 
   return (
     <div className="blog-post-card">

@@ -75,7 +75,7 @@ function PostPage({ user }) {
   if (error) return <div className="post-status error">{error}</div>;
   if (!post) return null;
 
-  const imageUrl = post.heroImage ? `http://localhost:5000${post.heroImage}` : null;
+  const imageUrl = post.heroImage ? `${post.heroImage}` : null;
   const authorName = post.author ? `${post.author.firstName} ${post.author.lastName}` : 'Admin';
   const hasLiked = user && likes.includes(user.id);
 

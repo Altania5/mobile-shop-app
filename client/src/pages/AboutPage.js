@@ -91,7 +91,7 @@ const AboutPage = () => {
                     <div className="sidebar-widget">
                         <h3><i className="fas fa-bolt"></i> Quick Contact</h3>
                         <p><i className="fas fa-phone"></i> <strong>Phone:</strong> (555) 123-4567</p>
-                        <p><i className="fas fa-envelope"></i> <strong>Email:</strong> contact@mobileshop.com</p>
+                        <p><i className="fas fa-envelope"></i> <strong>Email:</strong> JamesFerzanden@hardworkmobile.com</p>
                         <p><i className="fas fa-clock"></i> <strong>Hours:</strong> Mon-Fri, 9am - 5pm</p>
                         <Link to="/contact" className="cta-button">
                             <i className="fas fa-paper-plane"></i> Send a Message

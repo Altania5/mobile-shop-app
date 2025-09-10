@@ -26,18 +26,14 @@ router.post('/register', async (req, res) => {
             password
         });
         
-        // Generate email verification token
-        const verificationToken = user.generateEmailVerificationToken();
+        // For testing: Set user as verified immediately
+        user.isEmailVerified = true;
         
         // Save user
         await user.save();
         
-        // Send verification email
-        const { sendVerificationEmail } = require('../services/emailVerificationService');
-        await sendVerificationEmail(user, verificationToken);
-        
         res.status(201).json({ 
-            msg: 'Registration successful! Please check your email to verify your account.' 
+            msg: 'Registration successful! User verified for testing.' 
         });
         
     } catch (err) {
@@ -181,9 +177,6 @@ router.get('/me', auth, async (req, res) => {
             return res.status(404).json({ msg: 'User not found' });
         }
         const userResponse = user.toObject();
-        // Temporary bypass for testing - always return true for hasCardOnFile
-        // TODO: Remove this bypass when Square payment is fully configured
-        userResponse.hasCardOnFile = true; // !!user.squareCustomerId;
         res.json(userResponse);
     } catch (err) {
         console.error(err.message);
