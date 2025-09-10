@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import WorkOrderForm from './WorkOrderForm';
 import WorkOrderManager from './WorkOrderManager';
+import CustomBookingForm from './CustomBookingForm';
+import CustomerAssignmentPage from './CustomerAssignmentPage';
 
 // AdminBookingCard component with Work Order functionality
 const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusTextChange, onSaveStatus, onCreateWorkOrder }) => (
@@ -74,6 +76,11 @@ function BookingManager() {
     const [showWorkOrderForm, setShowWorkOrderForm] = useState(false);
     const [showWorkOrderManager, setShowWorkOrderManager] = useState(false);
     const [selectedBookingForWorkOrder, setSelectedBookingForWorkOrder] = useState(null);
+    
+    // Custom Booking related state
+    const [showCustomBookingForm, setShowCustomBookingForm] = useState(false);
+    const [showCustomerAssignment, setShowCustomerAssignment] = useState(false);
+    const [pendingCustomBooking, setPendingCustomBooking] = useState(null);
 
     const fetchAllBookings = useCallback(async () => {
         try {
@@ -213,6 +220,27 @@ function BookingManager() {
         setShowWorkOrderForm(false);
         setShowWorkOrderManager(false);
         setSelectedBookingForWorkOrder(null);
+        setShowCustomBookingForm(false);
+        setShowCustomerAssignment(false);
+        setPendingCustomBooking(null);
+    };
+    
+    const handleCreateCustomBooking = () => {
+        setShowCustomBookingForm(true);
+        setShowWorkOrderForm(false);
+        setShowWorkOrderManager(false);
+        setShowCustomerAssignment(false);
+    };
+    
+    const handleCustomBookingSaved = (bookingData) => {
+        setPendingCustomBooking(bookingData);
+        setShowCustomBookingForm(false);
+        setShowCustomerAssignment(true);
+    };
+    
+    const handleCustomerAssigned = () => {
+        fetchAllBookings();
+        handleBackToBookings();
     };
 
     const activeBookings = Array.isArray(allBookings)
@@ -232,6 +260,41 @@ function BookingManager() {
     );
 
     // Conditional rendering based on current view
+    if (showCustomBookingForm) {
+        return (
+            <div className="manager-container">
+                <div className="manager-header">
+                    <button onClick={handleBackToBookings} className="back-button">
+                        ← Back to Bookings
+                    </button>
+                    <h3>Create Custom Booking</h3>
+                </div>
+                <CustomBookingForm 
+                    onSave={handleCustomBookingSaved}
+                    onCancel={handleBackToBookings}
+                />
+            </div>
+        );
+    }
+    
+    if (showCustomerAssignment) {
+        return (
+            <div className="manager-container">
+                <div className="manager-header">
+                    <button onClick={handleBackToBookings} className="back-button">
+                        ← Back to Bookings
+                    </button>
+                    <h3>Assign Customer</h3>
+                </div>
+                <CustomerAssignmentPage 
+                    booking={pendingCustomBooking}
+                    onAssign={handleCustomerAssigned}
+                    onCancel={handleBackToBookings}
+                />
+            </div>
+        );
+    }
+    
     if (showWorkOrderForm) {
         return (
             <div className="manager-container">
@@ -268,9 +331,14 @@ function BookingManager() {
         <div className="manager-container">
             <div className="manager-header">
                 <h3>Manage Bookings</h3>
-                <button onClick={handleShowWorkOrderManager} className="work-order-manager-btn">
-                    📋 Work Order Manager
-                </button>
+                <div className="header-buttons">
+                    <button onClick={handleCreateCustomBooking} className="custom-booking-btn">
+                        ➕ Create Custom Booking
+                    </button>
+                    <button onClick={handleShowWorkOrderManager} className="work-order-manager-btn">
+                        📋 Work Order Manager
+                    </button>
+                </div>
             </div>
             {error && <p className="error-message">{error}</p>}
             

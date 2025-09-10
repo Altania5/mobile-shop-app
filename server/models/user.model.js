@@ -55,6 +55,22 @@ const userSchema = new Schema({
     emailVerificationExpires: {
         type: Date,
         default: null
+    },
+    phone: {
+        type: String,
+        trim: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    needsPasswordReset: {
+        type: Boolean,
+        default: false
+    },
+    createdByAdmin: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true,

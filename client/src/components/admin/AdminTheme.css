@@ -305,6 +305,33 @@ h2:contains("Admin Dashboard"),
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
 }
 
+/* Header Buttons Layout */
+.header-buttons {
+    display: flex !important;
+    gap: 15px !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+/* Custom Booking Button in Header */
+.custom-booking-btn {
+    background: var(--success-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--transition-smooth) !important;
+    font-size: 0.95rem !important;
+}
+
+.custom-booking-btn:hover {
+    background: #218838 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+}
+
 /* Work Order Manager Button in Header */
 .work-order-manager-btn {
     background: var(--accent-color) !important;

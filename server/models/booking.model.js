@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const bookingSchema = new Schema({
-  service: { type: Schema.Types.ObjectId, ref: 'Service', required: true },
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  service: { type: Schema.Types.ObjectId, ref: 'Service', required: false },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: false },
   date: { type: Date, required: true },
   // ADDED: Time slot for the appointment
   time: { type: String, required: true },
   status: {
     type: String,
-    enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
+    enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled', 'Pending Verification', 'Pending Customer Verification'],
     default: 'Pending'
   },
   serviceStatus: { type: String, default: '' },
@@ -19,7 +19,18 @@ const bookingSchema = new Schema({
   vehicleModel: { type: String, required: true },
   vehicleYear: { type: Number, required: true },
   vehicleColor: { type: String, required: true },
-  notes: { type: String, trim: true }
+  notes: { type: String, trim: true },
+  
+  // Custom booking fields
+  createdByAdmin: { type: Boolean, default: false },
+  requiresCustomerVerification: { type: Boolean, default: false },
+  isCustomService: { type: Boolean, default: false },
+  customServiceName: { type: String, trim: true },
+  customServicePrice: { type: Number },
+  duration: { type: Number, default: 60 },
+  assignedAt: { type: Date },
+  verificationToken: { type: String },
+  verifiedAt: { type: Date }
 }, {
   timestamps: true,
 });

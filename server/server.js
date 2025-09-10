@@ -42,7 +42,8 @@ const routes = [
     'service-request',
     'payments',
     'workOrders',
-    'timeSlots'
+    'timeSlots',
+    'admin'
 ];
 routes.forEach(route => {
     try {

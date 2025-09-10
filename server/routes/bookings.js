@@ -189,4 +189,93 @@ router.get('/mybookings', auth, async (req, res) => {
   }
 });
 
+// ADMIN CREATE CUSTOM BOOKING
+router.post('/admin-create', [auth, adminAuth], async (req, res) => {
+    try {
+        const {
+            serviceId, customServiceName, customServicePrice, isCustomService,
+            date, time, duration, notes, clientFirstName, clientLastName,
+            vehicleMake, vehicleModel, vehicleYear, vehicleColor
+        } = req.body;
+
+        let serviceRef = null;
+        let finalServiceName = '';
+        
+        if (isCustomService) {
+            // For custom services, create a temporary service entry or use a special marker
+            finalServiceName = customServiceName;
+        } else {
+            // Validate existing service
+            const service = await Service.findById(serviceId);
+            if (!service) {
+                return res.status(400).json({ msg: 'Service not found' });
+            }
+            serviceRef = serviceId;
+            finalServiceName = service.name;
+        }
+
+        const newBooking = new Booking({
+            service: serviceRef,
+            customServiceName: finalServiceName,
+            customServicePrice: isCustomService ? parseFloat(customServicePrice) : undefined,
+            date,
+            time,
+            duration: duration || 60,
+            notes,
+            clientFirstName,
+            clientLastName,
+            vehicleMake,
+            vehicleModel,
+            vehicleYear,
+            vehicleColor,
+            createdByAdmin: true,
+            requiresCustomerVerification: true,
+            status: 'Pending Verification',
+            isCustomService: isCustomService
+        });
+
+        const savedBooking = await newBooking.save();
+        console.log('Admin custom booking created:', savedBooking._id);
+        
+        res.status(201).json(savedBooking);
+    } catch (err) {
+        console.error('Error creating admin custom booking:', err);
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ msg: 'Please fill out all required fields.', details: err.errors });
+        }
+        res.status(500).json({ msg: 'Server error while creating custom booking.' });
+    }
+});
+
+// ASSIGN CUSTOMER TO CUSTOM BOOKING
+router.patch('/:id/assign-customer', [auth, adminAuth], async (req, res) => {
+    try {
+        const { customerId, customerEmail } = req.body;
+        const bookingId = req.params.id;
+
+        // Find the booking and update it with customer info
+        const booking = await Booking.findByIdAndUpdate(
+            bookingId,
+            {
+                user: customerId,
+                status: 'Pending Customer Verification',
+                assignedAt: new Date()
+            },
+            { new: true }
+        ).populate('service');
+
+        if (!booking) {
+            return res.status(404).json({ msg: 'Booking not found' });
+        }
+
+        // TODO: Send verification email to customer
+        console.log(`Custom booking ${bookingId} assigned to customer ${customerEmail}`);
+        
+        res.json({ msg: 'Booking assigned successfully', booking });
+    } catch (err) {
+        console.error('Error assigning customer to booking:', err);
+        res.status(500).json({ msg: 'Server error while assigning customer.' });
+    }
+});
+
 module.exports = router;
