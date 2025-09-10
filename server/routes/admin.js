@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../models/user.model');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // TEST ROUTE - to verify admin routes are working
 router.get('/test', (req, res) => {
