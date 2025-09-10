@@ -131,19 +131,33 @@
 }
 
 .error-message {
-  color: #d9534f;
-  background-color: #f2dede;
-  border: 1px solid #ebccd1;
-  padding: 1rem;
-  border-radius: 4px;
+    background: rgba(245, 101, 101, 0.15) !important;
+    color: var(--error-color) !important;
+    border: 2px solid var(--error-color) !important;
+    padding: 15px 20px !important;
+    border-radius: 8px !important;
+    margin: 15px 0 !important;
+    font-weight: 500 !important;
+}
+
+.error-message::before {
+    content: '⚠️ ' !important;
+    margin-right: 8px !important;
 }
 
 .success-message {
-  color: #3c763d;
-  background-color: #dff0d8;
-  border: 1px solid #d6e9c6;
-  padding: 1rem;
-  border-radius: 4px;
+    background: rgba(72, 187, 120, 0.15) !important;
+    color: var(--success-color) !important;
+    border: 2px solid var(--success-color) !important;
+    padding: 15px 20px !important;
+    border-radius: 8px !important;
+    margin: 15px 0 !important;
+    font-weight: 500 !important;
+}
+
+.success-message::before {
+    content: '✅ ' !important;
+    margin-right: 8px !important;
 }
 
 hr {
@@ -187,15 +201,24 @@ hr {
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #eee;
+    border: 2px solid var(--border-color) !important;
 }
 
 .testimonial-author-placeholder {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #e9ecef;
-    border: 2px solid #eee;
+    background: var(--surface-light) !important;
+    border: 2px solid var(--border-color) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.testimonial-author-placeholder::before {
+    content: '👤' !important;
+    color: var(--text-muted) !important;
+    font-size: 1.2rem !important;
 }
 
 .testimonial-content {
@@ -208,10 +231,12 @@ hr {
 
 .testimonial-content blockquote {
     margin: 0.5rem 0;
-    padding-left: 1rem;
-    border-left: 3px solid #007bff;
+    padding: 15px !important;
+    border-left: 4px solid var(--accent-color) !important;
+    background: var(--surface-light) !important;
+    border-radius: 0 8px 8px 0 !important;
     font-style: italic;
-    color: #555;
+    color: var(--text-light-color) !important;
 }
 
 .delete-btn {
