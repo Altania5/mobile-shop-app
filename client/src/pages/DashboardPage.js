@@ -76,18 +76,33 @@ const ServiceHistory = () => {
           {bookings.map(booking => (
             <div key={booking._id} className="booking-card">
               <div className="booking-card-header">
-                <h3>{booking.service?.name || 'Service Removed'}</h3>
-                <span className={`booking-status status-${booking.status.toLowerCase()}`}>
+                <h3>
+                  {booking.isCustomService 
+                    ? `${booking.customServiceName} (Professional Service)` 
+                    : (booking.service?.name || 'Service Removed')
+                  }
+                </h3>
+                <span className={`booking-status status-${booking.status.toLowerCase().replace(/\s+/g, '-')}`}>
                   {booking.status}
                 </span>
               </div>
               <div className="booking-card-body">
                 <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
                 <p><strong>Vehicle:</strong> {booking.vehicleYear} {booking.vehicleMake} {booking.vehicleModel} ({booking.vehicleColor})</p>
-                <p><strong>Price:</strong> {booking.service && typeof booking.service.price === 'number'
-                  ? `$${booking.service.price.toFixed(2)}`
-                  : 'N/A'}
+                <p><strong>Price:</strong> 
+                  {booking.isCustomService && booking.customServicePrice 
+                    ? `$${booking.customServicePrice}` 
+                    : (booking.service && typeof booking.service.price === 'number'
+                      ? `$${booking.service.price.toFixed(2)}`
+                      : 'N/A')
+                  }
                 </p>
+                {booking.duration && (
+                  <p><strong>Duration:</strong> {booking.duration} minutes</p>
+                )}
+                {booking.createdByAdmin && (
+                  <p><strong>Type:</strong> <span className="admin-created-badge">Professional Service</span></p>
+                )}
               </div>
               <div className="booking-card-footer">
                 {booking.status === 'Pending' && (

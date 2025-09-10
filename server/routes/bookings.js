@@ -84,8 +84,15 @@ router.get('/', auth, async (req, res) => {
             .populate({ path: 'service', select: 'name description price' })
             .sort({ createdAt: -1 });
 
-        // Filter out any bookings where the service might have been deleted
-        const validBookings = bookings.filter(booking => booking.service);
+        // Filter out bookings where service is deleted, but keep custom bookings
+        const validBookings = bookings.filter(booking => {
+            // Keep custom bookings even if they don't have a service reference
+            if (booking.isCustomService) {
+                return true;
+            }
+            // For regular bookings, ensure service exists
+            return booking.service;
+        });
         
         res.json(validBookings);
     } catch (err) {
@@ -128,8 +135,19 @@ router.get('/all', [auth, adminAuth], async (req, res) => {
             .populate({ path: 'service', select: 'name' })
             .sort({ date: -1 });
 
-        // Filter out any bookings where the user or service might have been deleted
-        const validBookings = bookings.filter(booking => booking.user && booking.service);
+        // Filter out bookings where user is deleted, but keep custom bookings even if service is null
+        const validBookings = bookings.filter(booking => {
+            // Must have a user
+            if (!booking.user) return false;
+            
+            // Keep custom bookings even if they don't have a service reference
+            if (booking.isCustomService) {
+                return true;
+            }
+            
+            // For regular bookings, ensure service exists
+            return booking.service;
+        });
 
         res.json(validBookings);
 

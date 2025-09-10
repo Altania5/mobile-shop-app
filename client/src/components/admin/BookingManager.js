@@ -9,17 +9,24 @@ import CustomerAssignmentPage from './CustomerAssignmentPage';
 const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusTextChange, onSaveStatus, onCreateWorkOrder }) => (
     <div className="admin-booking-card">
         <div className="card-header">
-            <h4>{booking.service ? booking.service.name : 'Service Not Available'}</h4>
+            <h4>
+                {booking.isCustomService 
+                    ? `${booking.customServiceName} (Custom Service)` 
+                    : (booking.service ? booking.service.name : 'Service Not Available')
+                }
+            </h4>
             <div className="header-controls">
                 <select
                     value={booking.status}
                     onChange={(e) => onStatusChange(booking._id, e.target.value)}
-                    className={`status-select status-${booking.status.toLowerCase()}`}
+                    className={`status-select status-${booking.status.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                     <option value="Pending">Pending</option>
                     <option value="Confirmed">Confirmed</option>
                     <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
+                    <option value="Pending Verification">Pending Verification</option>
+                    <option value="Pending Customer Verification">Pending Customer Verification</option>
                 </select>
                 <button 
                     className="create-work-order-btn"
@@ -51,6 +58,15 @@ const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusText
             )}
             <p><strong>Appointment:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
             <p><strong>Vehicle:</strong> {booking.vehicleYear} {booking.vehicleMake} {booking.vehicleModel}</p>
+            {booking.isCustomService && booking.customServicePrice && (
+                <p><strong>Price:</strong> ${booking.customServicePrice}</p>
+            )}
+            {booking.duration && (
+                <p><strong>Duration:</strong> {booking.duration} minutes</p>
+            )}
+            {booking.createdByAdmin && (
+                <p><strong>Type:</strong> <span className="custom-booking-badge">Admin Created</span></p>
+            )}
         </div>
     </div>
 );
