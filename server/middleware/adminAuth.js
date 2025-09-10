@@ -10,11 +10,11 @@ const adminAuth = (req, res, next) => {
                 return res.status(404).json({ msg: 'User not found.' });
             }
 
-            if (user.role && user.role.trim() === 'admin') {
-                console.log('Admin role confirmed. Granting access.');
+            if ((user.role && user.role.trim() === 'admin') || user.isAdmin === true) {
+                console.log('Admin access confirmed. Granting access.');
                 next();
             } else {
-                console.log(`Admin role check failed. User role is: '${user.role}'`);
+                console.log(`Admin access denied. User role: '${user.role}', isAdmin: ${user.isAdmin}`);
                 return res.status(401).json({ msg: 'Admin authorization denied.' });
             }
         } catch (err) {

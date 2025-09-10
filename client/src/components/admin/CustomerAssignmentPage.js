@@ -41,15 +41,29 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
         try {
             setLoading(true);
             const headers = { 'x-auth-token': token };
+            console.log('Fetching customers from /api/admin/users');
+            
             const response = await axios.get('/api/admin/users', { headers });
+            console.log('Response received:', response.data);
+            
+            // Check if response.data is an array
+            if (!Array.isArray(response.data)) {
+                console.error('API response is not an array:', response.data);
+                throw new Error('Invalid response format from server');
+            }
             
             // Filter to get only customers (non-admin users)
-            const customerUsers = response.data.filter(user => !user.isAdmin);
+            const customerUsers = response.data.filter(user => 
+                !user.isAdmin && user.role !== 'admin'
+            );
+            console.log('Filtered customers:', customerUsers);
+            
             setCustomers(customerUsers);
             setFilteredCustomers(customerUsers);
         } catch (err) {
             console.error('Error fetching customers:', err);
-            setError('Failed to load customers');
+            console.error('Error details:', err.response?.data);
+            setError(err.response?.data?.msg || err.message || 'Failed to load customers');
         } finally {
             setLoading(false);
         }
