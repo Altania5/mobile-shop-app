@@ -165,8 +165,14 @@ const WorkOrderManager = () => {
       
       alert(`Acknowledgment link sent successfully to customer!\n\nLink expires: ${new Date(response.data.tokenExpiresAt).toLocaleDateString()}`);
     } catch (err) {
-      alert('Failed to generate acknowledgment link');
-      console.error(err);
+      if (err.response?.status === 400 && err.response?.data?.message?.includes('already been acknowledged')) {
+        alert(`This work order has already been acknowledged.\n\nAcknowledged on: ${new Date(err.response.data.acknowledgedDate).toLocaleDateString()}`);
+        // Refresh the work orders list to get the latest data
+        fetchWorkOrders();
+      } else {
+        alert('Failed to generate acknowledgment link');
+        console.error(err);
+      }
     }
   };
 

@@ -206,6 +206,9 @@ workOrderSchema.methods.generateAcknowledgmentToken = function() {
   this.acknowledgment.tokenExpiresAt = expiresAt;
   this.acknowledgment.isRequired = true;
   
+  // Don't reset acknowledgment status if already acknowledged
+  // (This allows regenerating tokens for already acknowledged work orders if needed)
+  
   return token;
 };
 

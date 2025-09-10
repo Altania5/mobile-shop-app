@@ -40,6 +40,18 @@ router.get('/', adminAuth, async (req, res) => {
       .limit(parseInt(limit))
       .skip(parseInt(skip));
     
+    // Debug logging for acknowledgment status
+    workOrders.forEach(wo => {
+      if (wo.acknowledgment?.isRequired || wo.acknowledgment?.isAcknowledged) {
+        console.log(`WorkOrder ${wo.workOrderNumber} acknowledgment:`, {
+          isRequired: wo.acknowledgment.isRequired,
+          isAcknowledged: wo.acknowledgment.isAcknowledged,
+          acknowledgmentDate: wo.acknowledgment.acknowledgmentDate,
+          hasToken: !!wo.acknowledgment.acknowledgmentToken
+        });
+      }
+    });
+    
     const total = await WorkOrder.countDocuments(query);
     
     res.json({
@@ -613,6 +625,14 @@ router.post('/:id/generate-acknowledgment', adminAuth, async (req, res) => {
     const workOrder = await WorkOrder.findById(req.params.id);
     if (!workOrder) {
       return res.status(404).json({ message: 'Work order not found' });
+    }
+    
+    // Check if already acknowledged
+    if (workOrder.acknowledgment?.isAcknowledged) {
+      return res.status(400).json({ 
+        message: 'Work order has already been acknowledged',
+        acknowledgedDate: workOrder.acknowledgment.acknowledgmentDate
+      });
     }
     
     // Generate acknowledgment token
