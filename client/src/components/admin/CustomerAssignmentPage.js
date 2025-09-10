@@ -41,8 +41,17 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
         try {
             setLoading(true);
             const headers = { 'x-auth-token': token };
-            console.log('Fetching customers from /api/admin/users');
+            console.log('Testing admin routes...');
             
+            // First test if admin routes are working
+            try {
+                const testResponse = await axios.get('/api/admin/test');
+                console.log('Admin test route response:', testResponse.data);
+            } catch (testErr) {
+                console.error('Admin test route failed:', testErr);
+            }
+            
+            console.log('Fetching customers from /api/admin/users');
             const response = await axios.get('/api/admin/users', { headers });
             console.log('Response received:', response.data);
             

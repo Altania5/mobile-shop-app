@@ -4,12 +4,19 @@ const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const bcrypt = require('bcrypt');
 
+// TEST ROUTE - to verify admin routes are working
+router.get('/test', (req, res) => {
+    res.json({ msg: 'Admin routes are working!' });
+});
+
 // GET ALL USERS (For admin use)
 router.get('/users', [auth, adminAuth], async (req, res) => {
     try {
+        console.log('Admin users route called by user:', req.user?.id);
         const users = await User.find({}, '-password')
             .sort({ createdAt: -1 });
 
+        console.log(`Found ${users.length} users`);
         res.json(users);
     } catch (err) {
         console.error('Error fetching users:', err);
