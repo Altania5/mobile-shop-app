@@ -30,6 +30,7 @@ const bookingSchema = new Schema({
   duration: { type: Number, default: 60 },
   assignedAt: { type: Date },
   verificationToken: { type: String },
+  verificationExpiry: { type: Date },
   verifiedAt: { type: Date }
 }, {
   timestamps: true,

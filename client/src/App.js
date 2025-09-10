@@ -24,6 +24,7 @@ import WorkOrderPortal from './pages/WorkOrderPortal';
 import BookingPage from './pages/BookingPage';
 import BookingFormPage from './pages/BookingFormPage';
 import WorkOrderAcknowledgmentPage from './pages/WorkOrderAcknowledgmentPage';
+import CustomBookingVerificationPage from './pages/CustomBookingVerificationPage';
 
 import './App.css';
 
@@ -114,6 +115,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/work-order-portal" element={<WorkOrderPortal />} />
           <Route path="/work-order/acknowledge/:token" element={<WorkOrderAcknowledgmentPage />} />
+          <Route path="/verify-custom-booking/:token" element={<CustomBookingVerificationPage />} />
           <Route path="/book/:serviceId" element={<BookingPage user={user} />} />
           <Route path="/book/:serviceId/details" element={<BookingFormPage user={user} />} />
 
