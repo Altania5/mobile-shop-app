@@ -142,6 +142,34 @@ const WorkOrderManager = () => {
     }
   };
 
+  const handleGenerateAcknowledgment = async (workOrderId, workOrderNumber) => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
+      const response = await axios.post(`/api/workOrders/${workOrderId}/generate-acknowledgment`, {}, { headers });
+      
+      // Update the work order to reflect acknowledgment required
+      setWorkOrders(prev => (prev || []).map(wo => 
+        wo._id === workOrderId 
+          ? { 
+              ...wo, 
+              acknowledgment: {
+                ...wo.acknowledgment,
+                isRequired: true,
+                tokenExpiresAt: response.data.tokenExpiresAt
+              }
+            }
+          : wo
+      ));
+      
+      alert(`Acknowledgment link sent successfully to customer!\n\nLink expires: ${new Date(response.data.tokenExpiresAt).toLocaleDateString()}`);
+    } catch (err) {
+      alert('Failed to generate acknowledgment link');
+      console.error(err);
+    }
+  };
+
   const handleUpdateStatus = async (workOrderId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
@@ -273,6 +301,7 @@ const WorkOrderManager = () => {
                   <th>Total</th>
                   <th>Created</th>
                   <th>Email Status</th>
+                  <th>Acknowledgment</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -329,6 +358,26 @@ const WorkOrderManager = () => {
                       </div>
                     </td>
                     <td>
+                      <div className="acknowledgment-status">
+                        {workOrder.acknowledgment?.isAcknowledged ? (
+                          <span className="acknowledged">
+                            ✅ Acknowledged {workOrder.acknowledgment.acknowledgmentDate ? formatDate(workOrder.acknowledgment.acknowledgmentDate) : ''}
+                          </span>
+                        ) : workOrder.acknowledgment?.isRequired ? (
+                          <span className="pending-acknowledgment">
+                            ⏳ Pending
+                            {workOrder.acknowledgment.tokenExpiresAt && (
+                              <div className="expires-info">
+                                Expires: {formatDate(workOrder.acknowledgment.tokenExpiresAt)}
+                              </div>
+                            )}
+                          </span>
+                        ) : (
+                          <span className="no-acknowledgment">Not required</span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
                       <div className="action-buttons">
                         <button
                           onClick={() => handleEdit(workOrder)}
@@ -352,6 +401,16 @@ const WorkOrderManager = () => {
                         >
                           PDF
                         </button>
+                        {!workOrder.acknowledgment?.isAcknowledged && (
+                          <button
+                            onClick={() => handleGenerateAcknowledgment(workOrder._id, workOrder.workOrderNumber)}
+                            className="acknowledgment-button"
+                            title="Generate Acknowledgment Link"
+                            disabled={!workOrder.customer.email}
+                          >
+                            Acknowledgment
+                          </button>
+                        )}
                         <button
                           onClick={() => handleDelete(workOrder._id)}
                           className="delete-button"

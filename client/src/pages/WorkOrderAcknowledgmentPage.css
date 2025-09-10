@@ -1,0 +1,596 @@
+/* WorkOrderAcknowledgmentPage.css */
+
+.acknowledgment-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container,
+.success-container {
+  max-width: 500px;
+  margin: 4rem auto;
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-icon,
+.success-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-container h2,
+.success-container h2 {
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.success-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Main Container */
+.acknowledgment-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.acknowledgment-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.acknowledgment-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.acknowledgment-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+/* Work Order Summary */
+.work-order-summary {
+  padding: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.summary-header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-draft { background: #fef3c7; color: #d97706; }
+.status-pending_approval { background: #dbeafe; color: #2563eb; }
+.status-approved { background: #d1fae5; color: #059669; }
+.status-in_progress { background: #e0e7ff; color: #5b21b6; }
+.status-completed { background: #d1fae5; color: #047857; }
+.status-billed { background: #fce7f3; color: #be185d; }
+.status-cancelled { background: #fee2e2; color: #dc2626; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.summary-section h3 {
+  color: #374151;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-rows {
+  space-y: 0.75rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row .label {
+  font-weight: 600;
+  color: #6b7280;
+  flex: 0 0 auto;
+  margin-right: 1rem;
+}
+
+.detail-row span:last-child {
+  color: #1f2937;
+  text-align: right;
+  flex: 1;
+}
+
+/* Items Section */
+.items-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.items-group {
+  margin-bottom: 2rem;
+}
+
+.items-group:last-child {
+  margin-bottom: 0;
+}
+
+.items-group h3 {
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.items-list {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  align-items: center;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.item-description {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.item-details {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.item-total {
+  font-weight: 600;
+  color: #059669;
+  text-align: right;
+}
+
+/* Totals Section */
+.totals-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #374151;
+}
+
+.total-final {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  border-top: 2px solid #d1d5db;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Acknowledgment Form */
+.acknowledgment-form-container {
+  padding: 2rem;
+  background: #f9fafb;
+}
+
+.acknowledgment-form-container h2 {
+  color: #1f2937;
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.acknowledgment-form-container > p {
+  color: #6b7280;
+  margin: 0 0 2rem;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #dc2626;
+}
+
+.acknowledgment-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.form-group input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
+}
+
+/* Signature Section */
+.signature-group {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #f9fafb;
+}
+
+.signature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.signature-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.signature-checkbox input {
+  width: auto !important;
+  margin: 0;
+}
+
+.signature-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.signature-canvas {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  cursor: crosshair;
+  max-width: 100%;
+  height: auto;
+}
+
+.btn-clear-signature {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-clear-signature:hover {
+  background: #dc2626;
+}
+
+.signature-note {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-cancel {
+  padding: 0.75rem 2rem;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #374151;
+}
+
+.btn-acknowledge {
+  padding: 0.75rem 2rem;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-acknowledge:hover:not(:disabled) {
+  background: #047857;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.btn-acknowledge:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Common Button Styles */
+.btn-primary,
+.btn-secondary {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background: #d1d5db;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .acknowledgment-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .acknowledgment-container {
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .acknowledgment-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .acknowledgment-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .work-order-summary,
+  .acknowledgment-form-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .acknowledgment-form {
+    padding: 1.5rem 1rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .summary-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .item-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: left;
+  }
+
+  .item-details,
+  .item-total {
+    text-align: left;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .signature-canvas {
+    width: 100%;
+    height: 150px;
+  }
+
+  .signature-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .acknowledgment-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .summary-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .work-order-summary,
+  .acknowledgment-form-container {
+    padding: 1rem;
+  }
+
+  .acknowledgment-form {
+    padding: 1rem;
+  }
+
+  .btn-acknowledge,
+  .btn-cancel {
+    padding: 1rem;
+    width: 100%;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .acknowledgment-page {
+    background: white;
+    padding: 0;
+  }
+
+  .acknowledgment-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .acknowledgment-header {
+    background: none !important;
+    color: black !important;
+  }
+
+  .form-actions,
+  .btn-cancel,
+  .btn-acknowledge {
+    display: none !important;
+  }
+
+  .signature-canvas {
+    border: 1px solid #000;
+  }
+}

@@ -285,11 +285,14 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
     // Generate PDF
     const pdfBuffer = await generateWorkOrderPDF(workOrder);
     
-    // Email content
-    // Create download link based on environment
+    // Generate acknowledgment token and create acknowledgment link
+    const acknowledgmentToken = workOrder.generateAcknowledgmentToken();
+    await workOrder.save();
+    
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://hardworkmobile-0bf9805ba163.herokuapp.com'
+      ? process.env.CLIENT_URL || 'https://hardworkmobile-0bf9805ba163.herokuapp.com'
       : 'http://localhost:3000';
+    const acknowledgmentLink = `${baseUrl}/work-order/acknowledge/${acknowledgmentToken}`;
     const downloadLink = `${baseUrl}/api/workOrders/public/${workOrder.workOrderNumber}/pdf?email=${encodeURIComponent(workOrder.customer.email)}`;
     
     const emailContent = `
@@ -303,6 +306,17 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
           .work-order-details { background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
           .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
           .label { font-weight: bold; color: #555; }
+          .acknowledge-button { 
+            display: inline-block; 
+            padding: 15px 30px; 
+            background-color: #28a745; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            margin: 20px 10px;
+            font-weight: bold;
+            font-size: 16px;
+          }
           .download-button { 
             display: inline-block; 
             padding: 12px 25px; 
@@ -310,10 +324,12 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
             color: white; 
             text-decoration: none; 
             border-radius: 5px; 
-            margin: 20px 0;
+            margin: 20px 10px;
             font-weight: bold;
           }
           .footer { text-align: center; color: #777; font-size: 12px; margin-top: 30px; }
+          .important { background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #ffc107; }
+          .buttons-section { text-align: center; margin: 30px 0; }
         </style>
       </head>
       <body>
@@ -326,7 +342,7 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
           <h2>Work Order: ${workOrder.workOrderNumber}</h2>
           <p>Dear <strong>${workOrder.customer.name}</strong>,</p>
           
-          <p>We're pleased to provide you with your work order for the automotive services. Please review the details below and keep this for your records.</p>
+          <p>Your work order has been completed and requires your acknowledgment. Please review the details below.</p>
           
           <div class="work-order-details">
             <h3>Service Details</h3>
@@ -352,13 +368,29 @@ router.post('/:id/send-email', adminAuth, async (req, res) => {
               <span class="label">Scheduled Date:</span>
               <span>${new Date(workOrder.scheduledDate).toLocaleDateString()}</span>
             </div>` : ''}
+            ${workOrder.completedDate ? `
+            <div class="detail-row">
+              <span class="label">Completed Date:</span>
+              <span>${new Date(workOrder.completedDate).toLocaleDateString()}</span>
+            </div>` : ''}
           </div>
           
-          <div style="text-align: center;">
-            <a href="${downloadLink}" class="download-button">📄 Download Work Order PDF</a>
+          <div class="important">
+            <strong>⚠️ Action Required:</strong> Please acknowledge receipt of this work order by clicking the button below. This confirms that you have received and reviewed the completed work.
           </div>
           
-          <p><strong>Important:</strong> The attached PDF contains the complete work order with all details. You can also download it anytime using the link above.</p>
+          <div class="buttons-section">
+            <a href="${acknowledgmentLink}" class="acknowledge-button">📋 Acknowledge Work Order</a>
+            <a href="${downloadLink}" class="download-button">📄 Download PDF</a>
+          </div>
+          
+          <p><strong>What happens next?</strong></p>
+          <ul>
+            <li>Click "Acknowledge Work Order" to confirm receipt and review the details</li>
+            <li>You can optionally add a digital signature during the acknowledgment process</li>
+            <li>Download the PDF for your records at any time</li>
+            <li>The acknowledgment link will expire in 30 days</li>
+          </ul>
           
           <p>If you have any questions about this work order or need to schedule additional services, please don't hesitate to contact us:</p>
           <ul>
@@ -455,6 +487,268 @@ router.get('/public/:workOrderNumber/pdf', async (req, res) => {
     res.status(500).json({ message: 'Failed to generate PDF' });
   }
 });
+
+// @route   GET /api/workOrders/acknowledge/:token
+// @desc    Get work order for acknowledgment by token
+// @access  Public
+router.get('/acknowledge/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+    
+    const workOrder = await WorkOrder.findOne({
+      'acknowledgment.acknowledgmentToken': token
+    });
+    
+    if (!workOrder) {
+      return res.status(404).json({ message: 'Work order not found or token invalid' });
+    }
+    
+    // Check if token is valid
+    if (!workOrder.isAcknowledgmentTokenValid(token)) {
+      return res.status(400).json({ 
+        message: 'Acknowledgment token is invalid or expired',
+        expired: workOrder.acknowledgment.tokenExpiresAt < new Date(),
+        alreadyAcknowledged: workOrder.acknowledgment.isAcknowledged
+      });
+    }
+    
+    // Return work order data for acknowledgment (without sensitive admin data)
+    const workOrderData = {
+      _id: workOrder._id,
+      workOrderNumber: workOrder.workOrderNumber,
+      status: workOrder.status,
+      customer: workOrder.customer,
+      vehicle: workOrder.vehicle,
+      serviceDetails: workOrder.serviceDetails,
+      laborItems: workOrder.laborItems,
+      partItems: workOrder.partItems,
+      pricing: workOrder.pricing,
+      scheduledDate: workOrder.scheduledDate,
+      completedDate: workOrder.completedDate,
+      createdAt: workOrder.createdAt,
+      acknowledgment: {
+        isRequired: workOrder.acknowledgment.isRequired,
+        isAcknowledged: workOrder.acknowledgment.isAcknowledged
+      }
+    };
+    
+    res.json(workOrderData);
+  } catch (err) {
+    console.error('Error fetching work order for acknowledgment:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/workOrders/acknowledge/:token
+// @desc    Acknowledge work order
+// @access  Public
+router.post('/acknowledge/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { acknowledgedBy, signature, userAgent } = req.body;
+    
+    if (!acknowledgedBy || !acknowledgedBy.name || !acknowledgedBy.email) {
+      return res.status(400).json({ message: 'Acknowledged by name and email are required' });
+    }
+    
+    const workOrder = await WorkOrder.findOne({
+      'acknowledgment.acknowledgmentToken': token
+    });
+    
+    if (!workOrder) {
+      return res.status(404).json({ message: 'Work order not found or token invalid' });
+    }
+    
+    // Check if token is valid
+    if (!workOrder.isAcknowledgmentTokenValid(token)) {
+      return res.status(400).json({ 
+        message: 'Acknowledgment token is invalid or expired',
+        expired: workOrder.acknowledgment.tokenExpiresAt < new Date(),
+        alreadyAcknowledged: workOrder.acknowledgment.isAcknowledged
+      });
+    }
+    
+    // Verify the acknowledging person matches the customer
+    const customerEmail = workOrder.customer.email.toLowerCase();
+    const acknowledgingEmail = acknowledgedBy.email.toLowerCase();
+    
+    if (customerEmail !== acknowledgingEmail) {
+      return res.status(403).json({ 
+        message: 'Email does not match the work order customer' 
+      });
+    }
+    
+    // Get client IP address
+    const ipAddress = req.headers['x-forwarded-for'] || 
+                     req.connection.remoteAddress || 
+                     req.socket.remoteAddress ||
+                     (req.connection.socket ? req.connection.socket.remoteAddress : null);
+    
+    // Mark as acknowledged
+    const acknowledgedByData = {
+      ...acknowledgedBy,
+      ipAddress: ipAddress,
+      userAgent: userAgent
+    };
+    
+    workOrder.markAsAcknowledged(acknowledgedByData, signature);
+    await workOrder.save();
+    
+    res.json({ 
+      message: 'Work order acknowledged successfully',
+      acknowledgmentDate: workOrder.acknowledgment.acknowledgmentDate,
+      workOrderNumber: workOrder.workOrderNumber
+    });
+  } catch (err) {
+    console.error('Error acknowledging work order:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/workOrders/:id/generate-acknowledgment
+// @desc    Generate acknowledgment token and send email (Admin only)
+// @access  Admin
+router.post('/:id/generate-acknowledgment', adminAuth, async (req, res) => {
+  try {
+    const workOrder = await WorkOrder.findById(req.params.id);
+    if (!workOrder) {
+      return res.status(404).json({ message: 'Work order not found' });
+    }
+    
+    // Generate acknowledgment token
+    const token = workOrder.generateAcknowledgmentToken();
+    await workOrder.save();
+    
+    // Generate acknowledgment link
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? process.env.CLIENT_URL || 'https://hardworkmobile-0bf9805ba163.herokuapp.com'
+      : 'http://localhost:3000';
+    const acknowledgmentLink = `${baseUrl}/work-order/acknowledge/${token}`;
+    
+    // Send acknowledgment email
+    await sendAcknowledgmentEmail(workOrder, acknowledgmentLink);
+    
+    res.json({ 
+      message: 'Acknowledgment link generated and sent successfully',
+      acknowledgmentLink,
+      tokenExpiresAt: workOrder.acknowledgment.tokenExpiresAt
+    });
+  } catch (err) {
+    console.error('Error generating acknowledgment:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Helper function to send acknowledgment email
+async function sendAcknowledgmentEmail(workOrder, acknowledgmentLink) {
+  const nodemailer = require('nodemailer');
+  
+  const transporter = nodemailer.createTransporter({
+    host: process.env.EMAIL_HOST,
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+  
+  const emailContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .header { background-color: #ff8c42; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background-color: #f9f9f9; }
+        .work-order-details { background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
+        .label { font-weight: bold; color: #555; }
+        .acknowledge-button { 
+          display: inline-block; 
+          padding: 15px 30px; 
+          background-color: #28a745; 
+          color: white; 
+          text-decoration: none; 
+          border-radius: 8px; 
+          margin: 20px 0;
+          font-weight: bold;
+          font-size: 16px;
+        }
+        .footer { text-align: center; color: #777; font-size: 12px; margin-top: 30px; }
+        .important { background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 15px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>Mobile Shop</h1>
+        <p>Professional Mobile Automotive Service</p>
+      </div>
+      
+      <div class="content">
+        <h2>Work Order Acknowledgment Required</h2>
+        <p>Dear <strong>${workOrder.customer.name}</strong>,</p>
+        
+        <p>Your work order <strong>${workOrder.workOrderNumber}</strong> requires your acknowledgment. Please review the details below and click the acknowledgment button to confirm receipt.</p>
+        
+        <div class="work-order-details">
+          <h3>Service Details</h3>
+          <div class="detail-row">
+            <span class="label">Vehicle:</span>
+            <span>${workOrder.vehicle.year} ${workOrder.vehicle.make} ${workOrder.vehicle.model}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Service:</span>
+            <span>${workOrder.serviceDetails.description}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Status:</span>
+            <span>${workOrder.status.replace('_', ' ').toUpperCase()}</span>
+          </div>
+          ${workOrder.pricing.totalAmount > 0 ? `
+          <div class="detail-row">
+            <span class="label">Total Amount:</span>
+            <span style="font-size: 18px; font-weight: bold; color: #28a745;">$${workOrder.pricing.totalAmount.toFixed(2)}</span>
+          </div>` : ''}
+          ${workOrder.scheduledDate ? `
+          <div class="detail-row">
+            <span class="label">Scheduled Date:</span>
+            <span>${new Date(workOrder.scheduledDate).toLocaleDateString()}</span>
+          </div>` : ''}
+        </div>
+        
+        <div class="important">
+          <strong>⚠️ Important:</strong> By clicking the acknowledgment button below, you confirm that you have received and reviewed this work order.
+        </div>
+        
+        <div style="text-align: center;">
+          <a href="${acknowledgmentLink}" class="acknowledge-button">📋 Acknowledge Work Order</a>
+        </div>
+        
+        <p><strong>Note:</strong> This acknowledgment link will expire in 30 days. If you have any questions about this work order, please contact us:</p>
+        <ul>
+          <li>📞 Phone: (555) 123-4567</li>
+          <li>📧 Email: contact@mobileshop.com</li>
+        </ul>
+        
+        <p>Thank you for choosing Mobile Shop!</p>
+        
+        <div class="footer">
+          <p>Mobile Shop - Professional Mobile Automotive Service<br>
+          This is an automated message. Please do not reply to this email.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: workOrder.customer.email,
+    subject: `Work Order Acknowledgment Required - ${workOrder.workOrderNumber}`,
+    html: emailContent
+  });
+}
 
 // Helper function to generate PDF
 async function generateWorkOrderPDF(workOrder) {

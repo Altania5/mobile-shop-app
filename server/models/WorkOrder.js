@@ -85,9 +85,29 @@ const workOrderSchema = new mongoose.Schema({
     approvalDate: Date,
     approvalMethod: {
       type: String,
-      enum: ['in_person', 'email', 'phone'],
+      enum: ['in_person', 'email', 'phone', 'digital'],
       default: 'email'
     }
+  },
+
+  // Acknowledgment System
+  acknowledgment: {
+    isRequired: { type: Boolean, default: false },
+    isAcknowledged: { type: Boolean, default: false },
+    acknowledgmentDate: Date,
+    acknowledgmentToken: String, // Secure token for acknowledgment link
+    tokenExpiresAt: Date,
+    acknowledgedBy: {
+      name: String,
+      email: String,
+      ipAddress: String
+    },
+    acknowledgmentMethod: {
+      type: String,
+      enum: ['email_link', 'portal'],
+      default: 'email_link'
+    },
+    digitalSignature: String // Customer acknowledgment signature
   },
 
   // Related Records
@@ -172,5 +192,44 @@ workOrderSchema.pre('save', function(next) {
   
   next();
 });
+
+// Generate acknowledgment token
+workOrderSchema.methods.generateAcknowledgmentToken = function() {
+  const crypto = require('crypto');
+  const token = crypto.randomBytes(32).toString('hex');
+  
+  // Token expires in 30 days
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 30);
+  
+  this.acknowledgment.acknowledgmentToken = token;
+  this.acknowledgment.tokenExpiresAt = expiresAt;
+  this.acknowledgment.isRequired = true;
+  
+  return token;
+};
+
+// Check if acknowledgment token is valid
+workOrderSchema.methods.isAcknowledgmentTokenValid = function(token) {
+  return (
+    this.acknowledgment.acknowledgmentToken === token &&
+    this.acknowledgment.tokenExpiresAt &&
+    this.acknowledgment.tokenExpiresAt > new Date() &&
+    !this.acknowledgment.isAcknowledged
+  );
+};
+
+// Mark as acknowledged
+workOrderSchema.methods.markAsAcknowledged = function(acknowledgedBy, signature = null) {
+  this.acknowledgment.isAcknowledged = true;
+  this.acknowledgment.acknowledgmentDate = new Date();
+  this.acknowledgment.acknowledgedBy = acknowledgedBy;
+  if (signature) {
+    this.acknowledgment.digitalSignature = signature;
+  }
+  // Clear the token after use
+  this.acknowledgment.acknowledgmentToken = undefined;
+  this.acknowledgment.tokenExpiresAt = undefined;
+};
 
 module.exports = mongoose.model('WorkOrder', workOrderSchema);
