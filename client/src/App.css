@@ -2695,20 +2695,30 @@ button:active {
     font-size: 0.8rem;
   }
   
-  /* Reduce spacing between cards */
+  /* Reposition cards to create more space */
   .card-1 {
-    top: 10px; /* Reduced from 20px */
-    left: 10px; /* Reduced from 20px */
+    top: 80px; /* Move Expert Repairs card down */
+    left: 10px;
   }
   
   .card-2 {
-    bottom: 60px; /* Reduced from 100px */
-    right: 10px; /* Reduced from 20px */
+    top: 120px; /* Move Mobile Service card up from bottom */
+    right: 10px;
+    bottom: auto; /* Remove bottom positioning */
+  }
+  
+  /* Move hero content down to create space */
+  .hero-content-modern {
+    padding-top: 40px; /* Add top padding to push content down */
+  }
+  
+  .hero-text-wrapper {
+    margin-top: 20px; /* Additional margin to push text down */
   }
   
   /* Lower the buttons */
   .hero-buttons {
-    margin-top: 20px; /* Add margin to push buttons down */
+    margin-top: 30px; /* Increase margin to push buttons further down */
     gap: 15px; /* Reduce gap between buttons */
   }
 }
