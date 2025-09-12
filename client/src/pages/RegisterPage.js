@@ -111,7 +111,7 @@ function RegisterPage() {
         {/* Left Side - Welcome Section */}
         <div className="register-welcome">
           <div className="welcome-content">
-            <h1>Join MobileTech Solutions</h1>
+            <h1>Join Mobile Shop</h1>
             <p>Create your account to access our professional mobile repair services</p>
             <div className="features-list">
               <div className="feature">

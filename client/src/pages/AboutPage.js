@@ -90,9 +90,9 @@ const AboutPage = () => {
                 <aside className="about-sidebar left-sidebar">
                     <div className="sidebar-widget">
                         <h3><i className="fas fa-bolt"></i> Quick Contact</h3>
-                        <p><i className="fas fa-phone"></i> <strong>Phone:</strong> (555) 123-4567</p>
+                        <p><i className="fas fa-phone"></i> <strong>Phone:</strong> (484) 593-3875</p>
                         <p><i className="fas fa-envelope"></i> <strong>Email:</strong> JamesFerzanden@hardworkmobile.com</p>
-                        <p><i className="fas fa-clock"></i> <strong>Hours:</strong> Mon-Fri, 9am - 5pm</p>
+                        <p><i className="fas fa-clock"></i> <strong>Hours:</strong> Mon-Fri, 8:00am - 4:00pm</p>
                         <Link to="/contact" className="cta-button">
                             <i className="fas fa-paper-plane"></i> Send a Message
                         </Link>

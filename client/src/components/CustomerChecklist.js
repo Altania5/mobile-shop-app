@@ -14,7 +14,7 @@ const CustomerChecklist = ({ user }) => {
                 description: "Sign up for a free account to get started",
                 icon: "👤",
                 completed: user ? true : false,
-                action: user ? null : { text: "Sign Up", link: "/register" },
+                action: user ? { text: "Go to Dashboard", link: "/dashboard" } : { text: "Sign Up", link: "/register" },
                 note: user ? `Welcome back, ${user.name || 'valued customer'}!` : "Create your account to track service history"
             },
             {
@@ -101,7 +101,7 @@ const CustomerChecklist = ({ user }) => {
                 <h3>What type of service do you need?</h3>
                 <div className="service-type-options">
                     <button 
-                        className={"service-type-btn"}
+                        className={`service-type-btn ${serviceType === 'quick' ? 'active' : ''}`}
                         onClick={() => handleServiceTypeChange('quick')}
                     >
                         <div className="service-type-icon">🔧</div>
@@ -111,7 +111,7 @@ const CustomerChecklist = ({ user }) => {
                         </div>
                     </button>
                     <button 
-                        className={"service-type-btn"}
+                        className={`service-type-btn ${serviceType === 'custom' ? 'active' : ''}`}
                         onClick={() => handleServiceTypeChange('custom')}
                     >
                         <div className="service-type-icon">📝</div>
