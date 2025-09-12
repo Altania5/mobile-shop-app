@@ -1047,9 +1047,12 @@ button:active {
 .about-page-wrapper {
   max-width: 1200px;
   margin: 20px auto;
-  padding: 0;
+  padding: 0 10px;
   background-color: transparent; /* Override generic page-container */
   box-shadow: none;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* --- Hero Section --- */
@@ -1095,13 +1098,14 @@ button:active {
 /* --- Core Values Section --- */
 .core-values-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
   margin: 40px 0;
   text-align: center;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  padding: 0 5px;
 }
 
 .value-card {
@@ -2017,11 +2021,25 @@ button:active {
 .about-page-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 30px;
+  gap: 20px;
   margin-top: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-@media (max-width: 992px) {
+/* Desktop layout - 3 column grid */
+@media (min-width: 992px) {
+  .about-page-grid {
+    grid-template-columns: 300px 1fr 300px;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 991px) {
   .about-page-grid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -2030,39 +2048,108 @@ button:active {
 
 /* Mobile responsive styles for About page */
 @media (max-width: 768px) {
+  .about-page-wrapper {
+    padding: 0 15px;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .about-page-grid {
+    margin-top: 20px;
+    gap: 15px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
   .core-values-section {
     grid-template-columns: 1fr;
     gap: 15px;
     margin: 20px 0;
-    padding: 0 10px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .value-card {
     padding: 20px;
     margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .about-sidebar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .about-sidebar .sidebar-widget {
-    padding: 20px;
-    margin: 0 10px;
-    max-width: calc(100% - 20px);
+    padding: 15px;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
   
   .testimonial-container {
-    padding: 0 10px;
+    padding: 20px 15px;
     margin: 20px 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
-  .about-page-wrapper {
-    padding: 0 10px;
-    overflow-x: hidden;
+  .about-main-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  
+  /* Additional mobile fixes for sidebar content */
+  .sidebar-widget h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .sidebar-widget p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .sidebar-widget ul {
+    padding-left: 15px;
+  }
+  
+  .sidebar-widget li {
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .sidebar-widget a {
+    font-size: 0.9rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
 /* --- Enhanced Sidebar Styling --- */
 .about-sidebar .sidebar-widget {
   background: linear-gradient(145deg, var(--surface-color) 0%, #f7f9fc 100%); /* Subtle gradient */
-  padding: 25px;
+  padding: 20px;
   border-radius: var(--border-radius);
   /* A more defined shadow for a "lifted" look */
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07); 
@@ -2070,8 +2157,11 @@ button:active {
   border-left: none; /* Remove the old border */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow-x: hidden;
 }
 
 .about-sidebar .sidebar-widget:hover {
