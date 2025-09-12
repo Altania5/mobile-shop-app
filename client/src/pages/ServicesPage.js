@@ -213,7 +213,7 @@ const ServicesPage = ({ user }) => {
             {/* Customer Checklist Section */}
             <section className="checklist-section">
                 <div className="container-modern">
-                    <CustomerChecklist />
+                    <CustomerChecklist user={user} />
                 </div>
             </section>
 

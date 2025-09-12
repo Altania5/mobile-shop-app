@@ -64,7 +64,7 @@ function ContactPage() {
           <p><strong>Email:</strong> JamesFerzanden@hardworkmobile.com</p>
           <p><strong>Phone:</strong> (123) 456-7890</p>
           <p><strong>Service Area:</strong> Your City, State</p>
-          <p><strong>Hours:</strong> Mon - Fri, 8:00 AM - 6:00 PM</p>
+          <p><strong>Hours:</strong> Mon - Fri, 8:00 AM - 4:00 PM</p>
         </div>
       </div>
     </div>

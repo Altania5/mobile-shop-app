@@ -14,8 +14,8 @@ const CustomerChecklist = ({ user }) => {
                 description: "Sign up for a free account to get started",
                 icon: "👤",
                 completed: user ? true : false,
-                action: user ? { text: "Go to Dashboard", link: "/dashboard" } : { text: "Sign Up", link: "/register" },
-                note: user ? `Welcome back, ${user.name || 'valued customer'}!` : "Create your account to track service history"
+                action: user ? { text: "Account Manager", link: "/dashboard" } : { text: "Sign Up", link: "/register" },
+                note: user ? `✅ Account created successfully! Welcome back, ${user.name || 'valued customer'}!` : "Create your account to track service history"
             },
             {
                 id: 2,
@@ -26,9 +26,11 @@ const CustomerChecklist = ({ user }) => {
                 icon: "💳",
                 completed: user && user.hasCardOnFile,
                 action: user && !user.hasCardOnFile ? { text: "Add Card", link: "/dashboard?tab=account" } : null,
-                note: serviceType === 'quick' 
-                    ? "Secure payment processing • No charge until service complete"
-                    : "Some services may require upfront payment authorization",
+                note: user && user.hasCardOnFile 
+                    ? "✅ Payment method on file - Ready for service!"
+                    : serviceType === 'quick' 
+                        ? "Secure payment processing • No charge until service complete"
+                        : "Some services may require upfront payment authorization",
                 required: serviceType === 'quick'
             }
         ];
@@ -128,7 +130,7 @@ const CustomerChecklist = ({ user }) => {
                 {steps.map((step, index) => (
                     <div 
                         key={step.id} 
-                        className={"checklist-step"}
+                        className={`checklist-step ${step.completed ? 'completed' : ''}`}
                     >
                         <div className="step-number">
                             {step.completed ? (
@@ -173,7 +175,7 @@ const CustomerChecklist = ({ user }) => {
 
                         {index < steps.length - 1 && (
                             <div className="step-connector">
-                                <div className={"connector-line"}></div>
+                                <div className={`connector-line ${step.completed ? 'completed' : ''}`}></div>
                             </div>
                         )}
                     </div>

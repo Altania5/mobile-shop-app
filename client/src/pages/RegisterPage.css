@@ -225,14 +225,15 @@
 .register-form-wrapper {
   width: 100%;
   max-width: 450px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--surface-color);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 40px;
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+    0 0 0 1px var(--border-color);
   animation: slideInRight 1s ease-out 0.3s both;
+  border: 1px solid var(--border-color);
 }
 
 @keyframes slideInRight {
@@ -255,7 +256,7 @@
 .form-header h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--text-color);
   margin-bottom: 8px;
 }
 
@@ -284,10 +285,10 @@
 .input-group input {
   width: 100%;
   padding: 15px 20px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   font-size: 1rem;
-  background: white;
+  background: var(--background-color);
   color: var(--text-color);
   transition: all 0.3s ease;
   box-sizing: border-box;
@@ -466,13 +467,14 @@
 
   .register-form-wrapper {
     margin: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--surface-color);
     backdrop-filter: blur(20px);
     box-shadow: 
       0 20px 40px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.1);
+      0 0 0 1px var(--border-color);
     border-radius: 20px;
     max-width: 500px;
+    border: 1px solid var(--border-color);
   }
 }
 
