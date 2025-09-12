@@ -3,24 +3,29 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 1rem;
+    padding: 0;
     background-color: transparent;
     border: none;
     box-shadow: none;
     border-radius: 0;
     box-sizing: border-box;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .payment-form-container h3 {
-    text-align: left;
+    text-align: center;
     color: var(--text-color);
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
     font-weight: 600;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
+    width: 100%;
 }
 
 .payment-form-container h3::before {
@@ -29,42 +34,44 @@
 }
 
 .payment-form-container p {
-    text-align: left;
+    text-align: center;
     color: var(--text-light-color);
     margin-bottom: 1rem;
     font-size: 0.9rem;
     line-height: 1.4;
+    width: 100%;
+    max-width: 400px;
 }
 
-/* Card input section - clean mobile design */
+/* Card input section - removed unnecessary styling */
 .card-input-section {
-    background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 1rem 0;
+    box-shadow: none;
     width: 100%;
-    max-width: 100%;
+    max-width: 400px;
     box-sizing: border-box;
     overflow: hidden;
     position: relative;
+    display: flex;
+    justify-content: center;
 }
 
-/* Square iframe container - mobile optimized */
+/* Square iframe container - clean mobile design */
 .sq-card-iframe-container {
     width: 100% !important;
     max-width: 100% !important;
     overflow: hidden !important;
-    border-radius: 8px !important;
-    margin: 0 !important;
+    border-radius: 12px !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     box-sizing: border-box !important;
     background-color: white;
-    border: 1px solid #e0e0e0;
-    /* Force Square container to fit mobile properly */
-    transform: scale(1);
-    transform-origin: top left;
+    border: 2px solid var(--border-color, #e0e0e0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .sq-card-iframe-container iframe {
@@ -79,9 +86,10 @@
     overflow: hidden !important;
 }
 
-/* Save button - mobile optimized */
+/* Save button - clean mobile design */
 #card-button {
     width: 100%;
+    max-width: 400px;
     padding: 1rem;
     background: var(--gradient-accent);
     color: white;
@@ -96,6 +104,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    margin: 1rem auto 0;
 }
 
 #card-button::before {
@@ -172,11 +181,13 @@
         margin-right: 0 !important;
     }
     
-    #card-container {
+#card-container {
         width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
+        max-width: 400px !important;
+        margin: 0 auto !important;
         padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
     }
 }
 
@@ -185,11 +196,11 @@
     .payment-form-container {
         max-width: 500px;
         margin: 2rem auto;
-        padding: 2rem;
-        background-color: var(--surface-color);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 2rem 1rem;
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
     }
     
     .payment-form-container h3 {
@@ -200,18 +211,29 @@
     .payment-form-container p {
         text-align: center;
         font-size: 1rem;
+        max-width: 500px;
     }
     
     .card-input-section {
-        padding: 2rem;
+        padding: 0;
+        max-width: 500px;
     }
     
     .sq-card-iframe-container {
-        min-height: 300px !important;
+        min-height: 320px !important;
+        max-width: 500px;
     }
     
     .sq-card-iframe-container iframe {
-        min-height: 300px !important;
+        min-height: 320px !important;
+    }
+    
+    #card-container {
+        max-width: 500px !important;
+    }
+    
+    #card-button {
+        max-width: 500px;
     }
 }
 
