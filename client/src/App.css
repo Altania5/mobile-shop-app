@@ -2679,7 +2679,7 @@ button:active {
   }
 }
 
-/* Make cards smaller on mobile */
+/* Make cards smaller on mobile and adjust spacing */
 @media (max-width: 767px) {
   .floating-card {
     padding: 15px;
@@ -2693,6 +2693,23 @@ button:active {
   
   .floating-card span {
     font-size: 0.8rem;
+  }
+  
+  /* Reduce spacing between cards */
+  .card-1 {
+    top: 10px; /* Reduced from 20px */
+    left: 10px; /* Reduced from 20px */
+  }
+  
+  .card-2 {
+    bottom: 60px; /* Reduced from 100px */
+    right: 10px; /* Reduced from 20px */
+  }
+  
+  /* Lower the buttons */
+  .hero-buttons {
+    margin-top: 20px; /* Add margin to push buttons down */
+    gap: 15px; /* Reduce gap between buttons */
   }
 }
 
