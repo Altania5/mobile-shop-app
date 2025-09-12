@@ -2,42 +2,49 @@
     max-width: 500px;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: #f9f9f9;
+    background-color: var(--surface-color);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .payment-form-container h3 {
     text-align: center;
+    color: var(--text-color);
 }
 
 .payment-form-container p {
     text-align: center;
-    color: #666;
+    color: var(--text-light-color);
     margin-bottom: 1.5rem;
 }
 
 #card-container {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 8px;
     margin-bottom: 1rem;
+    background-color: var(--background-color);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #card-button {
     width: 100%;
     padding: 1rem;
-    background-color: #006aff;
+    background: var(--gradient-accent);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: 600;
 }
 
 #card-button:hover {
-    background-color: #004dc5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 140, 66, 0.4);
 }
 
 .status-message {
@@ -60,4 +67,23 @@
 .status-message.info {
     background-color: #cce5ff;
     color: #004085;
+}
+
+/* Mobile responsive styling */
+@media (max-width: 768px) {
+    .payment-form-container {
+        margin: 1rem auto;
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+    
+    #card-container {
+        padding: 12px;
+        margin-bottom: 1rem;
+    }
+    
+    #card-button {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
 }
