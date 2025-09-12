@@ -3,7 +3,7 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 0 1rem;
+    padding: 0 0.25rem;
     background-color: transparent;
     border: none;
     box-shadow: none;
@@ -36,11 +36,11 @@
 .payment-form-container p {
     text-align: center;
     color: var(--text-light-color);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
     line-height: 1.4;
     width: 100%;
-    max-width: 480px;
+    max-width: calc(100% - 0.5rem);
 }
 
 /* Card input section - removed unnecessary styling */
@@ -49,10 +49,10 @@
     border: none;
     border-radius: 0;
     padding: 0;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
     box-shadow: none;
     width: 100%;
-    max-width: 480px;
+    max-width: calc(100% - 0.5rem);
     box-sizing: border-box;
     overflow: hidden;
     position: relative;
@@ -89,7 +89,7 @@
 /* Save button - clean mobile design */
 #card-button {
     width: 100%;
-    max-width: 480px;
+    max-width: calc(100% - 0.5rem);
     padding: 1rem;
     background: var(--gradient-accent);
     color: white;
@@ -104,7 +104,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    margin: 1rem auto 0;
+    margin: 0.5rem auto 0;
 }
 
 #card-button::before {
@@ -176,14 +176,13 @@
     
     /* Make card input container fully responsive */
     .card-input-section {
-        padding: 0.75rem !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        padding: 0 !important;
+        margin: 0.25rem 0 !important;
     }
     
 #card-container {
         width: 100% !important;
-        max-width: 480px !important;
+        max-width: calc(100% - 0.5rem) !important;
         margin: 0 auto !important;
         padding: 0 !important;
         display: flex !important;
