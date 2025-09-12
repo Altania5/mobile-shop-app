@@ -3,12 +3,13 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 1rem;
     background-color: transparent;
     border: none;
     box-shadow: none;
     border-radius: 0;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .payment-form-container h3 {
@@ -40,26 +41,30 @@
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1rem;
     margin-bottom: 1.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    overflow: visible;
+    overflow: hidden;
+    position: relative;
 }
 
 /* Square iframe container - mobile optimized */
 .sq-card-iframe-container {
     width: 100% !important;
     max-width: 100% !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     border-radius: 8px !important;
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
     background-color: white;
     border: 1px solid #e0e0e0;
+    /* Force Square container to fit mobile properly */
+    transform: scale(1);
+    transform-origin: top left;
 }
 
 .sq-card-iframe-container iframe {
@@ -68,8 +73,10 @@
     border: none !important;
     border-radius: 8px !important;
     height: auto !important;
-    min-height: 250px !important;
+    min-height: 280px !important;
     box-sizing: border-box !important;
+    /* Prevent iframe from exceeding container */
+    overflow: hidden !important;
 }
 
 /* Save button - mobile optimized */
@@ -130,6 +137,47 @@
     background-color: #cce5ff;
     color: #004085;
     border: 1px solid #b8daff;
+}
+
+/* Additional mobile fixes for Square container sizing issues */
+@media (max-width: 768px) {
+    /* Force Square containers to respect mobile width */
+    .sq-card-iframe-container,
+    .sq-card-iframe-container *,
+    #card-container,
+    #card-container * {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Fix common Square iframe overflow issues */
+    .sq-card-iframe-container {
+        position: relative !important;
+        overflow: hidden !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .sq-card-iframe-container iframe {
+        position: relative !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+    
+    /* Make card input container fully responsive */
+    .card-input-section {
+        padding: 0.75rem !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    #card-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 }
 
 /* Desktop responsive styling */

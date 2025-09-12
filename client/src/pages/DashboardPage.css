@@ -28,3 +28,56 @@
   border-bottom: 2px solid #007bff;
 }
 
+/* Settings layout improvements */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.settings-section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    margin: 1rem;
+    padding: 1rem;
+    max-width: calc(100vw - 2rem);
+    overflow: hidden;
+  }
+  
+  .dashboard-tabs {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .dashboard-tab-button {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .dashboard-tab-button.active {
+    background-color: #f0f8ff;
+    border-left: 4px solid #007bff;
+  }
+  
+  .settings-container {
+    gap: 1.5rem;
+    padding: 0;
+  }
+  
+  .settings-section {
+    width: 100%;
+    overflow: hidden;
+  }
+}
+

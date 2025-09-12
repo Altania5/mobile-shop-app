@@ -4602,6 +4602,39 @@ label {
     color: var(--text-color) !important;
 }
 
+/* Square Payment Form Global Mobile Fixes */
+@media (max-width: 768px) {
+    /* Override any global styles that might break Square iframe */
+    .sq-card-iframe-container,
+    .sq-card-iframe-container *,
+    #card-container,
+    #card-container *,
+    iframe[src*="squareup"],
+    iframe[src*="square"] {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+    
+    /* Ensure payment form containers don't break on mobile */
+    .payment-form-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 1rem !important;
+        overflow: hidden !important;
+    }
+    
+    /* Fix settings sections on mobile */
+    .settings-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+    }
+}
+
 .dashboard-container h1 {
     color: var(--text-color) !important;
     font-size: 2.5rem !important;
