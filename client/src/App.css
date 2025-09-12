@@ -2709,11 +2709,11 @@ button:active {
   
   /* Move hero content down to create space */
   .hero-content-modern {
-    padding-top: 40px; /* Add top padding to push content down */
+    padding-top: 60px; /* Increased from 40px to push content down more */
   }
   
   .hero-text-wrapper {
-    margin-top: 20px; /* Additional margin to push text down */
+    margin-top: 30px; /* Increased from 20px to push text down more */
   }
   
   /* Lower the buttons */
