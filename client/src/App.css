@@ -4227,25 +4227,30 @@ label {
 /* Square Payment Form iframe container fixes */
 .sq-card-iframe-container {
   width: 100% !important;
-  max-width: 100% !important;
-  overflow: hidden !important;
+  min-width: 300px !important;
+  max-width: none !important;
+  overflow: visible !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .sq-card-iframe-container iframe {
   width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
+  min-width: 300px !important;
+  max-width: none !important;
   border: none !important;
   box-sizing: border-box !important;
+  height: auto !important;
 }
 
 /* Mobile specific Square iframe fixes */
 @media (max-width: 768px) {
   .sq-card-iframe-container {
     width: 100% !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
+    min-width: 280px !important;
+    max-width: none !important;
+    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
@@ -4253,10 +4258,11 @@ label {
   
   .sq-card-iframe-container iframe {
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
+    min-width: 280px !important;
+    max-width: none !important;
     border: none !important;
     box-sizing: border-box !important;
+    height: auto !important;
   }
 }
 

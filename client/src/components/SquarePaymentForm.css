@@ -1,11 +1,13 @@
 .payment-form-container {
-    max-width: 500px;
+    max-width: 600px;
     margin: 2rem auto;
     padding: 2rem;
     background-color: var(--surface-color);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .payment-form-container h3 {
@@ -21,12 +23,15 @@
 
 #card-container {
     border: 1px solid var(--border-color);
-    padding: 15px;
+    padding: 20px;
     border-radius: 8px;
     margin-bottom: 1rem;
     background-color: var(--background-color);
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    overflow: visible;
+    min-width: 0;
 }
 
 #card-button {
@@ -72,49 +77,57 @@
 /* Square iframe container styling */
 .sq-card-iframe-container {
     width: 100% !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
+    min-width: 300px !important;
+    max-width: none !important;
+    overflow: visible !important;
     border-radius: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .sq-card-iframe-container iframe {
     width: 100% !important;
-    max-width: 100% !important;
+    min-width: 300px !important;
+    max-width: none !important;
     border: none !important;
     border-radius: 8px !important;
+    height: auto !important;
 }
 
 /* Mobile responsive styling */
 @media (max-width: 768px) {
     .payment-form-container {
-        margin: 1rem auto;
-        padding: 1.5rem;
-        max-width: 100%;
-        width: 100%;
+        margin: 1rem;
+        padding: 1rem;
+        max-width: none;
+        width: calc(100% - 2rem);
         box-sizing: border-box;
     }
     
     #card-container {
-        padding: 12px;
+        padding: 15px;
         margin-bottom: 1rem;
         width: 100%;
         max-width: 100%;
-        overflow: hidden;
+        overflow: visible;
+        min-width: 0;
     }
     
     .sq-card-iframe-container {
         width: 100% !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
+        min-width: 280px !important;
+        max-width: none !important;
+        overflow: visible !important;
         margin: 0 !important;
         padding: 0 !important;
     }
     
     .sq-card-iframe-container iframe {
         width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
+        min-width: 280px !important;
+        max-width: none !important;
         border: none !important;
+        height: auto !important;
     }
     
     #card-button {
