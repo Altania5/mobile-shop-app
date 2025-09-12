@@ -69,17 +69,52 @@
     color: #004085;
 }
 
+/* Square iframe container styling */
+.sq-card-iframe-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+}
+
+.sq-card-iframe-container iframe {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
 /* Mobile responsive styling */
 @media (max-width: 768px) {
     .payment-form-container {
         margin: 1rem auto;
         padding: 1.5rem;
         max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     #card-container {
         padding: 12px;
         margin-bottom: 1rem;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .sq-card-iframe-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .sq-card-iframe-container iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        border: none !important;
     }
     
     #card-button {
