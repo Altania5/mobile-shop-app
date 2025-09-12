@@ -4227,43 +4227,16 @@ label {
 /* Square Payment Form iframe container fixes */
 .sq-card-iframe-container {
   width: 100% !important;
-  min-width: 300px !important;
-  max-width: none !important;
-  overflow: visible !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
   box-sizing: border-box !important;
-  margin: 0 !important;
-  padding: 0 !important;
 }
 
 .sq-card-iframe-container iframe {
   width: 100% !important;
-  min-width: 300px !important;
-  max-width: none !important;
+  max-width: 100% !important;
   border: none !important;
   box-sizing: border-box !important;
-  height: auto !important;
-}
-
-/* Mobile specific Square iframe fixes */
-@media (max-width: 768px) {
-  .sq-card-iframe-container {
-    width: 100% !important;
-    min-width: 280px !important;
-    max-width: none !important;
-    overflow: visible !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-  }
-  
-  .sq-card-iframe-container iframe {
-    width: 100% !important;
-    min-width: 280px !important;
-    max-width: none !important;
-    border: none !important;
-    box-sizing: border-box !important;
-    height: auto !important;
-  }
 }
 
 @keyframes float {
