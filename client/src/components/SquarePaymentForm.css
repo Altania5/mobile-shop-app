@@ -3,7 +3,7 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0 1rem;
     background-color: transparent;
     border: none;
     box-shadow: none;
@@ -40,7 +40,7 @@
     font-size: 0.9rem;
     line-height: 1.4;
     width: 100%;
-    max-width: 400px;
+    max-width: 480px;
 }
 
 /* Card input section - removed unnecessary styling */
@@ -52,7 +52,7 @@
     margin: 1rem 0;
     box-shadow: none;
     width: 100%;
-    max-width: 400px;
+    max-width: 480px;
     box-sizing: border-box;
     overflow: hidden;
     position: relative;
@@ -89,7 +89,7 @@
 /* Save button - clean mobile design */
 #card-button {
     width: 100%;
-    max-width: 400px;
+    max-width: 480px;
     padding: 1rem;
     background: var(--gradient-accent);
     color: white;
@@ -183,7 +183,7 @@
     
 #card-container {
         width: 100% !important;
-        max-width: 400px !important;
+        max-width: 480px !important;
         margin: 0 auto !important;
         padding: 0 !important;
         display: flex !important;
