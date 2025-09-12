@@ -76,7 +76,7 @@ const SquarePaymentForm = () => {
 
     return (
         <div className="payment-form-container">
-            <h3>💳 Add a Payment Method</h3>
+            <h3>Add a Payment Method</h3>
             <p>Your card will be saved securely for future charges.</p>
             
             <div className="card-input-section">
@@ -85,7 +85,7 @@ const SquarePaymentForm = () => {
             
             <form id="payment-form" onSubmit={handlePayment}>
                 <button id="card-button" type="submit">
-                    💾 Save Card
+                    Save Card
                 </button>
             </form>
             

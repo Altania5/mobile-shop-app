@@ -22,6 +22,11 @@
     gap: 0.5rem;
 }
 
+.payment-form-container h3::before {
+    content: "💳";
+    font-size: 1.1em;
+}
+
 .payment-form-container p {
     text-align: left;
     color: var(--text-light-color);
@@ -35,11 +40,13 @@
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    overflow: visible;
 }
 
 /* Square iframe container - mobile optimized */
@@ -61,7 +68,7 @@
     border: none !important;
     border-radius: 8px !important;
     height: auto !important;
-    min-height: 200px !important;
+    min-height: 250px !important;
     box-sizing: border-box !important;
 }
 
@@ -78,6 +85,15 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+#card-button::before {
+    content: "💾";
+    font-size: 1.1em;
 }
 
 #card-button:hover {
@@ -139,15 +155,15 @@
     }
     
     .card-input-section {
-        padding: 1.5rem;
+        padding: 2rem;
     }
     
     .sq-card-iframe-container {
-        min-height: 250px !important;
+        min-height: 300px !important;
     }
     
     .sq-card-iframe-container iframe {
-        min-height: 250px !important;
+        min-height: 300px !important;
     }
 }
 
