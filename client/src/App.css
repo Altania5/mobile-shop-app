@@ -2075,11 +2075,22 @@ button:active {
   }
   
   .value-card {
-    padding: 20px;
+    padding: 15px;
     margin: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    text-align: center;
+  }
+  
+  .value-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  
+  .value-card h4 {
+    font-size: 1rem;
+    margin: 0;
   }
   
   .about-sidebar {
@@ -2089,7 +2100,7 @@ button:active {
   }
   
   .about-sidebar .sidebar-widget {
-    padding: 15px;
+    padding: 12px;
     margin: 0;
     max-width: 100%;
     width: 100%;
@@ -2100,11 +2111,16 @@ button:active {
   }
   
   .testimonial-container {
-    padding: 20px 15px;
-    margin: 20px 0;
+    padding: 15px 12px;
+    margin: 15px 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+  }
+  
+  .testimonial-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
   }
   
   .about-main-content {
@@ -2116,33 +2132,54 @@ button:active {
   
   /* Additional mobile fixes for sidebar content */
   .sidebar-widget h3 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget p {
-    font-size: 0.9rem;
-    line-height: 1.4;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    margin-bottom: 10px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget ul {
-    padding-left: 15px;
+    padding-left: 10px;
+    margin: 0;
   }
   
   .sidebar-widget li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget a {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     word-wrap: break-word;
     overflow-wrap: break-word;
+  }
+  
+  .sidebar-widget .cta-button {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    margin-top: 10px;
+  }
+  
+  /* Fix flex layout for sidebar content */
+  .sidebar-widget p, .sidebar-widget ul li a {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .sidebar-widget p i, .sidebar-widget ul li a i {
+    display: inline-block;
+    width: auto;
+    margin-right: 8px;
   }
 }
 
