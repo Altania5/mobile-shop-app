@@ -2075,8 +2075,8 @@ button:active {
   }
   
   .value-card {
-    padding: 15px;
-    margin: 0;
+    padding: 12px;
+    margin: 0 0 10px 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -2084,13 +2084,14 @@ button:active {
   }
   
   .value-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 8px;
+    font-size: 1.3rem;
+    margin-bottom: 6px;
   }
   
   .value-card h4 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin: 0;
+    font-weight: 500;
   }
   
   .about-sidebar {
@@ -2100,8 +2101,8 @@ button:active {
   }
   
   .about-sidebar .sidebar-widget {
-    padding: 12px;
-    margin: 0;
+    padding: 10px;
+    margin: 0 0 15px 0;
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -2111,16 +2112,16 @@ button:active {
   }
   
   .testimonial-container {
-    padding: 15px 12px;
-    margin: 15px 0;
+    padding: 12px 10px;
+    margin: 12px 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
   
   .testimonial-container h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
   }
   
   .about-main-content {
@@ -2130,56 +2131,96 @@ button:active {
     padding: 0;
   }
   
+  /* Mission section mobile fixes */
+  .mission-section {
+    padding: 20px 15px;
+  }
+  
+  .mission-overlay {
+    padding: 15px;
+  }
+  
+  .mission-overlay h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .mission-overlay p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  /* CTA section mobile fixes */
+  .cta-section {
+    padding: 20px 15px;
+  }
+  
+  .cta-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .cta-section p {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+  
+  .cta-section .cta-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
   /* Additional mobile fixes for sidebar content */
   .sidebar-widget h3 {
-    font-size: 1rem;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget p {
-    font-size: 0.85rem;
-    line-height: 1.3;
-    margin-bottom: 10px;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget ul {
-    padding-left: 10px;
+    padding-left: 8px;
     margin: 0;
   }
   
   .sidebar-widget li {
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget a {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
   
   .sidebar-widget .cta-button {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    margin-top: 10px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    margin-top: 8px;
   }
   
   /* Fix flex layout for sidebar content */
   .sidebar-widget p, .sidebar-widget ul li a {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   
   .sidebar-widget p i, .sidebar-widget ul li a i {
     display: inline-block;
     width: auto;
-    margin-right: 8px;
+    margin-right: 6px;
+    font-size: 0.75rem;
   }
 }
 
