@@ -13,6 +13,17 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Force HTTPS in production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.header('host')}${req.url}`);
+    } else {
+      next();
+    }
+  });
+}
+
 // Serve static files from the 'uploads' directory
 app.use('../uploads', express.static(path.join(__dirname, 'uploads')));
 
