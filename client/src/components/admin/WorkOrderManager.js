@@ -295,7 +295,7 @@ const WorkOrderManager = () => {
         </div>
       ) : (
         <>
-          {/* Work Orders Table */}
+          {/* Desktop Table View */}
           <div className="work-orders-table">
             <table>
               <thead>
@@ -430,6 +430,125 @@ const WorkOrderManager = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="mobile-work-orders-container">
+            {(workOrders || []).map(workOrder => (
+              <div key={workOrder._id} className="mobile-work-order-card">
+                <div className="mobile-work-order-header">
+                  <div className="mobile-work-order-number">
+                    {workOrder.workOrderNumber}
+                  </div>
+                  <select
+                    value={workOrder.status}
+                    onChange={(e) => handleUpdateStatus(workOrder._id, e.target.value)}
+                    className="mobile-work-order-status"
+                    style={{ backgroundColor: getStatusColor(workOrder.status) }}
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="pending_approval">Pending Approval</option>
+                    <option value="approved">Approved</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="billed">Billed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                <div className="mobile-work-order-details">
+                  <div className="mobile-customer-info">
+                    <div className="mobile-customer-name">{workOrder.customer.name}</div>
+                    <div className="mobile-customer-email">{workOrder.customer.email}</div>
+                  </div>
+                  <div className="mobile-vehicle-info">
+                    {workOrder.vehicle.year} {workOrder.vehicle.make} {workOrder.vehicle.model}
+                  </div>
+                </div>
+
+                <div className="mobile-work-order-details">
+                  <div className="mobile-work-order-detail">
+                    <div className="mobile-work-order-label">Total</div>
+                    <div className="mobile-total-amount">
+                      {formatCurrency(workOrder.pricing.totalAmount)}
+                    </div>
+                  </div>
+                  <div className="mobile-work-order-detail">
+                    <div className="mobile-work-order-label">Created</div>
+                    <div className="mobile-work-order-value">{formatDate(workOrder.createdAt)}</div>
+                  </div>
+                </div>
+
+                <div className="mobile-status-section">
+                  <div className="mobile-status-item">
+                    <div className="mobile-status-label">Email Status</div>
+                    <div className={`mobile-status-value ${workOrder.emailSent ? 'email-sent' : 'email-not-sent'}`}>
+                      {workOrder.emailSent ? (
+                        <>✓ Sent {workOrder.emailSentDate ? formatDate(workOrder.emailSentDate) : ''}</>
+                      ) : (
+                        'Not sent'
+                      )}
+                    </div>
+                  </div>
+                  <div className="mobile-status-item">
+                    <div className="mobile-status-label">Acknowledgment</div>
+                    <div className={`mobile-status-value ${
+                      workOrder.acknowledgment?.isAcknowledged ? 'acknowledged' : 
+                      workOrder.acknowledgment?.isRequired ? 'pending-acknowledgment' : 'no-acknowledgment'
+                    }`}>
+                      {workOrder.acknowledgment?.isAcknowledged ? (
+                        <>✅ Acknowledged {workOrder.acknowledgment.acknowledgmentDate ? formatDate(workOrder.acknowledgment.acknowledgmentDate) : ''}</>
+                      ) : workOrder.acknowledgment?.isRequired ? (
+                        <>⏳ Pending {workOrder.acknowledgment.tokenExpiresAt && (
+                          <div className="expires-info">
+                            Expires: {formatDate(workOrder.acknowledgment.tokenExpiresAt)}
+                          </div>
+                        )}</>
+                      ) : (
+                        'Not required'
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mobile-work-order-actions">
+                  <button
+                    onClick={() => handleEdit(workOrder)}
+                    className="edit-button"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleSendEmail(workOrder._id)}
+                    className="email-button"
+                    disabled={!workOrder.customer.email}
+                  >
+                    Email
+                  </button>
+                  <button
+                    onClick={() => handleDownloadPDF(workOrder._id, workOrder.workOrderNumber)}
+                    className="pdf-button"
+                  >
+                    PDF
+                  </button>
+                  {!workOrder.acknowledgment?.isAcknowledged && (
+                    <button
+                      onClick={() => handleGenerateAcknowledgment(workOrder._id, workOrder.workOrderNumber)}
+                      className="acknowledgment-button"
+                      disabled={!workOrder.customer.email}
+                    >
+                      Acknowledgment
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDelete(workOrder._id)}
+                    className="delete-button"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Pagination */}

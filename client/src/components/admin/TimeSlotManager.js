@@ -369,82 +369,164 @@ const TimeSlotManager = () => {
         {loading ? (
           <div className="loading">Loading time slots...</div>
         ) : (
-          <div className="slots-table-wrapper">
-            <table className="slots-table">
-              <thead>
-                <tr>
-                  <th>Select</th>
-                  <th>Service</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Status</th>
-                  <th>Customer</th>
-                  <th>Notes</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {timeSlots.length === 0 ? (
+          <>
+            {/* Desktop Table View */}
+            <div className="slots-table-wrapper">
+              <table className="slots-table">
+                <thead>
                   <tr>
-                    <td colSpan="8" className="no-data">No time slots found</td>
+                    <th>Select</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Customer</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
                   </tr>
-                ) : (
-                  timeSlots.map(slot => (
-                    <tr key={slot._id} className={slot.isBooked ? 'booked' : ''}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedSlots.has(slot._id)}
-                          onChange={() => handleSlotSelection(slot._id)}
-                          disabled={slot.isBooked}
-                        />
-                      </td>
-                      <td>{slot.service?.name || 'Unknown Service'}</td>
-                      <td>{formatDate(slot.date)}</td>
-                      <td>{formatTime(slot.time)}</td>
-                      <td>
-                        <span className={`status ${slot.isBooked ? 'booked' : slot.isAvailable ? 'available' : 'unavailable'}`}>
+                </thead>
+                <tbody>
+                  {timeSlots.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="no-data">No time slots found</td>
+                    </tr>
+                  ) : (
+                    timeSlots.map(slot => (
+                      <tr key={slot._id} className={slot.isBooked ? 'booked' : ''}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedSlots.has(slot._id)}
+                            onChange={() => handleSlotSelection(slot._id)}
+                            disabled={slot.isBooked}
+                          />
+                        </td>
+                        <td>{slot.service?.name || 'Unknown Service'}</td>
+                        <td>{formatDate(slot.date)}</td>
+                        <td>{formatTime(slot.time)}</td>
+                        <td>
+                          <span className={`status ${slot.isBooked ? 'booked' : slot.isAvailable ? 'available' : 'unavailable'}`}>
+                            {slot.isBooked ? 'Booked' : slot.isAvailable ? 'Available' : 'Unavailable'}
+                          </span>
+                        </td>
+                        <td>
+                          {slot.booking ? 
+                            `${slot.booking.clientFirstName} ${slot.booking.clientLastName}` : 
+                            '-'
+                          }
+                        </td>
+                        <td className="notes-cell">
+                          {slot.notes || '-'}
+                        </td>
+                        <td>
+                          <div className="action-buttons">
+                            {!slot.isBooked && (
+                              <button
+                                onClick={() => handleUpdateSlot(slot._id, { isAvailable: !slot.isAvailable })}
+                                className={`btn-toggle ${slot.isAvailable ? 'available' : 'unavailable'}`}
+                                title={slot.isAvailable ? 'Make Unavailable' : 'Make Available'}
+                              >
+                                {slot.isAvailable ? '🔒' : '🔓'}
+                              </button>
+                            )}
+                            
+                            {!slot.isBooked && (
+                              <button
+                                onClick={() => handleDeleteSlot(slot._id)}
+                                className="btn-delete"
+                                title="Delete Slot"
+                              >
+                                🗑
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="mobile-slots-container">
+              {timeSlots.length === 0 ? (
+                <div className="no-data">No time slots found</div>
+              ) : (
+                timeSlots.map(slot => (
+                  <div key={slot._id} className="mobile-slot-card">
+                    <div className="mobile-slot-header">
+                      <div className="mobile-slot-service">
+                        {slot.service?.name || 'Unknown Service'}
+                      </div>
+                      <input
+                        type="checkbox"
+                        className="mobile-slot-checkbox"
+                        checked={selectedSlots.has(slot._id)}
+                        onChange={() => handleSlotSelection(slot._id)}
+                        disabled={slot.isBooked}
+                      />
+                    </div>
+                    
+                    <div className="mobile-slot-details">
+                      <div className="mobile-slot-detail">
+                        <div className="mobile-slot-label">Date</div>
+                        <div className="mobile-slot-value">{formatDate(slot.date)}</div>
+                      </div>
+                      <div className="mobile-slot-detail">
+                        <div className="mobile-slot-label">Time</div>
+                        <div className="mobile-slot-value">{formatTime(slot.time)}</div>
+                      </div>
+                    </div>
+
+                    <div className="mobile-slot-details">
+                      <div className="mobile-slot-detail">
+                        <div className="mobile-slot-label">Status</div>
+                        <span className={`mobile-slot-status ${slot.isBooked ? 'booked' : slot.isAvailable ? 'available' : 'unavailable'}`}>
                           {slot.isBooked ? 'Booked' : slot.isAvailable ? 'Available' : 'Unavailable'}
                         </span>
-                      </td>
-                      <td>
-                        {slot.booking ? 
-                          `${slot.booking.clientFirstName} ${slot.booking.clientLastName}` : 
-                          '-'
-                        }
-                      </td>
-                      <td className="notes-cell">
-                        {slot.notes || '-'}
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          {!slot.isBooked && (
-                            <button
-                              onClick={() => handleUpdateSlot(slot._id, { isAvailable: !slot.isAvailable })}
-                              className={`btn-toggle ${slot.isAvailable ? 'available' : 'unavailable'}`}
-                              title={slot.isAvailable ? 'Make Unavailable' : 'Make Available'}
-                            >
-                              {slot.isAvailable ? '🔒' : '🔓'}
-                            </button>
-                          )}
-                          
-                          {!slot.isBooked && (
-                            <button
-                              onClick={() => handleDeleteSlot(slot._id)}
-                              className="btn-delete"
-                              title="Delete Slot"
-                            >
-                              🗑
-                            </button>
-                          )}
+                      </div>
+                      <div className="mobile-slot-detail">
+                        <div className="mobile-slot-label">Customer</div>
+                        <div className="mobile-slot-value">
+                          {slot.booking ? 
+                            `${slot.booking.clientFirstName} ${slot.booking.clientLastName}` : 
+                            '-'
+                          }
                         </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
+
+                    {slot.notes && slot.notes !== '-' && (
+                      <div className="mobile-slot-detail">
+                        <div className="mobile-slot-label">Notes</div>
+                        <div className="mobile-slot-value">{slot.notes}</div>
+                      </div>
+                    )}
+
+                    <div className="mobile-slot-actions">
+                      {!slot.isBooked && (
+                        <button
+                          onClick={() => handleUpdateSlot(slot._id, { isAvailable: !slot.isAvailable })}
+                          className={`btn-toggle ${slot.isAvailable ? 'available' : 'unavailable'}`}
+                        >
+                          {slot.isAvailable ? 'Make Unavailable' : 'Make Available'}
+                        </button>
+                      )}
+                      {!slot.isBooked && (
+                        <button
+                          onClick={() => handleDeleteSlot(slot._id)}
+                          className="btn-delete"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
         )}
       </div>
 

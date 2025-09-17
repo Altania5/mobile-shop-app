@@ -146,6 +146,11 @@
   overflow-x: auto;
 }
 
+/* Mobile work orders container - hidden by default */
+.mobile-work-orders-container {
+  display: none;
+}
+
 .work-orders-table table {
   width: 100%;
   border-collapse: collapse;
@@ -517,56 +522,237 @@
     gap: 15px;
   }
 
+  /* Hide table on mobile and show card layout */
   .work-orders-table {
-    font-size: 0.8rem;
+    display: none;
   }
 
-  .work-orders-table th,
-  .work-orders-table td {
-    padding: 8px 6px;
+  /* Mobile card layout for work orders */
+  .mobile-work-orders-container {
+    display: block;
   }
 
-  .action-buttons {
+  .mobile-work-order-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-work-order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .mobile-work-order-number {
+    font-weight: 800;
+    color: #ff8c42;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    background: rgba(255, 140, 66, 0.12);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 140, 66, 0.35);
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+
+  .mobile-work-order-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .mobile-work-order-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .mobile-work-order-detail {
+    display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
   }
 
-  .action-buttons button {
-    width: 100%;
-    min-width: auto;
-    font-size: 0.7rem;
-    padding: 6px 8px;
+  .mobile-work-order-label {
+    font-size: 0.75rem;
+    color: var(--text-light-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .mobile-work-order-value {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    font-weight: 500;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .mobile-customer-info {
+    background: var(--surface-light);
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+  }
+
+  .mobile-customer-name {
+    font-weight: 700;
+    color: #1f2937;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+  }
+
+  .mobile-customer-email {
+    font-size: 0.8rem;
+    color: var(--text-light-color);
+    font-family: monospace;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .mobile-vehicle-info {
+    background: var(--surface-light);
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .mobile-total-amount {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-left: 4px solid #10b981;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  .mobile-status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--surface-light);
+    border-radius: 8px;
+  }
+
+  .mobile-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .mobile-status-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-status-label {
+    font-size: 0.8rem;
+    color: var(--text-light-color);
+    font-weight: 600;
+  }
+
+  .mobile-status-value {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .mobile-status-value.email-sent {
+    color: var(--success-color);
+  }
+
+  .mobile-status-value.email-not-sent {
+    color: var(--text-light-color);
+  }
+
+  .mobile-status-value.acknowledged {
+    color: #28a745;
+  }
+
+  .mobile-status-value.pending-acknowledgment {
+    color: #ffc107;
+  }
+
+  .mobile-status-value.no-acknowledgment {
+    color: #6c757d;
+    font-style: italic;
+  }
+
+  .mobile-work-order-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .mobile-work-order-actions button {
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+
+  .mobile-work-order-actions .edit-button {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+  }
+
+  .mobile-work-order-actions .email-button {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+  }
+
+  .mobile-work-order-actions .pdf-button {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+  }
+
+  .mobile-work-order-actions .acknowledgment-button {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+  }
+
+  .mobile-work-order-actions .delete-button {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    grid-column: 1 / -1;
   }
 
   .pagination {
     flex-direction: column;
     gap: 15px;
-  }
-
-  .customer-info,
-  .vehicle-info {
-    font-size: 0.8rem;
-  }
-
-  .customer-email {
-    font-size: 0.7rem;
-  }
-
-  .customer-name {
-    font-size: 0.8rem;
-  }
-
-  .vehicle-info {
-    font-size: 0.75rem;
-  }
-
-  .email-sent,
-  .email-not-sent {
-    font-size: 0.7rem;
-  }
-
-  .acknowledgment-status {
-    font-size: 0.7rem;
   }
 }
 
