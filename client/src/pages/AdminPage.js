@@ -9,8 +9,8 @@ import '../components/admin/AdminTheme.css';
 
 function AdminPage() {
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
+    <div className="admin-page-container">
+      <h2 className="admin-dashboard-title">Admin Dashboard</h2>
       <div className="admin-panel">
         <BookingManager />
         <TimeSlotManager />
