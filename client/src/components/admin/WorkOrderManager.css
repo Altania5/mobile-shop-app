@@ -1,10 +1,12 @@
 .work-order-manager {
-  max-width: 1500px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 30px;
+  padding: 20px;
   background: var(--background-color);
   color: var(--text-color);
   min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .manager-header {
@@ -147,7 +149,9 @@
 .work-orders-table table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1200px;
+  min-width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
 }
 
 .work-orders-table th {
@@ -162,12 +166,61 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Column width constraints */
+.work-orders-table th:nth-child(1), /* Work Order # */
+.work-orders-table td:nth-child(1) {
+  width: 12%;
+}
+
+.work-orders-table th:nth-child(2), /* Customer */
+.work-orders-table td:nth-child(2) {
+  width: 18%;
+}
+
+.work-orders-table th:nth-child(3), /* Vehicle */
+.work-orders-table td:nth-child(3) {
+  width: 15%;
+}
+
+.work-orders-table th:nth-child(4), /* Status */
+.work-orders-table td:nth-child(4) {
+  width: 12%;
+}
+
+.work-orders-table th:nth-child(5), /* Total */
+.work-orders-table td:nth-child(5) {
+  width: 8%;
+}
+
+.work-orders-table th:nth-child(6), /* Created */
+.work-orders-table td:nth-child(6) {
+  width: 10%;
+}
+
+.work-orders-table th:nth-child(7), /* Email Status */
+.work-orders-table td:nth-child(7) {
+  width: 12%;
+}
+
+.work-orders-table th:nth-child(8), /* Acknowledgment */
+.work-orders-table td:nth-child(8) {
+  width: 13%;
+}
+
+.work-orders-table th:nth-child(9), /* Actions */
+.work-orders-table td:nth-child(9) {
+  width: 15%;
+}
+
 .work-orders-table td {
   padding: 20px 16px;
   border-bottom: 1px solid var(--border-color);
   vertical-align: top;
   font-size: 0.95rem;
   color: var(--text-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .work-orders-table tr:hover {
@@ -192,22 +245,31 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 200px;
+  min-width: 0;
+  width: 100%;
 }
 
 .customer-name {
   font-weight: 700;
   color: #1f2937;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
 }
 
 .customer-email {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--text-light-color);
   background: var(--surface-light);
   padding: 4px 8px;
   border-radius: 6px;
   font-family: monospace;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
 }
 
 .vehicle-info {
@@ -217,7 +279,11 @@
   padding: 8px 12px;
   border-radius: 8px;
   border-left: 4px solid #3b82f6;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.3;
 }
 
 .status-select {
@@ -257,38 +323,45 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .email-sent {
   color: var(--success-color);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
 .email-not-sent {
   color: var(--text-light-color);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
 .action-buttons {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .action-buttons button {
-  padding: 10px 16px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.025em;
   transition: all 0.3s ease;
-  min-width: 70px;
+  min-width: 60px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .edit-button {
@@ -445,22 +518,24 @@
   }
 
   .work-orders-table {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .work-orders-table th,
   .work-orders-table td {
-    padding: 10px 8px;
+    padding: 8px 6px;
   }
 
   .action-buttons {
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
   }
 
   .action-buttons button {
     width: 100%;
     min-width: auto;
+    font-size: 0.7rem;
+    padding: 6px 8px;
   }
 
   .pagination {
@@ -470,17 +545,35 @@
 
   .customer-info,
   .vehicle-info {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .customer-email {
+    font-size: 0.7rem;
+  }
+
+  .customer-name {
     font-size: 0.8rem;
+  }
+
+  .vehicle-info {
+    font-size: 0.75rem;
+  }
+
+  .email-sent,
+  .email-not-sent {
+    font-size: 0.7rem;
+  }
+
+  .acknowledgment-status {
+    font-size: 0.7rem;
   }
 }
 
 @media (max-width: 480px) {
   .work-orders-table table {
-    min-width: 800px;
+    min-width: 100%;
+    max-width: 100%;
   }
 
   .work-orders-table {
@@ -494,7 +587,9 @@
 
 /* Acknowledgment Status Styles */
 .acknowledgment-status {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .acknowledged {
@@ -503,6 +598,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  line-height: 1.2;
 }
 
 .pending-acknowledgment {
@@ -511,24 +607,28 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  line-height: 1.2;
 }
 
 .expires-info {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #6c757d;
   font-weight: normal;
+  line-height: 1.1;
 }
 
 .no-acknowledgment {
   color: #6c757d;
   font-style: italic;
+  line-height: 1.2;
 }
 
 .acknowledgment-button {
   background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
   color: white !important;
-  font-size: 0.8rem !important;
-  padding: 0.4rem 0.8rem !important;
+  font-size: 0.7rem !important;
+  padding: 6px 8px !important;
+  min-width: 50px !important;
 }
 
 .acknowledgment-button:hover:not(:disabled) {

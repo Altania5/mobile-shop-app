@@ -2,22 +2,100 @@
 /* MOBILE MECHANIC ADMIN PANEL REDESIGN                */
 /* ===================================================== */
 
-/* Admin Page Container */
-.admin-page-container {
+/* Admin Page Wrapper - Strict width control */
+.admin-page-wrapper {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    min-width: 0 !important;
+    position: relative !important;
+    contain: layout !important;
+}
+
+/* Responsive scaling for admin content */
+@media (max-width: 1200px) {
+    .admin-page-wrapper {
+        transform: scale(0.95) !important;
+        transform-origin: top center !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .admin-page-wrapper {
+        transform: scale(0.9) !important;
+        transform-origin: top center !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-page-wrapper {
+        transform: none !important;
+    }
+}
+
+/* Ensure the wrapper never exceeds viewport */
+@media (max-width: 100vw) {
+    .admin-page-wrapper {
+        max-width: 100vw !important;
+        width: 100vw !important;
+    }
+}
+
+/* Force all admin content to respect viewport width */
+.admin-page-wrapper *,
+.admin-page-wrapper *::before,
+.admin-page-wrapper *::after {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Prevent any element from causing horizontal overflow */
+.admin-page-wrapper * {
+    overflow-x: hidden !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+/* Specific fixes for common overflow culprits */
+.admin-page-wrapper input,
+.admin-page-wrapper textarea,
+.admin-page-wrapper select,
+.admin-page-wrapper button {
+    max-width: 100% !important;
+    width: auto !important;
+}
+
+.admin-page-wrapper table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Admin Page Container */
+.admin-page-container {
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
 .admin-panel {
     display: grid !important;
-    gap: 40px !important;
-    padding: 0 !important;
+    gap: 15px !important;
+    padding: 10px !important;
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 1200px !important;
     box-sizing: border-box !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    justify-items: center !important;
 }
 
 /* Admin Dashboard Header */
@@ -28,14 +106,16 @@ h2:contains("Admin Dashboard"),
     font-size: 2.5rem !important;
     font-weight: 700 !important;
     text-align: center !important;
-    margin: 0 0 40px 0 !important;
+    margin: 0 auto 40px auto !important;
     padding: 0 !important;
     background: var(--gradient-accent) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
     width: 100% !important;
+    max-width: 1200px !important;
     box-sizing: border-box !important;
+    display: block !important;
 }
 
 /* Manager Container Base Styling */
@@ -46,15 +126,16 @@ h2:contains("Admin Dashboard"),
     background: var(--surface-color) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: var(--border-radius) !important;
-    padding: 40px 30px !important;
+    padding: 15px 10px !important;
     box-shadow: var(--box-shadow) !important;
     color: var(--text-color) !important;
     position: relative !important;
     overflow: hidden !important;
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 1200px !important;
     box-sizing: border-box !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
+    min-width: 0 !important;
 }
 
 /* Add orange accent bar to each manager */
@@ -272,6 +353,11 @@ h2:contains("Admin Dashboard"),
     overflow: hidden !important;
     transition: var(--transition-smooth) !important;
     box-shadow: var(--box-shadow) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    padding: 15px !important;
 }
 
 .admin-booking-card:hover {
@@ -299,9 +385,13 @@ h2:contains("Admin Dashboard"),
 .header-controls {
     display: flex !important;
     align-items: center !important;
-    gap: 15px !important;
+    gap: 10px !important;
     justify-content: space-between !important;
     flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
 }
 
 /* Create Work Order Button */
@@ -309,10 +399,10 @@ h2:contains("Admin Dashboard"),
     background: var(--success-color) !important;
     color: white !important;
     border: none !important;
-    padding: 8px 15px !important;
+    padding: 6px 12px !important;
     border-radius: 6px !important;
     font-weight: 600 !important;
-    font-size: 0.85rem !important;
+    font-size: 0.8rem !important;
     cursor: pointer !important;
     transition: var(--transition-smooth) !important;
     white-space: nowrap !important;
@@ -330,6 +420,10 @@ h2:contains("Admin Dashboard"),
     gap: 15px !important;
     align-items: center !important;
     flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
 }
 
 /* Custom Booking Button in Header */
@@ -337,12 +431,15 @@ h2:contains("Admin Dashboard"),
     background: var(--success-color) !important;
     color: white !important;
     border: none !important;
-    padding: 12px 20px !important;
+    padding: 10px 15px !important;
     border-radius: 8px !important;
     font-weight: 600 !important;
     cursor: pointer !important;
     transition: var(--transition-smooth) !important;
-    font-size: 0.95rem !important;
+    font-size: 0.9rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
 }
 
 .custom-booking-btn:hover {
@@ -356,12 +453,15 @@ h2:contains("Admin Dashboard"),
     background: var(--accent-color) !important;
     color: white !important;
     border: none !important;
-    padding: 12px 20px !important;
+    padding: 10px 15px !important;
     border-radius: 8px !important;
     font-weight: 600 !important;
     cursor: pointer !important;
     transition: var(--transition-smooth) !important;
-    font-size: 0.95rem !important;
+    font-size: 0.9rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
 }
 
 .work-order-manager-btn:hover {
@@ -378,6 +478,10 @@ h2:contains("Admin Dashboard"),
     margin-bottom: 30px !important;
     flex-wrap: wrap !important;
     gap: 15px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
 }
 
 /* Back Button */
@@ -399,13 +503,21 @@ h2:contains("Admin Dashboard"),
 }
 
 .admin-booking-card .card-body {
-    padding: 20px !important;
+    padding: 15px !important;
     color: var(--text-light-color) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
 }
 
 .admin-booking-card .card-body p {
     margin-bottom: 8px !important;
-    font-size: 0.95rem !important;
+    font-size: 0.9rem !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
 }
 
 .admin-booking-card .card-body strong {
@@ -451,15 +563,39 @@ h2:contains("Admin Dashboard"),
 /* Admin Grid Layouts */
 .admin-booking-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
-    gap: 25px !important;
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    justify-items: center !important;
+}
+
+/* Desktop: Allow multiple columns only on very wide screens */
+@media (min-width: 1400px) {
+    .admin-booking-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    }
 }
 
 .search-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    grid-template-columns: 1fr !important;
     gap: 15px !important;
     margin-bottom: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+}
+
+/* Desktop: Allow multiple columns for search grid */
+@media (min-width: 768px) {
+    .search-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    }
 }
 
 /* Checkbox Groups */
@@ -612,21 +748,30 @@ h2:contains("Admin Dashboard"),
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+    /* Admin Page Wrapper Mobile */
+    .admin-page-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+    }
+    
     /* Admin Page Container Mobile */
     .admin-page-container {
         padding: 0 !important;
         margin: 0 !important;
-        width: 100vw !important;
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     /* Admin Panel Mobile */
     .admin-panel {
-        padding: 10px !important;
-        gap: 20px !important;
+        padding: 5px !important;
+        gap: 15px !important;
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
     }
     
     /* Admin Dashboard Title Mobile */
@@ -641,7 +786,7 @@ h2:contains("Admin Dashboard"),
     .testimonial-manager,
     .blog-manager,
     .service-manager {
-        padding: 20px 15px !important;
+        padding: 15px 10px !important;
         margin: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
@@ -684,12 +829,17 @@ h2:contains("Admin Dashboard"),
     .admin-booking-grid {
         grid-template-columns: 1fr !important;
         gap: 15px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
     }
     
     /* Admin Booking Cards Mobile */
     .admin-booking-card {
         margin: 0 !important;
         width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
     }
     
     .admin-booking-card .card-header {
@@ -709,6 +859,8 @@ h2:contains("Admin Dashboard"),
         flex-direction: column !important;
         gap: 10px !important;
         width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
     }
     
     .status-select {
@@ -741,11 +893,18 @@ h2:contains("Admin Dashboard"),
     /* Card Body Mobile */
     .admin-booking-card .card-body {
         padding: 15px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
     }
     
     .admin-booking-card .card-body p {
         font-size: 0.9rem !important;
         margin-bottom: 6px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
     
     /* Search Grid Mobile */
@@ -837,6 +996,14 @@ h2:contains("Admin Dashboard"),
 
 /* Extra Small Mobile Devices */
 @media (max-width: 480px) {
+    /* Admin Page Wrapper Extra Small */
+    .admin-page-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
     /* Admin Page Container Extra Small */
     .admin-page-container {
         padding: 0 !important;

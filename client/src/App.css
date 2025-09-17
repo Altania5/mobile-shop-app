@@ -261,6 +261,35 @@ button:active {
   margin: 0 auto;
 }
 
+/* Admin page override - strict width control */
+.app-main .admin-page-wrapper {
+  margin: -20px !important;
+  padding: 0 !important;
+  max-width: 1200px !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+/* Prevent any horizontal overflow on the entire page when admin page is active */
+body.admin-page-active {
+  overflow-x: hidden !important;
+}
+
+html.admin-page-active {
+  overflow-x: hidden !important;
+}
+
+/* Ensure admin content never exceeds viewport */
+.admin-page-wrapper * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 .dashboard-nav {
   padding: 15px 30px;
   background-color: var(--surface-color);
