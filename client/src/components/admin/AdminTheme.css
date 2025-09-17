@@ -752,17 +752,23 @@ h2:contains("Admin Dashboard"),
     .admin-page-wrapper {
         width: 100% !important;
         max-width: 100% !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         padding: 0 !important;
         overflow-x: hidden !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
     }
     
     /* Admin Page Container Mobile */
     .admin-page-container {
         padding: 0 !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         width: 100% !important;
         max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
     
     /* Admin Panel Mobile */
@@ -772,6 +778,8 @@ h2:contains("Admin Dashboard"),
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
+        margin: 0 auto !important;
+        justify-items: center !important;
     }
     
     /* Admin Dashboard Title Mobile */
@@ -787,7 +795,7 @@ h2:contains("Admin Dashboard"),
     .blog-manager,
     .service-manager {
         padding: 15px 10px !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         width: 100% !important;
         max-width: 100% !important;
         border-radius: 8px !important;
@@ -832,11 +840,13 @@ h2:contains("Admin Dashboard"),
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
+        margin: 0 auto !important;
+        justify-items: center !important;
     }
     
     /* Admin Booking Cards Mobile */
     .admin-booking-card {
-        margin: 0 !important;
+        margin: 0 auto !important;
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;

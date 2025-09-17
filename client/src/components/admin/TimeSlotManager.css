@@ -548,6 +548,8 @@
   /* Mobile card layout for time slots */
   .mobile-slots-container {
     display: block;
+    margin: 0 auto;
+    max-width: 100%;
   }
 
   .mobile-slot-card {

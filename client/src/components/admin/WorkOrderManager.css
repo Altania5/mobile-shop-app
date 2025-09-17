@@ -530,6 +530,8 @@
   /* Mobile card layout for work orders */
   .mobile-work-orders-container {
     display: block;
+    margin: 0 auto;
+    max-width: 100%;
   }
 
   .mobile-work-order-card {
