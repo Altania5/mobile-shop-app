@@ -3629,6 +3629,13 @@ footer a:hover {
   --shadow-hover: 0 20px 60px rgba(0,0,0,0.4);
   --border-radius-modern: 16px;
   --text-shadow-modern: 0 2px 10px rgba(0,0,0,0.5);
+  --hero-offset: 80px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --hero-offset: 70px;
+  }
 }
 
 /* ========================================= */
@@ -3636,16 +3643,18 @@ footer a:hover {
 /* ========================================= */
 
 .hero-section-modern {
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   display: flex;
   align-items: center;
   background: var(--gradient-dark);
-  margin-top: -80px;
-  padding-top: 80px;
+  margin-top: calc(-1 * var(--hero-offset) - env(safe-area-inset-top, 0px));
+  padding-top: calc(var(--hero-offset) + env(safe-area-inset-top, 0px) + 24px);
   overflow: hidden;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
+  box-sizing: border-box;
 }
 
 .hero-background {
