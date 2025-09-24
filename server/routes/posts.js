@@ -5,6 +5,24 @@ const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const upload = require('../middleware/upload');
 const slugify = require('slugify');
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const uploadToCloudinary = (file) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream({ folder: 'blog-hero-images' }, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+    streamifier.createReadStream(file.buffer).pipe(stream);
+  });
+};
 
 // --- GET ALL POSTS (Public) ---
 router.get('/', async (req, res) => {
@@ -50,8 +68,13 @@ router.post('/', [auth, adminAuth, upload.single('heroImage')], async (req, res)
     }
 
     if (req.file) {
-      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
-      newPostData.heroImage = `${baseUrl}/uploads/${req.file.filename}`;
+      try {
+        const uploadResult = await uploadToCloudinary(req.file);
+        newPostData.heroImage = uploadResult.secure_url;
+      } catch (uploadErr) {
+        console.error('Cloudinary upload error:', uploadErr);
+        return res.status(500).json({ error: 'Failed to upload hero image.' });
+      }
     }
 
     const newPost = new Post(newPostData);
@@ -80,8 +103,13 @@ router.put('/:id', [auth, adminAuth, upload.single('heroImage')], async (req, re
         };
 
         if (req.file) {
-            const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
-            updatedData.heroImage = `${baseUrl}/uploads/${req.file.filename}`;
+            try {
+                const uploadResult = await uploadToCloudinary(req.file);
+                updatedData.heroImage = uploadResult.secure_url;
+            } catch (uploadErr) {
+                console.error('Cloudinary upload error:', uploadErr);
+                return res.status(500).json({ error: 'Failed to upload hero image.' });
+            }
         }
 
         const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, { new: true });

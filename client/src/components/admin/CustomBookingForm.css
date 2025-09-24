@@ -1,42 +1,49 @@
 .custom-booking-form {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    background: linear-gradient(135deg, rgba(24, 32, 42, 0.95), rgba(36, 44, 54, 0.95));
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    color: var(--text-color, #e2e8f0);
+    backdrop-filter: blur(14px);
 }
 
 .form-header {
     text-align: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .form-header h3 {
-    color: #333;
+    color: var(--text-color, #f8fafc);
     margin-bottom: 8px;
+    font-size: 2.2rem;
+    text-shadow: 0 8px 20px rgba(56, 189, 248, 0.35);
 }
 
 .form-header p {
-    color: #666;
+    color: rgba(226, 232, 240, 0.75);
     margin: 0;
-    font-size: 14px;
+    font-size: 0.95rem;
 }
 
 .form-section {
-    margin-bottom: 25px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 6px;
-    border-left: 4px solid #007bff;
+    margin-bottom: 28px;
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.05);
 }
 
 .form-section h4 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 16px;
+    color: var(--accent-color, #38bdf8);
+    margin-bottom: 18px;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
 }
 
 .form-row {
@@ -51,21 +58,24 @@
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #555;
-    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: rgba(226, 232, 240, 0.9);
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
+    padding: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: var(--text-color, #e2e8f0);
+    background: rgba(15, 23, 42, 0.85);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     box-sizing: border-box;
 }
 
@@ -73,8 +83,9 @@
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: rgba(56, 189, 248, 0.7);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+    background: rgba(15, 23, 42, 0.95);
 }
 
 .form-group input[type="checkbox"] {
@@ -91,56 +102,61 @@
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
 }
 
 .btn-cancel,
 .btn-primary {
-    padding: 12px 24px;
+    padding: 14px 28px;
     border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 120px;
+    transition: all 0.25s ease;
+    min-width: 140px;
 }
 
 .btn-cancel {
-    background: #6c757d;
-    color: white;
+    background: transparent;
+    color: rgba(226, 232, 240, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.4);
 }
 
 .btn-cancel:hover {
-    background: #5a6268;
+    background: rgba(148, 163, 184, 0.15);
+    color: #f8fafc;
+    transform: translateY(-2px);
 }
 
 .btn-primary {
-    background: #007bff;
+    background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
     color: white;
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 45px rgba(99, 102, 241, 0.45);
 }
 
 .btn-primary:disabled {
-    background: #6c757d;
+    background: rgba(148, 163, 184, 0.4);
     cursor: not-allowed;
-    opacity: 0.7;
+    box-shadow: none;
 }
 
 .error-message {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid #f5c6cb;
+    background: rgba(248, 113, 113, 0.1);
+    color: #fca5a5;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(248, 113, 113, 0.3);
     margin-bottom: 20px;
-    font-size: 14px;
+    font-size: 0.95rem;
 }
 
 /* Responsive design */

@@ -332,12 +332,6 @@ function BookingManager() {
     if (showWorkOrderManager) {
         return (
             <div className="manager-container">
-                <div className="manager-header">
-                    <button onClick={handleBackToBookings} className="back-button">
-                        ← Back to Bookings
-                    </button>
-                    <h3>Work Order Manager</h3>
-                </div>
                 <WorkOrderManager onBack={handleBackToBookings} />
             </div>
         );
@@ -350,9 +344,6 @@ function BookingManager() {
                 <div className="header-buttons">
                     <button onClick={handleCreateCustomBooking} className="custom-booking-btn">
                         ➕ Create Custom Booking
-                    </button>
-                    <button onClick={handleShowWorkOrderManager} className="work-order-manager-btn">
-                        📋 Work Order Manager
                     </button>
                 </div>
             </div>

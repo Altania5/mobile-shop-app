@@ -1,35 +1,20 @@
 const multer = require('multer');
-const path = require('path');
 
-// Set up storage engine
-const storage = multer.diskStorage({
-  destination: './uploads/',
-  filename: function(req, file, cb) {
-    // Generate a unique filename to avoid conflicts
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
+const storage = multer.memoryStorage();
 
-// Check File Type
-function checkFileType(file, cb) {
+const checkFileType = (file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
+  if (mimetype) {
     return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
   }
-}
-
+  cb(new Error('Error: Images Only!'));
+};
 
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5000000 }, // Limit file size to 5MB
-  fileFilter: function(req, file, cb) {
-    checkFileType(file, cb);
-  }
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => checkFileType(file, cb),
 });
 
 module.exports = upload;

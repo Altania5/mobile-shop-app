@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './CustomerAssignmentPage.css';
 
@@ -8,6 +8,7 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [searching, setSearching] = useState(false);
     const [error, setError] = useState('');
     const [showNewCustomerForm, setShowNewCustomerForm] = useState(false);
     const [newCustomerData, setNewCustomerData] = useState({
@@ -18,46 +19,44 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
     });
 
     const token = localStorage.getItem('token');
+    const searchDebounce = useRef(null);
 
     useEffect(() => {
         fetchCustomers();
     }, []);
 
     useEffect(() => {
-        if (searchTerm) {
+        if (!searchTerm.trim()) {
+            setFilteredCustomers(customers);
+            return;
+        }
+
+        if (searchDebounce.current) {
+            clearTimeout(searchDebounce.current);
+        }
+
+        searchDebounce.current = setTimeout(() => {
             const filtered = customers.filter(customer => {
                 const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-                const email = customer.email.toLowerCase();
+                const email = customer.email?.toLowerCase() || '';
+                const phone = customer.phone?.toLowerCase() || '';
                 const search = searchTerm.toLowerCase();
-                return fullName.includes(search) || email.includes(search);
+                return fullName.includes(search) || email.includes(search) || phone.includes(search);
             });
             setFilteredCustomers(filtered);
-        } else {
-            setFilteredCustomers(customers);
-        }
+        }, 250);
+
+        return () => clearTimeout(searchDebounce.current);
     }, [searchTerm, customers]);
 
     const fetchCustomers = async () => {
         try {
             setLoading(true);
             const headers = { 'x-auth-token': token };
-            console.log('Testing admin routes...');
-            
-            // First test if admin routes are working
-            try {
-                const testResponse = await axios.get('/api/admin/test');
-                console.log('Admin test route response:', testResponse.data);
-            } catch (testErr) {
-                console.error('Admin test route failed:', testErr);
-            }
-            
-            console.log('Fetching customers from /api/admin/users');
             const response = await axios.get('/api/admin/users', { headers });
-            console.log('Response received:', response.data);
             
             // Check if response.data is an array
             if (!Array.isArray(response.data)) {
-                console.error('API response is not an array:', response.data);
                 throw new Error('Invalid response format from server');
             }
             
@@ -65,17 +64,45 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
             const customerUsers = response.data.filter(user => 
                 !user.isAdmin && user.role !== 'admin'
             );
-            console.log('Filtered customers:', customerUsers);
             
             setCustomers(customerUsers);
             setFilteredCustomers(customerUsers);
         } catch (err) {
-            console.error('Error fetching customers:', err);
-            console.error('Error details:', err.response?.data);
             setError(err.response?.data?.msg || err.message || 'Failed to load customers');
         } finally {
             setLoading(false);
         }
+    };
+
+    const performSearch = async (term) => {
+        const trimmed = term.trim();
+        if (!trimmed) {
+            setFilteredCustomers(customers);
+            return;
+        }
+        setSearching(true);
+        setError('');
+        try {
+            const headers = { 'x-auth-token': token };
+            const response = await axios.get(`/api/admin/users/search?query=${encodeURIComponent(trimmed)}`, { headers });
+            setCustomers(Array.isArray(response.data) ? response.data : []);
+            setFilteredCustomers(Array.isArray(response.data) ? response.data : []);
+        } catch (err) {
+            setError('Failed to search customers. Please try again.');
+            setCustomers([]);
+            setFilteredCustomers([]);
+        } finally {
+            setSearching(false);
+        }
+    };
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        if (searchDebounce.current) {
+            clearTimeout(searchDebounce.current);
+        }
+        searchDebounce.current = setTimeout(() => performSearch(value), 350);
     };
 
     const handleCustomerSelect = (customer) => {
@@ -206,14 +233,22 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
                             <div className="search-input-container">
                                 <input
                                     type="text"
-                                    placeholder="Search customers by name or email..."
+                                    placeholder="Search customers by name, email, or phone..."
                                     value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    onChange={handleSearchChange}
                                     className="search-input"
                                 />
+                                <button
+                                    type="button"
+                                    className="search-button"
+                                    onClick={() => performSearch(searchTerm)}
+                                    disabled={searching}
+                                >
+                                    {searching ? 'Searching...' : 'Search'}
+                                </button>
                             </div>
 
-                            {loading ? (
+                            {(loading || searching) ? (
                                 <p>Loading customers...</p>
                             ) : (
                                 <div className="customer-list">

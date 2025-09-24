@@ -1,43 +1,52 @@
 .customer-assignment-page {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
-    background: #f8f9fa;
+    padding: 32px;
+    background: linear-gradient(135deg, rgba(24, 32, 42, 0.94), rgba(32, 41, 52, 0.96));
     min-height: 100vh;
+    color: #e2e8f0;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+    border: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 .assignment-header {
     text-align: center;
     margin-bottom: 30px;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
 }
 
 .assignment-header h2 {
-    color: #333;
+    color: #f8fafc;
     margin-bottom: 10px;
+    font-size: 2.2rem;
+    text-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
 }
 
 .assignment-header p {
-    color: #666;
+    color: rgba(226, 232, 240, 0.75);
     margin: 0;
 }
 
 .booking-summary {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    background: rgba(15, 23, 42, 0.75);
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+    margin-bottom: 32px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
 }
 
 .booking-summary h3 {
-    color: #333;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f0f0f0;
+    color: #38bdf8;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    letter-spacing: 0.05em;
 }
 
 .summary-grid {
@@ -49,31 +58,34 @@
 .summary-item {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    border-left: 4px solid #007bff;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.85);
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.05);
 }
 
 .summary-item .label {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #666;
+    color: rgba(148, 163, 184, 0.9);
     text-transform: uppercase;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
 }
 
 .summary-item .value {
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f8fafc;
 }
 
 .assignment-content {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
     overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .customer-search-section {
@@ -82,21 +94,65 @@
 
 .search-header {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
 }
 
 .search-header h3 {
-    color: #333;
+    color: #38bdf8;
     margin: 0;
     flex: 1;
+    letter-spacing: 0.05em;
 }
 
 .search-input-container {
     margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #f1f5f9;
+    background: rgba(15, 23, 42, 0.85);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-button {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 25px rgba(99, 102, 241, 0.35);
+}
+
+.search-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: rgba(56, 189, 248, 0.7);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
 }
 
 .search-input {
@@ -118,19 +174,21 @@
 .customer-list {
     max-height: 400px;
     overflow-y: auto;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.7);
 }
 
 .customer-card {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e9ecef;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     position: relative;
+    color: #f8fafc;
 }
 
 .customer-card:last-child {
@@ -138,12 +196,12 @@
 }
 
 .customer-card:hover {
-    background: #f8f9fa;
+    background: rgba(59, 130, 246, 0.08);
 }
 
 .customer-card.selected {
-    background: #e3f2fd;
-    border-left: 4px solid #007bff;
+    background: rgba(56, 189, 248, 0.12);
+    border-left: 4px solid #38bdf8;
 }
 
 .customer-info {
@@ -151,43 +209,43 @@
 }
 
 .customer-info h4 {
-    margin: 0 0 5px 0;
-    color: #333;
-    font-size: 16px;
+    margin: 0 0 6px 0;
+    color: #f8fafc;
+    font-size: 1.05rem;
 }
 
 .customer-email {
-    color: #666;
-    margin: 0 0 3px 0;
-    font-size: 14px;
+    color: rgba(226, 232, 240, 0.7);
+    margin: 0 0 4px 0;
+    font-size: 0.9rem;
 }
 
 .customer-phone {
-    color: #666;
+    color: rgba(226, 232, 240, 0.7);
     margin: 0;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
 .selection-indicator {
-    background: #007bff;
+    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
     color: white;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
 .assignment-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
+    gap: 12px;
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.7);
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
 }
 
 .new-customer-section {

@@ -774,44 +774,49 @@ async function sendAcknowledgmentEmail(workOrder, acknowledgmentLink) {
 async function generateWorkOrderPDF(workOrder) {
   return new Promise((resolve, reject) => {
     try {
-      const doc = new PDFDocument({ margin: 50 });
+      const doc = new PDFDocument({ margin: 50, size: 'A4' });
       const chunks = [];
       
       doc.on('data', chunk => chunks.push(chunk));
       doc.on('end', () => resolve(Buffer.concat(chunks)));
       
       // Add orange header bar
-      doc.rect(0, 0, doc.page.width, 80).fill('#FF8C42');
+      doc.rect(0, 0, doc.page.width, 90).fill('#0f172a');
       
-      // Header with company info
       doc.fillColor('white')
-         .fontSize(24)
-         .text('MOBILE SHOP', 50, 20, { align: 'left' });
+         .fontSize(26)
+         .font('Helvetica-Bold')
+         .text('MOBILE SHOP', 50, 25);
       
-      doc.fontSize(12)
-         .text('Professional Mobile Automotive Service', 50, 45);
+      doc.fontSize(11)
+         .font('Helvetica')
+         .text('Professional Mobile Automotive Service', 50, 50);
       
-      // Work Order title
-      doc.fillColor('black')
-         .fontSize(20)
-         .text('WORK ORDER', 0, 100, { align: 'center' });
+      doc.fontSize(10)
+         .text('📧 contact@mobileshop.com  |  📞 (555) 123-4567  |  🌐 www.mobileshop.com', 50, 65);
+      
+      doc.fillColor('#38bdf8')
+         .fontSize(22)
+         .font('Helvetica-Bold')
+         .text('WORK ORDER', 0, 110, { align: 'center' })
+         .fillColor('black');
       
       // Reset position after header
       doc.y = 130;
       
       // Company contact info
-      doc.fontSize(10)
-         .text('📧 contact@mobileshop.com  |  📞 (555) 123-4567  |  🌐 www.mobileshop.com', { align: 'center' });
-      doc.moveDown(2);
+      doc.moveDown();
       
       // Work Order Details Box
       const detailsY = doc.y;
-      doc.rect(doc.page.width - 200, detailsY - 5, 180, 70).stroke();
+      doc.roundedRect(doc.page.width - 220, detailsY - 5, 200, 88, 8).lineWidth(1).strokeColor('#38bdf8').stroke();
       
-      doc.fontSize(12).font('Helvetica-Bold')
-         .text('Work Order #:', doc.page.width - 190, detailsY + 5)
-         .font('Helvetica')
-         .text(workOrder.workOrderNumber, doc.page.width - 100, detailsY + 5, { width: 80 }); // Fixed: Added width constraint
+      doc.fontSize(11).font('Helvetica-Bold')
+         .text('Work Order #', doc.page.width - 205, detailsY + 5)
+         .font('Helvetica-Bold')
+         .fillColor('#38bdf8')
+         .text(workOrder.workOrderNumber, doc.page.width - 205, detailsY + 20, { width: 180, align: 'left' })
+         .fillColor('black');
       
       doc.font('Helvetica-Bold')
          .text('Date:', doc.page.width - 190, detailsY + 20)
@@ -836,7 +841,7 @@ async function generateWorkOrderPDF(workOrder) {
          .fillColor('black');
       
       // Customer info box
-      doc.rect(50, customerY + 20, 250, 80).stroke();
+      doc.roundedRect(50, customerY + 20, 260, 95, 10).strokeColor('#94a3b8').stroke();
       doc.fontSize(10).font('Helvetica');
       let customerInfoY = customerY + 30;
       
@@ -865,7 +870,7 @@ async function generateWorkOrderPDF(workOrder) {
          .fillColor('black');
       
       // Vehicle info box
-      doc.rect(320, vehicleY + 20, 250, 80).stroke();
+      doc.roundedRect(320, vehicleY + 20, 260, 95, 10).strokeColor('#94a3b8').stroke();
       doc.fontSize(10).font('Helvetica');
       let vehicleInfoY = vehicleY + 30;
       
@@ -895,7 +900,7 @@ async function generateWorkOrderPDF(workOrder) {
       
       // Service Details Section
       doc.fontSize(14).font('Helvetica-Bold')
-         .fillColor('#FF8C42')
+         .fillColor('#38bdf8')
          .text('🔧 SERVICE DETAILS', 50, doc.y)
          .fillColor('black');
       doc.moveDown(0.5);
@@ -903,7 +908,7 @@ async function generateWorkOrderPDF(workOrder) {
       // Service details box
       const serviceDetailsY = doc.y;
       const serviceBoxHeight = 120;
-      doc.rect(50, serviceDetailsY, doc.page.width - 100, serviceBoxHeight).stroke();
+      doc.roundedRect(50, serviceDetailsY, doc.page.width - 100, serviceBoxHeight, 12).strokeColor('#94a3b8').stroke();
       
       doc.fontSize(10).font('Helvetica');
       let serviceY = serviceDetailsY + 10;
@@ -934,7 +939,7 @@ async function generateWorkOrderPDF(workOrder) {
       
       // Labor Items
       if (workOrder.laborItems.length > 0) {
-        doc.fontSize(14).text('LABOR', { underline: true });
+        doc.fontSize(14).fillColor('#38bdf8').text('LABOR').fillColor('black');
         doc.fontSize(10);
         workOrder.laborItems.forEach(item => {
           doc.text(`${item.description}: ${item.hours} hrs @ $${item.hourlyRate}/hr = $${item.total.toFixed(2)}`);
@@ -944,7 +949,7 @@ async function generateWorkOrderPDF(workOrder) {
       
       // Parts Items
       if (workOrder.partItems.length > 0) {
-        doc.fontSize(14).text('PARTS', { underline: true });
+        doc.fontSize(14).fillColor('#38bdf8').text('PARTS').fillColor('black');
         doc.fontSize(10);
         workOrder.partItems.forEach(item => {
           doc.text(`${item.description}: ${item.quantity} @ $${item.unitPrice.toFixed(2)} = $${item.total.toFixed(2)}`);
@@ -954,27 +959,26 @@ async function generateWorkOrderPDF(workOrder) {
       
       // Totals
       if (workOrder.pricing.totalAmount > 0) {
-        doc.fontSize(12).text('TOTALS', { underline: true });
-        doc.text(`Subtotal: $${workOrder.pricing.subtotal.toFixed(2)}`, { align: 'right' });
-        doc.text(`Tax (${(workOrder.pricing.taxRate * 100).toFixed(1)}%): $${workOrder.pricing.taxAmount.toFixed(2)}`, { align: 'right' });
-        doc.fontSize(14).text(`TOTAL: $${workOrder.pricing.totalAmount.toFixed(2)}`, { align: 'right' });
+        doc.fontSize(12).fillColor('#38bdf8').text('TOTALS').fillColor('black');
+        doc.moveDown(0.3);
+        doc.text(`Subtotal: $${workOrder.pricing.subtotal.toFixed(2)}`, doc.page.width - 220, doc.y, { width: 200, align: 'right' });
+        doc.text(`Tax (${(workOrder.pricing.taxRate * 100).toFixed(1)}%): $${workOrder.pricing.taxAmount.toFixed(2)}`, doc.page.width - 220, doc.y, { width: 200, align: 'right' });
+        doc.fontSize(14).font('Helvetica-Bold').fillColor('#1f2937').text(`TOTAL: $${workOrder.pricing.totalAmount.toFixed(2)}`, doc.page.width - 220, doc.y + 10, { width: 200, align: 'right' }).fillColor('black');
       }
       
-      // Professional Footer
-      const footerY = doc.page.height - 80;
-      doc.rect(0, footerY, doc.page.width, 80).fill('#F5F5F5');
+      const footerY = doc.page.height - 90;
+      doc.rect(0, footerY, doc.page.width, 90).fill('#0f172a');
       
-      doc.fillColor('#666')
-         .fontSize(10)
+      doc.fillColor('#e2e8f0')
+         .fontSize(11)
          .font('Helvetica-Bold')
-         .text('Thank you for choosing Mobile Shop!', 0, footerY + 15, { align: 'center' })
-         .fontSize(8)
+         .text('Thank you for choosing Mobile Shop!', 0, footerY + 18, { align: 'center' })
+         .fontSize(9)
          .font('Helvetica')
-         .text('Professional Mobile Automotive Service - Bringing quality service to your location', 0, footerY + 30, { align: 'center' })
-         .text('📧 contact@mobileshop.com  |  📞 (555) 123-4567  |  🌐 www.mobileshop.com', 0, footerY + 45, { align: 'center' })
-         .fontSize(7)
-         .fillColor('#999')
-         .text(`Document generated on ${new Date().toLocaleString()}`, 0, footerY + 60, { align: 'center' });
+         .text('Professional Mobile Automotive Service | contact@mobileshop.com | (555) 123-4567 | www.mobileshop.com', 0, footerY + 34, { align: 'center' })
+         .fontSize(8)
+         .fillColor('#94a3b8')
+         .text(`Document generated on ${new Date().toLocaleString()}`, 0, footerY + 52, { align: 'center' });
       
       doc.end();
     } catch (error) {

@@ -24,6 +24,37 @@ router.get('/users', [auth, adminAuth], async (req, res) => {
     }
 });
 
+// SEARCH USERS (Admin only)
+router.get('/users/search', [auth, adminAuth], async (req, res) => {
+    try {
+        const { query } = req.query;
+        if (!query || !query.trim()) {
+            return res.json([]);
+        }
+
+        const searchRegex = new RegExp(query.trim(), 'i');
+
+        const users = await User.find({
+            $and: [
+                {
+                    $or: [
+                        { firstName: searchRegex },
+                        { lastName: searchRegex },
+                        { email: searchRegex },
+                        { phone: searchRegex }
+                    ]
+                },
+                { $or: [{ isAdmin: false }, { role: { $ne: 'admin' } }] }
+            ]
+        }).select('-password').limit(25);
+
+        res.json(users);
+    } catch (err) {
+        console.error('Error searching users:', err);
+        res.status(500).json({ msg: 'Server error while searching users.' });
+    }
+});
+
 // CREATE NEW CUSTOMER (Admin only)
 router.post('/create-customer', [auth, adminAuth], async (req, res) => {
     try {
