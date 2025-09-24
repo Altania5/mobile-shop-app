@@ -32,7 +32,8 @@ router.get('/users/search', [auth, adminAuth], async (req, res) => {
             return res.json([]);
         }
 
-        const searchRegex = new RegExp(query.trim(), 'i');
+        const safeQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const searchRegex = new RegExp(safeQuery, 'i');
 
         const users = await User.find({
             $and: [
@@ -41,12 +42,16 @@ router.get('/users/search', [auth, adminAuth], async (req, res) => {
                         { firstName: searchRegex },
                         { lastName: searchRegex },
                         { email: searchRegex },
-                        { phone: searchRegex }
+                        { phone: searchRegex },
+                        { username: searchRegex }
                     ]
                 },
                 { $or: [{ isAdmin: false }, { role: { $ne: 'admin' } }] }
             ]
-        }).select('-password').limit(25);
+        })
+        .select('-password')
+        .sort({ createdAt: -1 })
+        .limit(25);
 
         res.json(users);
     } catch (err) {

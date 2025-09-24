@@ -5,6 +5,7 @@ import './CustomerAssignmentPage.css';
 function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustomer }) {
     const [customers, setCustomers] = useState([]);
     const [filteredCustomers, setFilteredCustomers] = useState([]);
+    const [remoteResults, setRemoteResults] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -26,7 +27,8 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
     }, []);
 
     useEffect(() => {
-        if (!searchTerm.trim()) {
+        const trimmed = searchTerm.trim();
+        if (!trimmed) {
             setFilteredCustomers(customers);
             return;
         }
@@ -36,18 +38,19 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
         }
 
         searchDebounce.current = setTimeout(() => {
-            const filtered = customers.filter(customer => {
+            const targetList = remoteResults.length > 0 ? remoteResults : customers;
+            const filtered = targetList.filter(customer => {
                 const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
                 const email = customer.email?.toLowerCase() || '';
                 const phone = customer.phone?.toLowerCase() || '';
-                const search = searchTerm.toLowerCase();
+                const search = trimmed.toLowerCase();
                 return fullName.includes(search) || email.includes(search) || phone.includes(search);
             });
             setFilteredCustomers(filtered);
         }, 250);
 
         return () => clearTimeout(searchDebounce.current);
-    }, [searchTerm, customers]);
+    }, [searchTerm, customers, remoteResults]);
 
     const fetchCustomers = async () => {
         try {
@@ -55,17 +58,16 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
             const headers = { 'x-auth-token': token };
             const response = await axios.get('/api/admin/users', { headers });
             
-            // Check if response.data is an array
+            const rawUsers = Array.isArray(response.data) ? response.data : [];
             if (!Array.isArray(response.data)) {
                 throw new Error('Invalid response format from server');
             }
             
             // Filter to get only customers (non-admin users)
-            const customerUsers = response.data.filter(user => 
-                !user.isAdmin && user.role !== 'admin'
-            );
+            const customerUsers = rawUsers.filter(user => !user.isAdmin && user.role !== 'admin');
             
             setCustomers(customerUsers);
+            setRemoteResults([]);
             setFilteredCustomers(customerUsers);
         } catch (err) {
             setError(err.response?.data?.msg || err.message || 'Failed to load customers');
@@ -77,6 +79,7 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
     const performSearch = async (term) => {
         const trimmed = term.trim();
         if (!trimmed) {
+            setRemoteResults([]);
             setFilteredCustomers(customers);
             return;
         }
@@ -85,11 +88,27 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
         try {
             const headers = { 'x-auth-token': token };
             const response = await axios.get(`/api/admin/users/search?query=${encodeURIComponent(trimmed)}`, { headers });
-            setCustomers(Array.isArray(response.data) ? response.data : []);
-            setFilteredCustomers(Array.isArray(response.data) ? response.data : []);
+            const remoteUsers = Array.isArray(response.data) ? response.data : [];
+            const results = remoteUsers.filter(user => !user.isAdmin && user.role !== 'admin');
+            setRemoteResults(results);
+            const fallbackResults = results.length > 0 ? results : customers;
+            const search = trimmed.toLowerCase();
+            const filtered = fallbackResults.filter(customer => {
+                const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+                const email = customer.email?.toLowerCase() || '';
+                const phone = customer.phone?.toLowerCase() || '';
+                const username = customer.username?.toLowerCase() || '';
+                return (
+                    fullName.includes(search) ||
+                    email.includes(search) ||
+                    phone.includes(search) ||
+                    username.includes(search)
+                );
+            });
+            setFilteredCustomers(filtered);
         } catch (err) {
             setError('Failed to search customers. Please try again.');
-            setCustomers([]);
+            setRemoteResults([]);
             setFilteredCustomers([]);
         } finally {
             setSearching(false);

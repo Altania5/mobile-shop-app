@@ -7,6 +7,15 @@ import ServiceHelpForm from '../components/ServiceHelpForm';
 import CustomerChecklist from '../components/CustomerChecklist';
 import axios from 'axios';
 import { animateCounters, initScrollAnimations } from '../utils/animations';
+import {
+    ExpertRepairsIcon,
+    MobileServiceIcon,
+    FastResponseIcon,
+    MobileConvenienceIcon,
+    ExpertTechniciansIcon,
+    QualityGuaranteedIcon,
+    FlexibleSchedulingIcon,
+} from '../components/icons/ServiceIcons';
 
 const ServicesPage = ({ user }) => {
     const [services, setServices] = useState([]);
@@ -151,15 +160,21 @@ const ServicesPage = ({ user }) => {
                     </div>
                     <div className="hero-image-wrapper">
                         <div className="floating-card card-1">
-                            <div className="card-icon">??</div>
+                            <div className="card-icon" aria-hidden="true">
+                                <ExpertRepairsIcon width={48} height={48} />
+                            </div>
                             <span>Expert Repairs</span>
                         </div>
                         <div className="floating-card card-2">
-                            <div className="card-icon">??</div>
+                            <div className="card-icon" aria-hidden="true">
+                                <MobileServiceIcon width={48} height={48} />
+                            </div>
                             <span>Mobile Service</span>
                         </div>
                         <div className="floating-card card-3">
-                            <div className="card-icon">?</div>
+                            <div className="card-icon" aria-hidden="true">
+                                <FastResponseIcon width={48} height={48} />
+                            </div>
                             <span>Fast Response</span>
                         </div>
                     </div>
@@ -180,28 +195,36 @@ const ServicesPage = ({ user }) => {
                     <div className="features-grid">
                         <div className="feature-card">
                             <div className="feature-icon">
-                                <div className="icon-bg">??</div>
+                                <div className="icon-bg" aria-hidden="true">
+                                    <MobileConvenienceIcon width={64} height={64} />
+                                </div>
                             </div>
                             <h3>Mobile Convenience</h3>
                             <p>We come to you - at home, work, or anywhere you need service. No need to visit a garage.</p>
                         </div>
                         <div className="feature-card">
                             <div className="feature-icon">
-                                <div className="icon-bg">?????</div>
+                                <div className="icon-bg" aria-hidden="true">
+                                    <ExpertTechniciansIcon width={64} height={64} />
+                                </div>
                             </div>
                             <h3>Expert Technicians</h3>
                             <p>Certified professionals with years of experience in automotive repair and maintenance.</p>
                         </div>
                         <div className="feature-card">
                             <div className="feature-icon">
-                                <div className="icon-bg">??</div>
+                                <div className="icon-bg" aria-hidden="true">
+                                    <QualityGuaranteedIcon width={64} height={64} />
+                                </div>
                             </div>
                             <h3>Quality Guaranteed</h3>
                             <p>All work comes with our satisfaction guarantee and warranty on parts and labor.</p>
                         </div>
                         <div className="feature-card">
                             <div className="feature-icon">
-                                <div className="icon-bg">?</div>
+                                <div className="icon-bg" aria-hidden="true">
+                                    <FlexibleSchedulingIcon width={64} height={64} />
+                                </div>
                             </div>
                             <h3>Flexible Scheduling</h3>
                             <p>Book appointments that fit your schedule, including evenings and weekends.</p>
