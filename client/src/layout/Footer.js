@@ -28,8 +28,8 @@ function Footer() {
         <div className="footer-section contact">
           <h3>Contact Info</h3>
           <p><span>Email:</span> JamesFerzanden@hardworkmobile.com</p>
-          <p><span>Phone:</span> (123) 456-7890</p>
-          <p><span>Service Area:</span> Your City, State</p>
+          <p><span>Phone:</span> (484) 593-3875</p>
+          <p><span>Service Area:</span> West Chester, PA</p>
         </div>
       </div>
       <div className="footer-bottom">

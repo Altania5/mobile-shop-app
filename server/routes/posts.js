@@ -34,18 +34,34 @@ router.post('/', [auth, adminAuth, upload.single('heroImage')], async (req, res)
     if (!title || !content) {
       return res.status(400).json({ msg: 'Please enter title and content.' });
     }
+
     const newPostData = {
-      title, content, summary, allowLikes, allowComments,
-      author: req.user, 
-      slug: slugify(title, { lower: true, strict: true }),
+      title,
+      content,
+      summary,
+      allowLikes: String(allowLikes) !== 'false',
+      allowComments: String(allowComments) !== 'false',
+      author: req.user?.id,
+      slug: slugify(title, { lower: true, strict: true })
     };
-    if (req.file) {
-      newPostData.heroImage = `/uploads/${req.file.filename}`;
+
+    if (!newPostData.author) {
+      return res.status(401).json({ msg: 'User authentication required.' });
     }
+
+    if (req.file) {
+      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+      newPostData.heroImage = `${baseUrl}/uploads/${req.file.filename}`;
+    }
+
     const newPost = new Post(newPostData);
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);
   } catch (err) {
+    console.error('Error creating post:', err);
+    if (err.code === 11000) {
+      return res.status(400).json({ msg: 'A post with this title already exists. Please choose a different title.' });
+    }
     res.status(500).json({ error: 'Server error while creating post.' });
   }
 });
@@ -58,13 +74,14 @@ router.put('/:id', [auth, adminAuth, upload.single('heroImage')], async (req, re
             title,
             content,
             summary,
-            allowLikes,
-            allowComments,
+            allowLikes: String(allowLikes) !== 'false',
+            allowComments: String(allowComments) !== 'false',
             slug: slugify(title, { lower: true, strict: true })
         };
 
         if (req.file) {
-            updatedData.heroImage = `/uploads/${req.file.filename}`;
+            const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+            updatedData.heroImage = `${baseUrl}/uploads/${req.file.filename}`;
         }
 
         const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, { new: true });
@@ -85,13 +102,20 @@ router.put('/:id/like', auth, async (req, res) => {
     if (!post) {
       return res.status(404).json({ msg: 'Post not found' });
     }
-    if (post.likes.includes(req.user)) {
-      post.likes = post.likes.filter(userId => userId.toString() !== req.user);
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ msg: 'User authentication required.' });
+    }
+
+    const alreadyLiked = post.likes.some((id) => id.toString() === userId);
+    if (alreadyLiked) {
+      post.likes = post.likes.filter((id) => id.toString() !== userId);
     } else {
-      post.likes.push(req.user);
+      post.likes.push(userId);
     }
     await post.save();
-    res.json(post.likes);
+    await post.populate('likes', 'firstName lastName');
+    res.json(post.likes.map((like) => like._id ? like._id.toString() : like.toString()));
   } catch (err) {
     res.status(500).json({ error: 'Server error while updating likes.' });
   }

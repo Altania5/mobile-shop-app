@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Serve static files from the 'uploads' directory
-app.use('../uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- DATABASE CONNECTION ---
 const uri = process.env.ATLAS_URI;

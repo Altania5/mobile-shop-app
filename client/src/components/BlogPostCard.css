@@ -1,65 +1,98 @@
 .blog-post-card {
-  background-color: var(--surface-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  /* UPDATED: Remove padding from the main card to allow image to touch edges */
-  padding: 0; 
-  margin-bottom: 25px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-  overflow: hidden; /* Ensures the image corners are rounded */
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.95) 100%);
+  color: var(--text-color, #e2e8f0);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 20px;
+  padding: 0;
+  margin-bottom: 32px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .blog-post-card:hover {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 25px 55px rgba(56, 189, 248, 0.25);
 }
 
-/* ADDED: Styles for the hero image */
 .card-hero-image {
   width: 100%;
-  height: 250px; /* Or your desired height */
-  object-fit: cover; /* This makes the image cover the area without distortion */
+  height: 240px;
+  object-fit: cover;
   display: block;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
-/* ADDED: Wrapper for the text content */
 .card-content {
-  padding: 25px;
+  padding: 28px;
+  display: grid;
+  gap: 14px;
 }
 
 .card-content h2 a {
   text-decoration: none;
-  color: #2c3e50;
-  font-size: 1.75rem;
+  color: var(--text-color, #f8fafc);
+  font-size: 1.9rem;
+  line-height: 1.2;
+  font-weight: 700;
+  transition: color 0.2s ease;
 }
 
 .card-content h2 a:hover {
-  color: #007bff;
+  color: var(--accent-color, #60a5fa);
 }
 
 .post-meta {
-  font-size: 0.9rem;
-  color: #95a5a6;
-  margin-top: 5px;
-  margin-bottom: 15px;
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.75);
+  letter-spacing: 0.03em;
 }
 
 .post-summary {
-  color: #34495e;
+  color: rgba(203, 213, 225, 0.92);
   line-height: 1.7;
-  min-height: 50px;
+  min-height: 54px;
 }
 
 .read-more-link {
-  display: inline-block;
-  margin-top: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
   text-decoration: none;
-  color: #007bff;
-  font-weight: bold;
+  color: var(--accent-color, #60a5fa);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.read-more-link::after {
+  content: '→';
+  font-size: 1.1em;
+  transition: transform 0.2s ease;
 }
 
 .read-more-link:hover {
-  text-decoration: underline;
+  color: var(--accent-color-strong, #38bdf8);
+  gap: 12px;
+}
+
+.read-more-link:hover::after {
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  .card-hero-image {
+    height: 200px;
+  }
+
+  .card-content {
+    padding: 22px;
+  }
+
+  .card-content h2 a {
+    font-size: 1.6rem;
+  }
 }

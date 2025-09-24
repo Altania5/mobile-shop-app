@@ -48,8 +48,10 @@ function PostPage({ user }) {
   const handleLike = async () => {
     if (!user) return navigate('/login'); // Redirect if not logged in
     try {
-      const res = await axios.put(`/api/posts/${post._id}/like`);
-      setLikes(res.data);
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      const res = await axios.put(`/api/posts/${post._id}/like`, {}, { headers });
+      setLikes(res.data || []);
     } catch (err) {
       console.error('Error liking post:', err);
     }
@@ -75,9 +77,19 @@ function PostPage({ user }) {
   if (error) return <div className="post-status error">{error}</div>;
   if (!post) return null;
 
-  const imageUrl = post.heroImage ? `${post.heroImage}` : null;
+  const imageUrl = post.heroImage
+    ? (post.heroImage.startsWith('http') ? post.heroImage : `${window.location.origin}${post.heroImage}`)
+    : null;
   const authorName = post.author ? `${post.author.firstName} ${post.author.lastName}` : 'Admin';
-  const hasLiked = user && likes.includes(user.id);
+  const normalizeId = (id) => {
+    if (!id) return '';
+    if (typeof id === 'string') return id;
+    if (typeof id === 'object' && id.$oid) return id.$oid;
+    return id.toString ? id.toString() : '';
+  };
+
+  const userId = normalizeId(user?.id || user?._id);
+  const hasLiked = user && likes.some((likeId) => normalizeId(likeId) === userId);
 
   return (
     <article className="post-page-container">

@@ -10,6 +10,7 @@ function BlogManager() {
   const [allowLikes, setAllowLikes] = useState(true);
   const [allowComments, setAllowComments] = useState(true);
   const [heroImage, setHeroImage] = useState(null);
+  const [heroImagePreview, setHeroImagePreview] = useState(null);
   
   // State for editing
   const [editingPostId, setEditingPostId] = useState(null);
@@ -31,6 +32,19 @@ function BlogManager() {
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    if (heroImage) {
+      const previewUrl = URL.createObjectURL(heroImage);
+      setHeroImagePreview(previewUrl);
+      return () => URL.revokeObjectURL(previewUrl);
+    } else if (editingPostId) {
+      const currentPost = posts.find((p) => p._id === editingPostId);
+      setHeroImagePreview(currentPost?.heroImage || null);
+    } else {
+      setHeroImagePreview(null);
+    }
+  }, [heroImage, editingPostId, posts]);
+
   const resetForm = () => {
     setTitle('');
     setContent('');
@@ -38,6 +52,7 @@ function BlogManager() {
     setAllowLikes(true);
     setAllowComments(true);
     setHeroImage(null);
+    setHeroImagePreview(null);
     setEditingPostId(null);
     if (document.getElementById('heroImage')) {
       document.getElementById('heroImage').value = null;
@@ -97,6 +112,7 @@ function BlogManager() {
     setSummary(post.summary || '');
     setAllowLikes(post.allowLikes);
     setAllowComments(post.allowComments);
+    setHeroImage(null);
     setMessage('');
     setError('');
     formRef.current.scrollIntoView({ behavior: 'smooth' }); // Scroll to form
@@ -130,7 +146,19 @@ function BlogManager() {
 
         <div className="form-group">
           <label htmlFor="heroImage">Hero Image (Optional)</label>
-          <input id="heroImage" type="file" onChange={(e) => setHeroImage(e.target.files[0])} />
+          <input
+            id="heroImage"
+            type="file"
+            accept="image/png, image/jpeg, image/jpg, image/gif"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              setHeroImage(file || null);
+            }}
+          />
+          <p className="field-hint">PNG, JPG, GIF up to 5MB</p>
+          {heroImagePreview && (
+            <img src={heroImagePreview} alt="Preview" className="image-preview" />
+          )}
         </div>
         
         <div className="form-group">

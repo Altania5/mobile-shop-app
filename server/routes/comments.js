@@ -11,6 +11,11 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Comment text is required.' });
     }
 
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ msg: 'User authentication required.' });
+    }
+
     // This block is required to validate the post
     const post = await Post.findById(postId);
     if (!post) {
@@ -19,7 +24,7 @@ router.post('/', auth, async (req, res) => {
 
     const newComment = new Comment({
       text,
-      author: req.user,
+      author: userId,
       post: postId,
     });
 
