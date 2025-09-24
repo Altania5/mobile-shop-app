@@ -133,8 +133,8 @@
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background-color: var(--surface-color, #1a202c);
-  color: var(--text-color, #e2e8f0);
+  background-color: var(--background-color, #ffffff) !important; /* Fixed: Use light background */
+  color: var(--text-color, #1a202c) !important; /* Fixed: Use dark text */
   font-weight: 500;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -142,9 +142,9 @@
 .item-row .form-group input,
 .item-row .form-group select,
 .item-row .form-group textarea {
-  background-color: var(--surface-color);
+  background-color: var(--background-color, #ffffff) !important; /* Fixed: Use light background */
   border: 1px solid var(--border-color);
-  color: var(--text-color);
+  color: var(--text-color, #1a202c) !important; /* Fixed: Use dark text */
   font-weight: 600;
 }
 
@@ -154,7 +154,7 @@
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background-color: var(--surface-color);
+  background-color: var(--background-color, #ffffff) !important; /* Fixed: Use light background */
 }
 
 .form-group textarea {

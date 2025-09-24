@@ -156,13 +156,10 @@
 .feature {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 15px 0;
+  gap: 16px;
+  margin-bottom: 25px;
+  padding: 12px 0;
   animation: slideInLeft 1s ease-out both;
-  text-align: center;
-  max-width: 300px;
-  width: 100%;
 }
 
 .feature:nth-child(1) { animation-delay: 0.6s; }
@@ -170,21 +167,31 @@
 .feature:nth-child(3) { animation-delay: 0.8s; }
 
 .feature-icon {
-  font-size: 1.5rem;
-  margin-right: 15px;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 45px;
+  width: 45px;
+  height: 45px;
+  margin-right: 0;
+  font-size: 1.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
   backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.feature:hover .feature-icon {
+  transform: scale(1.1); /* Add hover effect like Login page */
 }
 
 .feature span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 45px;
+  line-height: 1;
   font-size: 1.1rem;
   font-weight: 500;
+  transform: translateY(-10px);
 }
 
 /* Login Prompt */

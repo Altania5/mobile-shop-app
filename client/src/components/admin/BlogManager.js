@@ -49,10 +49,20 @@ function BlogManager() {
     setError('');
     setMessage('');
 
+    // Validation
+    if (!title.trim()) {
+      setError('Title is required.');
+      return;
+    }
+    if (!content.trim()) {
+      setError('Content is required.');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', content);
-    formData.append('summary', summary);
+    formData.append('title', title.trim());
+    formData.append('content', content.trim());
+    formData.append('summary', summary.trim());
     formData.append('allowLikes', allowLikes);
     formData.append('allowComments', allowComments);
     if (heroImage) {
@@ -60,19 +70,23 @@ function BlogManager() {
     }
 
     try {
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'x-auth-token': token } : {};
+      
       if (editingPostId) {
         // --- UPDATE EXISTING POST ---
-        await axios.put(`/api/posts/${editingPostId}`, formData);
+        await axios.put(`/api/posts/${editingPostId}`, formData, { headers });
         setMessage('Post updated successfully!');
       } else {
         // --- CREATE NEW POST ---
-        await axios.post('/api/posts', formData);
+        await axios.post('/api/posts', formData, { headers });
         setMessage('Post created successfully!');
       }
       resetForm();
       fetchPosts();
     } catch (err) {
-      setError(err.response?.data?.msg || 'Operation failed.');
+      console.error('Blog creation error:', err);
+      setError(err.response?.data?.msg || err.response?.data?.error || 'Operation failed.');
     }
   };
 

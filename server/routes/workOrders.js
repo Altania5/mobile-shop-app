@@ -811,7 +811,7 @@ async function generateWorkOrderPDF(workOrder) {
       doc.fontSize(12).font('Helvetica-Bold')
          .text('Work Order #:', doc.page.width - 190, detailsY + 5)
          .font('Helvetica')
-         .text(workOrder.workOrderNumber, doc.page.width - 100, detailsY + 5);
+         .text(workOrder.workOrderNumber, doc.page.width - 100, detailsY + 5, { width: 80 }); // Fixed: Added width constraint
       
       doc.font('Helvetica-Bold')
          .text('Date:', doc.page.width - 190, detailsY + 20)

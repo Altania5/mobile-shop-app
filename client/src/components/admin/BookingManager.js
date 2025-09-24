@@ -216,8 +216,8 @@ function BookingManager() {
 
     const handleCreateWorkOrder = (booking) => {
         setSelectedBookingForWorkOrder(booking);
-        setShowWorkOrderForm(true);
-        setShowWorkOrderManager(false);
+        setShowWorkOrderManager(true); // Fixed: Use WorkOrderManager instead of WorkOrderForm
+        setShowWorkOrderForm(false);
     };
 
     const handleWorkOrderSaved = () => {
