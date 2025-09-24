@@ -2724,6 +2724,13 @@ html.admin-page-active {
 
 .hero-text-wrapper {
   color: white;
+  transform: none; /* desktop/tablet */
+}
+
+@media (max-width: 768px) {
+  .hero-text-wrapper {
+    transform: translateY(40px); /* adjust 40px up/down as needed */
+  }
 }
 
 .hero-badge {
@@ -3643,8 +3650,8 @@ footer a:hover {
 /* ========================================= */
 
 .hero-section-modern {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 50vh;
+  min-height: 50dvh;
   position: relative;
   display: flex;
   align-items: center;
