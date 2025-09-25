@@ -925,33 +925,67 @@ async function generateWorkOrderPDF(workOrder) {
       ].filter(field => field.value);
 
       if (serviceFields.length > 0) {
-        doc.font('Helvetica').fontSize(10);
-        const contentWidth = doc.page.width - 220;
-        let calculatedHeight = 24;
+        const boxX = 50;
+        const boxWidth = doc.page.width - 100;
+        const padding = 14;
+        const labelWidth = 140;
+        const gap = 10;
+        const valueWidth = boxWidth - padding * 2 - labelWidth - gap;
+        const lineSpacing = 8;
 
+        // Rough estimate for height to decide if a page break is needed
+        doc.font('Helvetica').fontSize(10);
+        let estimatedHeight = padding * 2;
         serviceFields.forEach(field => {
-          const labelHeight = doc.heightOfString(`${field.label}:`, { width: contentWidth, align: 'left' });
-          const valueHeight = doc.heightOfString(field.value, { width: contentWidth, align: 'left' });
-          calculatedHeight += Math.max(labelHeight, 12) + valueHeight + 8;
+          const value = field.value || '—';
+          const valueHeight = doc.heightOfString(value, { width: valueWidth });
+          estimatedHeight += Math.max(18, valueHeight) + lineSpacing;
         });
 
-        ensureSpace(calculatedHeight + 40);
+        ensureSpace(estimatedHeight + 40);
 
-        doc.fontSize(14).font('Helvetica-Bold').fillColor('#38bdf8').text('Service Details', 50, doc.y).fillColor('black');
+        doc.fontSize(14)
+           .font('Helvetica-Bold')
+           .fillColor('#38bdf8')
+           .text('Service Details', boxX, doc.y)
+           .fillColor('black');
         doc.moveDown(0.5);
 
-        const serviceBoxY = doc.y;
-        const serviceBoxWidth = doc.page.width - 100;
-        doc.roundedRect(50, serviceBoxY, serviceBoxWidth, calculatedHeight, 12).strokeColor('#94a3b8').stroke();
+        const boxTopY = doc.y;
+        let cursorY = boxTopY + padding;
+        const labelX = boxX + padding;
+        const valueX = labelX + labelWidth + gap;
 
-        let serviceY = serviceBoxY + 12;
-        serviceFields.forEach(field => {
-          doc.font('Helvetica-Bold').fontSize(10).text(`${field.label}:`, 60, serviceY);
-          doc.font('Helvetica').fontSize(10).text(field.value, 140, serviceY, { width: contentWidth });
-          serviceY = doc.y + 8;
+        serviceFields.forEach((field, index) => {
+          const labelText = `${field.label}:`;
+          const valueText = field.value || '—';
+
+          doc.font('Helvetica-Bold').fontSize(10).text(labelText, labelX, cursorY, { width: labelWidth });
+          const beforeValueY = doc.y;
+
+          doc.font('Helvetica').fontSize(10).text(valueText, valueX, cursorY, {
+            width: valueWidth,
+            align: 'left'
+          });
+
+          const rowHeight = Math.max(doc.y - cursorY, 18);
+          cursorY = Math.max(beforeValueY, cursorY) + rowHeight + lineSpacing;
+
+          if (index !== serviceFields.length - 1) {
+            cursorY = Math.max(cursorY, doc.y + lineSpacing / 2);
+          }
         });
 
-        doc.y = serviceBoxY + calculatedHeight + 15;
+        const boxBottomY = cursorY - lineSpacing + padding / 2;
+        doc.roundedRect(
+          boxX,
+          boxTopY - padding / 2,
+          boxWidth,
+          boxBottomY - boxTopY,
+          12
+        ).strokeColor('#94a3b8').stroke();
+
+        doc.y = cursorY + 10;
       }
 
       // Labor Items

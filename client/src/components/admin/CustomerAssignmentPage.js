@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 import './CustomerAssignmentPage.css';
 
 function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustomer }) {
     const [customers, setCustomers] = useState([]);
-    const [filteredCustomers, setFilteredCustomers] = useState([]);
     const [remoteResults, setRemoteResults] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -20,7 +19,7 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
     });
 
     const token = localStorage.getItem('token');
-    const searchDebounce = useRef(null);
+    const searchTimeoutRef = useRef(null);
 
     useEffect(() => {
         fetchCustomers();
@@ -28,29 +27,29 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
 
     useEffect(() => {
         const trimmed = searchTerm.trim();
+
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+            searchTimeoutRef.current = null;
+        }
+
         if (!trimmed) {
-            setFilteredCustomers(customers);
+            setSearching(false);
+            setRemoteResults([]);
             return;
         }
 
-        if (searchDebounce.current) {
-            clearTimeout(searchDebounce.current);
-        }
+        searchTimeoutRef.current = setTimeout(() => {
+            performSearch(trimmed);
+        }, 300);
 
-        searchDebounce.current = setTimeout(() => {
-            const targetList = remoteResults.length > 0 ? remoteResults : customers;
-            const filtered = targetList.filter(customer => {
-                const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-                const email = customer.email?.toLowerCase() || '';
-                const phone = customer.phone?.toLowerCase() || '';
-                const search = trimmed.toLowerCase();
-                return fullName.includes(search) || email.includes(search) || phone.includes(search);
-            });
-            setFilteredCustomers(filtered);
-        }, 250);
-
-        return () => clearTimeout(searchDebounce.current);
-    }, [searchTerm, customers, remoteResults]);
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+                searchTimeoutRef.current = null;
+            }
+        };
+    }, [searchTerm]);
 
     const fetchCustomers = async () => {
         try {
@@ -68,7 +67,6 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
             
             setCustomers(customerUsers);
             setRemoteResults([]);
-            setFilteredCustomers(customerUsers);
         } catch (err) {
             setError(err.response?.data?.msg || err.message || 'Failed to load customers');
         } finally {
@@ -80,49 +78,60 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
         const trimmed = term.trim();
         if (!trimmed) {
             setRemoteResults([]);
-            setFilteredCustomers(customers);
+            setSearching(false);
             return;
         }
+
         setSearching(true);
         setError('');
+
         try {
             const headers = { 'x-auth-token': token };
             const response = await axios.get(`/api/admin/users/search?query=${encodeURIComponent(trimmed)}`, { headers });
-            const remoteUsers = Array.isArray(response.data) ? response.data : [];
+            const remoteUsers = Array.isArray(response.data)
+                ? response.data
+                : Array.isArray(response.data?.users)
+                    ? response.data.users
+                    : [];
             const results = remoteUsers.filter(user => !user.isAdmin && user.role !== 'admin');
             setRemoteResults(results);
-            const fallbackResults = results.length > 0 ? results : customers;
-            const search = trimmed.toLowerCase();
-            const filtered = fallbackResults.filter(customer => {
-                const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-                const email = customer.email?.toLowerCase() || '';
-                const phone = customer.phone?.toLowerCase() || '';
-                const username = customer.username?.toLowerCase() || '';
-                return (
-                    fullName.includes(search) ||
-                    email.includes(search) ||
-                    phone.includes(search) ||
-                    username.includes(search)
-                );
-            });
-            setFilteredCustomers(filtered);
         } catch (err) {
             setError('Failed to search customers. Please try again.');
             setRemoteResults([]);
-            setFilteredCustomers([]);
         } finally {
             setSearching(false);
         }
     };
 
     const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-        if (searchDebounce.current) {
-            clearTimeout(searchDebounce.current);
-        }
-        searchDebounce.current = setTimeout(() => performSearch(value), 350);
+        setSearchTerm(e.target.value);
     };
+
+    const filteredCustomers = useMemo(() => {
+        const trimmed = searchTerm.trim().toLowerCase();
+
+        if (remoteResults.length > 0) {
+            return remoteResults;
+        }
+
+        if (!trimmed) {
+            return customers;
+        }
+
+        return customers.filter(customer => {
+            const fullName = `${customer.firstName ?? ''} ${customer.lastName ?? ''}`.trim().toLowerCase();
+            const email = (customer.email ?? '').toLowerCase();
+            const phone = customer.phone ? String(customer.phone).toLowerCase() : '';
+            const username = (customer.username ?? '').toLowerCase();
+
+            return (
+                fullName.includes(trimmed) ||
+                email.includes(trimmed) ||
+                phone.includes(trimmed) ||
+                username.includes(trimmed)
+            );
+        });
+    }, [customers, remoteResults, searchTerm]);
 
     const handleCustomerSelect = (customer) => {
         setSelectedCustomer(customer);

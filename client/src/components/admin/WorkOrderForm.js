@@ -2,7 +2,96 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './WorkOrderForm.css';
 
-const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) => {
+const formatDateTimeInput = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+};
+
+const normalizeDateTimeValue = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toISOString();
+};
+
+const applyBookingDefaults = (booking) => {
+  if (!booking) return null;
+
+  const bookingUser = booking.user || {};
+  const firstName = booking.clientFirstName || booking.firstName || bookingUser.firstName || '';
+  const lastName = booking.clientLastName || booking.lastName || bookingUser.lastName || '';
+  const email = booking.customerEmail || booking.email || bookingUser.email || '';
+  const phone = booking.phone || booking.customerPhone || bookingUser.phone || '';
+
+  const isCustom = booking.isCustomService;
+  const serviceDescription = isCustom
+    ? booking.customServiceName || booking.customServiceDescription || 'Custom Service'
+    : booking.service?.name || booking.customServiceName || booking.customServiceDescription || 'Professional Service';
+
+  let scheduledDate = '';
+  if (booking.date) {
+    const baseDate = new Date(booking.date);
+    if (!Number.isNaN(baseDate.getTime())) {
+      if (booking.time) {
+        const timeString = String(booking.time).trim();
+        const match = timeString.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+        if (match) {
+          let hours = parseInt(match[1], 10);
+          const minutes = match[2] ? parseInt(match[2], 10) : 0;
+          const meridiem = match[3] ? match[3].toUpperCase() : null;
+
+          if (meridiem === 'PM' && hours < 12) {
+            hours += 12;
+          }
+          if (meridiem === 'AM' && hours === 12) {
+            hours = 0;
+          }
+
+          baseDate.setHours(hours, minutes, 0, 0);
+        }
+      }
+
+      scheduledDate = baseDate.toISOString();
+    }
+  }
+
+  return {
+    customer: {
+      name: `${firstName} ${lastName}`.trim(),
+      email,
+      phone,
+      address: {
+        street: booking.address || booking.customerAddress || bookingUser.address?.street || '',
+        city: booking.city || booking.customerCity || bookingUser.address?.city || '',
+        state: booking.state || booking.customerState || bookingUser.address?.state || '',
+        zipCode: booking.zipCode || booking.customerZipCode || bookingUser.address?.zipCode || ''
+      }
+    },
+    vehicle: {
+      year: booking.vehicleYear || booking.vehicle?.year || '',
+      make: booking.vehicleMake || booking.vehicle?.make || '',
+      model: booking.vehicleModel || booking.vehicle?.model || '',
+      vin: booking.vehicleVin || booking.vin || '',
+      licensePlate: booking.vehicleLicense || booking.plate || '',
+      mileage: booking.vehicleMileage || booking.mileage || '',
+      color: booking.vehicleColor || booking.color || ''
+    },
+    serviceDetails: {
+      description: serviceDescription,
+      customerComplaints: booking.notes || booking.customerNotes || '',
+      diagnosis: '',
+      workPerformed: '',
+      recommendations: ''
+    },
+    scheduledDate,
+    relatedBooking: booking._id || booking.relatedBooking || null
+  };
+};
+
+const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null, booking = null }) => {
   const [workOrder, setWorkOrder] = useState({
     customer: {
       name: '',
@@ -39,7 +128,8 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
     status: 'draft',
     scheduledDate: '',
     internalNotes: '',
-    customerNotes: ''
+    customerNotes: '',
+    relatedBooking: null
   });
 
   const [loading, setLoading] = useState(false);
@@ -48,10 +138,36 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
   useEffect(() => {
     if (initialData) {
       setWorkOrder(initialData);
+    } else if (booking) {
+      const defaults = applyBookingDefaults(booking);
+      if (defaults) {
+        setWorkOrder(prev => ({
+          ...prev,
+          ...defaults,
+          customer: {
+            ...prev.customer,
+            ...defaults.customer,
+            address: {
+              ...prev.customer.address,
+              ...defaults.customer.address
+            }
+          },
+          vehicle: {
+            ...prev.vehicle,
+            ...defaults.vehicle
+          },
+          serviceDetails: {
+            ...prev.serviceDetails,
+            ...defaults.serviceDetails
+          },
+          scheduledDate: defaults.scheduledDate || prev.scheduledDate,
+          relatedBooking: defaults.relatedBooking || prev.relatedBooking
+        }));
+      }
     } else if (workOrderId) {
       fetchWorkOrder();
     }
-  }, [workOrderId, initialData]);
+  }, [workOrderId, initialData, booking]);
 
   const fetchWorkOrder = async () => {
     try {
@@ -314,7 +430,7 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
               <label>Make *</label>
               <input
                 type="text"
-                value={workOrder.vehicle.make}
+              value={workOrder.vehicle.make}
                 onChange={(e) => handleInputChange('vehicle', 'make', e.target.value)}
                 required
               />
@@ -323,7 +439,7 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
               <label>Model *</label>
               <input
                 type="text"
-                value={workOrder.vehicle.model}
+              value={workOrder.vehicle.model}
                 onChange={(e) => handleInputChange('vehicle', 'model', e.target.value)}
                 required
               />
@@ -332,7 +448,7 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
               <label>VIN</label>
               <input
                 type="text"
-                value={workOrder.vehicle.vin}
+              value={workOrder.vehicle.vin}
                 onChange={(e) => handleInputChange('vehicle', 'vin', e.target.value)}
               />
             </div>
@@ -586,8 +702,8 @@ const WorkOrderForm = ({ workOrderId, onSave, onCancel, initialData = null }) =>
               <label>Scheduled Date</label>
               <input
                 type="datetime-local"
-                value={workOrder.scheduledDate ? new Date(workOrder.scheduledDate).toISOString().slice(0, 16) : ''}
-                onChange={(e) => setWorkOrder(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                value={formatDateTimeInput(workOrder.scheduledDate)}
+                onChange={(e) => setWorkOrder(prev => ({ ...prev, scheduledDate: normalizeDateTimeValue(e.target.value) }))}
               />
             </div>
           </div>

@@ -87,6 +87,7 @@ function BookingManager() {
     const [makes, setMakes] = useState([]);
     const [models, setModels] = useState([]);
     const [isLoadingModels, setIsLoadingModels] = useState(false);
+    const [workOrderManagerRefreshKey, setWorkOrderManagerRefreshKey] = useState(0);
     
     // Work Order related state
     const [showWorkOrderForm, setShowWorkOrderForm] = useState(false);
@@ -216,14 +217,16 @@ function BookingManager() {
 
     const handleCreateWorkOrder = (booking) => {
         setSelectedBookingForWorkOrder(booking);
-        setShowWorkOrderManager(true); // Fixed: Use WorkOrderManager instead of WorkOrderForm
-        setShowWorkOrderForm(false);
+        setShowWorkOrderForm(true);
+        setShowWorkOrderManager(false);
     };
 
     const handleWorkOrderSaved = () => {
         setShowWorkOrderForm(false);
         setSelectedBookingForWorkOrder(null);
-        // Optionally refresh bookings to update any related data
+        setWorkOrderManagerRefreshKey(prev => prev + 1);
+        setShowWorkOrderManager(true);
+        // Refresh bookings to reflect any status updates
         fetchAllBookings();
     };
 
@@ -332,7 +335,11 @@ function BookingManager() {
     if (showWorkOrderManager) {
         return (
             <div className="manager-container">
-                <WorkOrderManager onBack={handleBackToBookings} />
+                <WorkOrderManager
+                    key={workOrderManagerRefreshKey}
+                    onBack={handleBackToBookings}
+                    initialWorkOrder={selectedBookingForWorkOrder}
+                />
             </div>
         );
     }
