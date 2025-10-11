@@ -223,7 +223,7 @@ const ServicesPage = ({ user }) => {
                             <h3>Quality Guaranteed</h3>
                             <p>All work comes with our satisfaction guarantee and warranty on parts and labor.</p>
                         </div>
-                        <div className="feature-card">
+                        {/*<div className="feature-card">
                             <div className="feature-icon">
                                 <div className="icon-bg" aria-hidden="true">
                                     <FlexibleSchedulingIcon width={64} height={64} />
@@ -231,7 +231,7 @@ const ServicesPage = ({ user }) => {
                             </div>
                             <h3>Flexible Scheduling</h3>
                             <p>Book appointments that fit your schedule, including evenings and weekends.</p>
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
             </section>
