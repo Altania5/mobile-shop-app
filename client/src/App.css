@@ -2710,7 +2710,7 @@ html.admin-page-active {
   gap: 60px;
   align-items: center;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 20 auto;
   padding: 0px;
   opacity: 0;
   transform: translateY(0px);
