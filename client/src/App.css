@@ -2729,7 +2729,7 @@ html.admin-page-active {
 
 @media (max-width: 768px) {
   .hero-text-wrapper {
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
 }
 
