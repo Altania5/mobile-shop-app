@@ -6,7 +6,7 @@ import ServicesList from '../components/ServicesList';
 import ServiceHelpForm from '../components/ServiceHelpForm';
 import CustomerChecklist from '../components/CustomerChecklist';
 import axios from 'axios';
-// import { animateCounters, initScrollAnimations } from '../utils/animations';
+import { animateCounters, initScrollAnimations } from '../utils/animations';
 import {
     ExpertRepairsIcon,
     MobileServiceIcon,
