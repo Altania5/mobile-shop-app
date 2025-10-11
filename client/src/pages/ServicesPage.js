@@ -161,7 +161,7 @@ const ServicesPage = ({ user }) => {
                             </a>
                         </div>
                     </div>
-                    <div className="hero-image-wrapper">
+                    {/*<div className="hero-image-wrapper">
                         <div className="floating-card card-1">
                             <div className="card-icon" aria-hidden="true">
                                 <ExpertRepairsIcon width={48} height={48} />
@@ -180,7 +180,7 @@ const ServicesPage = ({ user }) => {
                             </div>
                             <span>Fast Response</span>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
                 {/* <div className="hero-scroll-indicator">
                     <div className="scroll-arrow"></div>
