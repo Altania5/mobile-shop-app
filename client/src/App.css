@@ -2666,8 +2666,8 @@ html.admin-page-active {
   display: flex;
   align-items: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin-top: -80px;
-  padding-top: 80px;
+  margin-top: 0px;  /*80*/
+  padding-top: 0px;
   overflow: hidden;
 }
 
