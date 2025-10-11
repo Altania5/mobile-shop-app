@@ -6,7 +6,7 @@ import ServicesList from '../components/ServicesList';
 import ServiceHelpForm from '../components/ServiceHelpForm';
 import CustomerChecklist from '../components/CustomerChecklist';
 import axios from 'axios';
-import { animateCounters, initScrollAnimations } from '../utils/animations';
+// import { animateCounters, initScrollAnimations } from '../utils/animations';
 import {
     ExpertRepairsIcon,
     MobileServiceIcon,
@@ -36,7 +36,7 @@ const ServicesPage = ({ user }) => {
 
     // Animation trigger
         animateCounters();
-        initScrollAnimations();
+        //initScrollAnimations();
     useEffect(() => {
         setTimeout(() => setIsLoaded(true), 100);
     }, []);
@@ -182,9 +182,9 @@ const ServicesPage = ({ user }) => {
                         </div>
                     </div>
                 </div>
-                <div className="hero-scroll-indicator">
+                {/* <div className="hero-scroll-indicator">
                     <div className="scroll-arrow"></div>
-                </div>
+                </div> */}
             </section>
 
             {/* Features Section */}
