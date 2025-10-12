@@ -2709,11 +2709,11 @@ html.admin-page-active {
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
-  max-width: 100%;
+  max-width: 1200px;
   margin: 20 auto;
-  padding: 0px;
+  padding: 20px;
   opacity: 0;
-  transform: translateY(0px);
+  transform: translateY(50px);
   transition: var(--transition-smooth);
 }
 
@@ -2729,7 +2729,7 @@ html.admin-page-active {
 
 @media (max-width: 768px) {
   .hero-text-wrapper {
-    transform: translateY(10px);
+    transform: translateY(65px);
   }
 }
 
