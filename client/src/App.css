@@ -2710,8 +2710,8 @@ html.admin-page-active {
   gap: 60px;
   align-items: center;
   max-width: 1200px;
-  margin: 20 auto;
-  padding: 20px;
+  margin: auto;
+  padding: 30px;
   opacity: 0;
   transform: translateY(50px);
   transition: var(--transition-smooth);
