@@ -185,7 +185,7 @@ const ServicesPage = ({ user }) => {
                 {/* <div className="hero-scroll-indicator">
                     <div className="scroll-arrow"></div>
                 </div> */}
-            </section> 
+            </section>
 
             {/* Features Section */}
             <section className="features-section">
