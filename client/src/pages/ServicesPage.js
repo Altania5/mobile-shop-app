@@ -140,7 +140,7 @@ const ServicesPage = ({ user }) => {
                 </div>
                 <div className="hero-content-modern">
                     <div className="hero-text-wrapper">
-                        <span>Welcome to Hard Work Mobile!</span>
+                        <p>Welcome to Hard Work Mobile!</p>
                         <h1 className="hero-title">
                             When your car is in need of
                         </h1>
@@ -151,8 +151,7 @@ const ServicesPage = ({ user }) => {
                             your most important choice is your mechanic.
                         </h1>
                         <p className="hero-subtitle">
-                            Expert automotive repair and maintenance delivered directly to your location. 
-                            Professional service, convenient scheduling, transparent pricing.
+                            Click below to view services, or read more about your future Auto Tech.
                         </p>
                         <div className="hero-buttons">
                             <Link to="/about" className="btn-primary-modern">

@@ -2748,10 +2748,10 @@ html.admin-page-active {
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 1.2;
-  margin: 0 0 25px 0;
+  margin: 0px 0px 0px 0;
   text-shadow: var(--text-shadow-modern);
   animation: fadeInUp 0.8s ease 0.4s both;
 }
