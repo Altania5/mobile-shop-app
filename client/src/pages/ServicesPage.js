@@ -140,12 +140,15 @@ const ServicesPage = ({ user }) => {
                 </div>
                 <div className="hero-content-modern">
                     <div className="hero-text-wrapper">
-                        <span className="hero-badge">Professional Mobile Service</span>
+                        <span>Welcome to Hard Work Mobile!</span>
                         <h1 className="hero-title">
-                            Welcome To
+                            When your car is in need of
                         </h1>
                         <h1 className="hero-title">
-                            <span className="gradient-text">Hard Work Mobile</span>
+                            <span className="gradient-text">Hard Work</span>
+                        </h1>
+                        <h1 className="hero-title">
+                            your most important choice is your mechanic.
                         </h1>
                         <p className="hero-subtitle">
                             Expert automotive repair and maintenance delivered directly to your location. 
