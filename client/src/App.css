@@ -2634,9 +2634,9 @@ html.admin-page-active {
 
 /* Modern Variables */
 :root {
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-primary: linear-gradient(135deg, #D4AF37 0%, #D4AF37 100%);
   --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-accent: linear-gradient(135deg, #D4AF37 0%, #D4AF37 100%);
   --shadow-modern: 0 10px 40px rgba(0,0,0,0.1);
   --shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
   --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -2762,9 +2762,12 @@ html.admin-page-active {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
+.hero-intro {
+  color: #BBBBBB;
+}
 .hero-subtitle {
   font-size: 1.2rem;
+  color:#BBBBBB;
   line-height: 1.6;
   opacity: 0.9;
   margin: 0 0 40px 0;
