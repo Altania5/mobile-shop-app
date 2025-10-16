@@ -1369,7 +1369,7 @@ html.admin-page-active {
 
 .site-footer {
   background-color: var(--primary-color);
-  color: #a9b3c1; /* A lighter gray for better readability */
+  color: #ffffff; /* A whitest of whites for the best readability */
   padding: 40px 20px;
   margin-top: 40px; /* Give some space above the footer */
 }
@@ -1409,7 +1409,7 @@ html.admin-page-active {
 }
 
 .footer-section.links a {
-  color: #a9b3c1;
+  color: #ffffff;
   text-decoration: none;
   transition: color 0.2s ease;
 }
