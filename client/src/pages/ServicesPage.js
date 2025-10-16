@@ -140,7 +140,7 @@ const ServicesPage = ({ user }) => {
                 </div>
                 <div className="hero-content-modern">
                     <div className="hero-text-wrapper">
-                        <p>Welcome to Hard Work Mobile!</p>
+                        <p className="hero-intro">Welcome to Hard Work Mobile!</p>
                         <h1 className="hero-title">
                             When your car is in need of
                         </h1>
