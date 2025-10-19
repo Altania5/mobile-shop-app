@@ -1,16 +1,16 @@
 ﻿:root {
-  /* Mobile Mechanic Theme - Balanced Dark */
+  /* Mobile Mechanic Theme - Heavenly Vibe */
   --primary-color: #1e2833;   /* Steel Gray-Blue */
   --secondary-color: #2a3441; /* Medium Steel */
   --accent-color: #d4af37;    /* Lovely Gold */
   --accent-secondary: #4fc3f7; /* Light Blue */
-  --background-color: #121820; /* Dark Charcoal */
-  --surface-color: #1a202c;   /* Dark Surface */
-  --surface-light: #2d3748;   /* Lighter Surface */
-  --text-color: #e2e8f0;      /* Light Gray */
-  --text-light-color: #ffffff;/* Medium Gray */
-  --text-muted: #718096;      /* Muted Gray */
-  --border-color: #4a5568;    /* Medium Border */
+  --background-color: #F2F3F6; /* Dark Charcoal */
+  --surface-color: #ffffff;   /* White Surface */
+  --surface-light: #ffffff;   /* Lighter Surface */
+  --text-color: #000000;      /* Black */
+  --text-light-color: #ffffff;/* White */
+  --text-muted: #BBBBBB;      /* Muted Gray */
+  --border-color: #000000;    /* Black Border */
   --border-light: #2d3748;    /* Light Border */
   --success-color: #48bb78;
   --warning-color: #ed8936;
