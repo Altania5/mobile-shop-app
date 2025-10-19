@@ -1476,7 +1476,7 @@ html.admin-page-active {
 }
 
 .contact-info {
-  background-color: #FFFFFF(--surface-color);
+  background-color: #FFFFFF;
   padding: 30px;
   border-radius: var(--border-radius);
   border-left: 5px solid var(--accent-color);
