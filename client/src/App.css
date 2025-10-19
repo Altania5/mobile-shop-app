@@ -1476,7 +1476,7 @@ html.admin-page-active {
 }
 
 .contact-info {
-  background-color: var(--surface-color);
+  background-color: #FFFFFF(--surface-color);
   padding: 30px;
   border-radius: var(--border-radius);
   border-left: 5px solid var(--accent-color);
@@ -5232,11 +5232,6 @@ label {
     align-items: center !important;
     justify-content: center !important;
     gap: 12px !important;
-}
-
-.page-container h2::before {
-    content: '📋' !important;
-    font-size: 1.5rem !important;
 }
 
 /* Booking Cards Enhancement */
