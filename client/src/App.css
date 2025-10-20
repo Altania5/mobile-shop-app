@@ -3926,6 +3926,14 @@ textarea:focus {
   color: var(--text-light-color);
 }
 
+.Feature-Grid-Header {
+  color: var(--text-color);
+  align-items: center;
+  margin-bottom: 80px;
+  text-align: center;
+  border-bottom: 1px solid #000000;
+}
+
 /* ========================================= */
 /* ENHANCED CARDS & COMPONENTS             */
 /* ========================================= */
@@ -4579,7 +4587,7 @@ label {
 }
 
 .about-hero-section p {
-  color: var(--text-light-color) !important;
+  color: #666666 !important;
   font-size: 1.2rem !important;
   line-height: 1.8 !important;
 }
@@ -4756,7 +4764,7 @@ label {
 }
 
 .sidebar-widget p {
-  color: var(--text-light-color) !important;
+  color: #666666 !important;
 }
 
 .sidebar-widget p strong {
@@ -4764,7 +4772,7 @@ label {
 }
 
 .sidebar-widget ul li a {
-  color: var(--text-light-color) !important;
+  color: #666666 !important;
   text-decoration: none !important;
 }
 

@@ -8,7 +8,7 @@
   --surface-color: #ffffff;   /* White Surface */
   --surface-light: #ffffff;   /* Lighter Surface */
   --text-color: #000000;      /* Black */
-  --text-light-color: #ffffff;/* White */
+  --text-light-color: #3c3c3c;/* Dark Grey for subtext */
   --text-muted: #BBBBBB;      /* Muted Gray */
   --border-color: #000000;    /* Black Border */
   --border-light: #2d3748;    /* Light Border */

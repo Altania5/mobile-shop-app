@@ -192,10 +192,8 @@ const ServicesPage = ({ user }) => {
             {/* Features Section */}
             <section className="features-section">
                 <div className="container-modern">
-                    <div className="section-header">
-                        <span className="section-badge">Why Choose Us</span>
+                    <div className="Feature-Grid-Header">
                         <h2>Professional Mobile Automotive Service</h2>
-                        <p>Experience the convenience of professional automotive service at your location</p>
                     </div>
                     <div className="features-grid">
                         <div className="feature-card">
