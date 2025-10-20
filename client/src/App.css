@@ -3169,6 +3169,7 @@ html.admin-page-active {
   background: #ddd;
   outline: none;
   -webkit-appearance: none;
+  appearance: none;
 }
 
 .price-slider-modern::-webkit-slider-thumb {
@@ -3776,7 +3777,7 @@ footer a:hover {
 }
 
 .nav-link {
-  color: var(--text-light-color);
+  color: #FFFFFF;
   position: relative;
   transition: var(--transition-smooth);
 }
@@ -4297,7 +4298,7 @@ label {
 /* ========================================= */
 
 .dashboard-nav {
-  background: rgba(30, 40, 51, 0.95) !important;
+  background: #000000 !important;
   backdrop-filter: blur(20px) !important;
   border-bottom: 1px solid var(--border-color) !important;
   box-shadow: var(--box-shadow) !important;
@@ -4309,7 +4310,7 @@ label {
 }
 
 .nav-link {
-  color: var(--text-light-color) !important;
+  color: #FFFFFF !important;
   transition: var(--transition-smooth) !important;
 }
 
