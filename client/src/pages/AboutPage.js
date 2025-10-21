@@ -148,7 +148,7 @@ const AboutPage = () => {
                 <div className="mission-overlay">
                     <h2>My Crusade</h2>
                     <p>
-                        To shatter the corrupt price gouging and degenerate upselling that robbs good people blind. A bussiness Model whcih plunders its clients and Techniscians has not the right to exist at all.
+                        To shatter the corrupt price gouging and degenerate upselling that robbs good people blind. A bussiness Model which plunders its clients and technicians has not the right to exist at all.
                     </p>
                 </div>
             </section>
