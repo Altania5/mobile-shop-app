@@ -51,9 +51,9 @@ const AboutPage = () => {
             {/* HERO SECTION */}
             <section ref={addToRefs} className="about-hero-section">
                 <div className="about-hero-content">
-                    <h1 className="fade-in-down">Your Trusted Partner in Mobile Detailing</h1>
+                    <h1 className="fade-in-down"> When You Dive into the Tough World of Auto Repair, Less than Perfection is a No-No!</h1>
                     <p className="fade-in-up">
-                        We are more than just a car wash. We are a team of passionate professionals dedicated to bringing back the showroom shine to your vehicle, right at your doorstep.
+                       How fortuitous, then, that I shall stop at nothing to deliver it for my clients.
                     </p>
                     <img src={signature} alt="Signature" className="signature-image fade-in-up delay-1" />
                 </div>
@@ -62,7 +62,7 @@ const AboutPage = () => {
                 </div>
             </section>
 
-            <section className="stats-section">
+            {/*<section className="stats-section">
                 <div className="stat-item">
                     <i className="fas fa-award"></i>
                     <h3>10+</h3>
@@ -83,7 +83,7 @@ const AboutPage = () => {
                     <h3>Eco-Friendly</h3>
                     <p>Products Used</p>
                 </div>
-            </section>
+            </section>*/}
 
             <div className="about-page-grid">
                 {/* LEFT SIDEBAR */}
@@ -129,10 +129,10 @@ const AboutPage = () => {
                     <div className="sidebar-widget">
                         <h3><i className="fas fa-concierge-bell"></i> Our Services</h3>
                         <ul>
-                            <li><Link to="/services"><i className="fas fa-car-side"></i> Exterior Detailing</Link></li>
-                            <li><Link to="/services"><i className="fas fa-couch"></i> Interior Cleaning</Link></li>
-                            <li><Link to="/services"><i className="fas fa-paint-roller"></i> Paint Correction</Link></li>
-                            <li><Link to="/services"><i className="fas fa-shield-alt"></i> Ceramic Coating</Link></li>
+                            <li><Link to="/services"><i className="fas fa-car-side"></i> Vehicle Diagnosis</Link></li>
+                            <li><Link to="/services"><i className="fas fa-couch"></i> Routine Maintenance</Link></li>
+                            <li><Link to="/services"><i className="fas fa-paint-roller"></i> Suspension Work</Link></li>
+                            <li><Link to="/services"><i className="fas fa-shield-alt"></i> Brakes</Link></li>
                         </ul>
                     </div>
                 </aside>
@@ -146,17 +146,17 @@ const AboutPage = () => {
                 style={{ backgroundImage: `url(${missionBg})` }}
             >
                 <div className="mission-overlay">
-                    <h2>Our Mission</h2>
+                    <h2>My Crusade</h2>
                     <p>
-                        To provide the most convenient, high-quality, and reliable mobile detailing service, ensuring every client feels proud of their vehicle's appearance and condition.
+                        To shatter the corrupt price gouging and degenerate upselling that robbs good people blind. A bussiness Model whcih plunders its clients and Techniscians has not the right to exist at all.
                     </p>
                 </div>
             </section>
 
             {/* CTA SECTION (Full Width) */}
             <section ref={addToRefs} className="cta-section">
-                <h2>Ready for the Ultimate Shine?</h2>
-                <p>Book your appointment today and experience the difference.</p>
+                <h2>In need of Hard Work?</h2>
+                <p>Contact me, and well go from there. Fair Enough?</p>
                 <Link to="/services" className="cta-button hover-glow">View Our Services</Link>
             </section>
         </div>
