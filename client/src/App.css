@@ -97,7 +97,7 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 35px 30px;
+  padding: 35px 30px !important;
   background-color: var(--surface-color);
   box-shadow: var(--box-shadow);
   border-radius: 0;
