@@ -97,7 +97,7 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 35px 30px;
   background-color: var(--surface-color);
   box-shadow: var(--box-shadow);
   border-radius: 0;
@@ -3030,8 +3030,6 @@ html.admin-page-active {
 }
 
 .icon-bg {
-  width: 80px;
-  height: 80px;
   background: var(--gradient-primary);
   border-radius: 50%;
   display: flex;
@@ -4314,7 +4312,7 @@ label {
 }
 
 .nav-brand {
-  color: var(--text-color) !important;
+  color: #D4AF37 !important;
   font-weight: 700 !important;
 }
 
