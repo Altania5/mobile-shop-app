@@ -409,7 +409,7 @@ html.admin-page-active {
 
 /* Work Order Portal Link Styling */
 .work-order-link {
-  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+  background: linear-gradient(135deg, #7851A9 0%, #7851A9 100%);
   color: white !important;
   padding: 8px 16px;
   border-radius: 20px;
@@ -1492,6 +1492,10 @@ html.admin-page-active {
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
   margin-bottom: 10px;
+}
+
+.contact-info strong {
+    color: #000000 !important
 }
 
 .contact-info p:last-child {
@@ -4579,7 +4583,7 @@ label {
 /* Fix About Hero Section Text */
 .about-hero-section h1 {
   color: var(--text-color) !important;
-  font-size: 3rem !important;
+  font-size: 2rem !important;
   font-weight: 700 !important;
   margin-bottom: 25px !important;
   text-shadow: none !important;

@@ -51,7 +51,7 @@ const AboutPage = () => {
             {/* HERO SECTION */}
             <section ref={addToRefs} className="about-hero-section">
                 <div className="about-hero-content">
-                    <h1 className="fade-in-down"> When You Dive into the Tough World of Auto Repair, Less than Perfection is a No-No!</h1>
+                    <h1 className="fade-in-down"> When You Dive into the Tough World of Auto Repair, Less than Perfect is a No-No!</h1>
                     <p className="fade-in-up">
                        How fortuitous, then, that I shall stop at nothing to deliver it for my clients.
                     </p>

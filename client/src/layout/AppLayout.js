@@ -19,7 +19,7 @@ export default function AppLayout({ user, onLogout }) {
   return (
     <div className="site-wrapper">
       <nav className="dashboard-nav">
-        <NavLink to="/" className="nav-brand">Mobile Shop</NavLink>
+        <NavLink to="/" className="nav-brand">Hard Work</NavLink>
         <button className="mobile-nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           &#9776;
         </button>
@@ -27,7 +27,7 @@ export default function AppLayout({ user, onLogout }) {
           <NavLink to="/services" className="nav-link" onClick={closeMenu}>Home</NavLink>
           <NavLink to="/testimonials" className="nav-link" onClick={closeMenu}>Testimonials</NavLink>
           <NavLink to="/blog" className="nav-link" onClick={closeMenu}>Blog</NavLink>
-          <NavLink to="/about" className="nav-link" onClick={closeMenu}>About Us</NavLink>
+          <NavLink to="/about" className="nav-link" onClick={closeMenu}>About Me</NavLink>
           <NavLink to="/contact" className="nav-link" onClick={closeMenu}>Contact</NavLink>
           <NavLink to="/work-order-portal" className="nav-link work-order-link" onClick={closeMenu}>📄 Work Orders</NavLink>
 

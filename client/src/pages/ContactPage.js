@@ -63,7 +63,7 @@ function ContactPage() {
           <h3>Contact Information</h3>
           <p><strong>Email:</strong> JamesFerzanden@hardworkmobile.com</p>
           <p><strong>Phone:</strong> (484) 593-3875</p>
-          <p><strong>Chester County:</strong> West Chester, PA</p>
+          <p><strong>Service Area:</strong> Chester County, PA</p>
           <p><strong>Hours:</strong> Mon - Fri, 8:00 AM - 4:00 PM</p>
         </div>
       </div>

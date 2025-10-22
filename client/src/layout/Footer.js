@@ -8,9 +8,9 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-content">
         <div className="footer-section about">
-          <h3 className="footer-brand">Mobile Shop</h3>
+          <h3 className="footer-brand">Hard Work Mobile</h3>
           <p>
-            Your trusted partner in mobile vehicle care. We bring expert service directly to you, combining convenience with quality.
+            "The Hardest and Greatest work is working to turn your passions into your reality."
           </p>
         </div>
 
@@ -18,7 +18,7 @@ function Footer() {
           <h3>Quick Links</h3>
           <ul>
             <li><Link to="/">Services</Link></li>
-            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/about">About Me</Link></li>
             <li><Link to="/testimonials">Testimonials</Link></li>
             <li><Link to="/blog">Blog</Link></li>
             <li><Link to="/contact">Contact</Link></li>
@@ -29,7 +29,7 @@ function Footer() {
           <h3>Contact Info</h3>
           <p><span>Email:</span> JamesFerzanden@hardworkmobile.com</p>
           <p><span>Phone:</span> (484) 593-3875</p>
-          <p><span>Service Area:</span> West Chester, PA</p>
+          <p><span>Service Area:</span> Chester County, PA</p>
         </div>
       </div>
       <div className="footer-bottom">
