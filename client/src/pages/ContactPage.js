@@ -39,7 +39,7 @@ function ContactPage() {
     <div className="page-container">
       <div className="contact-header">
         <h2>Get In Touch</h2>
-        <p>Have a question or need a quote? Fill out the form below, and we'll get back to you as soon as possible.</p>
+        <p>Have a question or need a quote? Fill out the form below, and I'll get back to you as soon as possible.</p>
       </div>
       <div className="contact-wrapper">
         <form onSubmit={handleSubmit} className="contact-form">
@@ -64,7 +64,7 @@ function ContactPage() {
           <p><strong>Email:</strong> JamesFerzanden@hardworkmobile.com</p>
           <p><strong>Phone:</strong> (484) 593-3875</p>
           <p><strong>Service Area:</strong> Chester County, PA</p>
-          <p><strong>Hours:</strong> Mon - Fri, 8:00 AM - 4:00 PM</p>
+          <p><strong>Hours:</strong> Mon - Fri, 10:00 AM - 6:00 PM</p>
         </div>
       </div>
     </div>

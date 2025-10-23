@@ -127,7 +127,7 @@ const AboutPage = () => {
                 {/* RIGHT SIDEBAR */}
                 <aside className="about-sidebar right-sidebar">
                     <div className="sidebar-widget">
-                        <h3><i className="fas fa-concierge-bell"></i> Our Services</h3>
+                        <h3><i className="fas fa-concierge-bell"></i> My Services</h3>
                         <ul>
                             <li><Link to="/services"><i className="fas fa-car-side"></i> Vehicle Diagnosis</Link></li>
                             <li><Link to="/services"><i className="fas fa-couch"></i> Routine Maintenance</Link></li>
@@ -157,7 +157,7 @@ const AboutPage = () => {
             <section ref={addToRefs} className="cta-section">
                 <h2>In need of Hard Work?</h2>
                 <p>Contact me, and well go from there. Fair Enough?</p>
-                <Link to="/services" className="cta-button hover-glow">View Our Services</Link>
+                <Link to="/services" className="cta-button hover-glow">View my Services</Link>
             </section>
         </div>
     );

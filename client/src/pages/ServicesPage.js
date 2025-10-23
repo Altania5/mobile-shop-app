@@ -155,11 +155,11 @@ const ServicesPage = ({ user }) => {
                         </p>
                         <div className="hero-buttons">
                             <Link to="/about" className="btn-primary-modern">
-                                <span>About Our Services</span>
+                                <span>About Me</span>
                                 <div className="btn-shine"></div>
                             </Link>
                             <a href="#services" className="btn-secondary-modern">
-                                <span>View Services</span>
+                                <span>Services</span>
                             </a>
                         </div>
                     </div>

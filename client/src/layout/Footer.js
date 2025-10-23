@@ -17,7 +17,7 @@ function Footer() {
         <div className="footer-section links">
           <h3>Quick Links</h3>
           <ul>
-            <li><Link to="/">Services</Link></li>
+            <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About Me</Link></li>
             <li><Link to="/testimonials">Testimonials</Link></li>
             <li><Link to="/blog">Blog</Link></li>

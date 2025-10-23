@@ -1492,6 +1492,7 @@ html.admin-page-active {
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
   margin-bottom: 10px;
+  color: #666666; /* Dark gray for better readability */
 }
 
 .contact-info strong {
@@ -2709,9 +2710,6 @@ html.admin-page-active {
 .hero-content-modern {
   position: relative;
   z-index: 4;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
   align-items: center;
   max-width: 1200px;
   margin: auto;
@@ -2719,6 +2717,7 @@ html.admin-page-active {
   opacity: 0;
   transform: translateY(50px);
   transition: var(--transition-smooth);
+  text-align: left;
 }
 
 .hero-section-modern.loaded .hero-content-modern {
