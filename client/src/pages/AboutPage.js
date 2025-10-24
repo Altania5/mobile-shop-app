@@ -119,7 +119,7 @@ const AboutPage = () => {
                     
                     {/* TESTIMONIAL CAROUSEL */}
                     <section className="testimonial-container">
-                        <h2>What Our Clients Say</h2>
+                        <h2>What My Clients Say</h2>
                         <TestimonialCarousel />
                     </section>
                 </main>
@@ -148,7 +148,7 @@ const AboutPage = () => {
                 <div className="mission-overlay">
                     <h2>My Crusade</h2>
                     <p>
-                        To shatter the corrupt price gouging and degenerate upselling that robbs good people blind. A bussiness Model which plunders its clients and technicians has not the right to exist at all.
+                        To shatter the corrupt price gouging and degenerate upselling that robs good people blind. A business model which plunders its clients and technicians has not the right to exist at all.
                     </p>
                 </div>
             </section>

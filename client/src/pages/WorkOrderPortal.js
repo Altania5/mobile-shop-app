@@ -121,11 +121,11 @@ const WorkOrderPortal = () => {
 
           <div className="help-section">
             <h3>Need Help?</h3>
-            <p>If you're having trouble finding your work order, please contact us:</p>
+            <p>If you're having trouble finding your work order, please contact me.:</p>
             <div className="contact-info">
               <div className="contact-item">
                 <span className="icon">📞</span>
-                <span>(555) 123-4567</span>
+                <span>(484) 593-3875</span>
               </div>
               <div className="contact-item">
                 <span className="icon">📧</span>

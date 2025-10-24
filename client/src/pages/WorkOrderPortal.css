@@ -1,6 +1,6 @@
 .work-order-portal {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #7851a9 0%, #7851a9 100%);
   padding: 20px;
   display: flex;
   align-items: center;
@@ -40,7 +40,7 @@
 }
 
 .card-header {
-  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #d4af37 100%);
   color: white;
   padding: 30px;
   text-align: center;
