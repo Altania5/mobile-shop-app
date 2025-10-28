@@ -274,7 +274,7 @@
 }
 
 .login-form-wrapper button {
-  background: linear-gradient(135deg, var(--accent-color) 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, var(--accent-color) 0%, #d4af37 100%);
   color: white;
   border: none;
   padding: 15px 30px;

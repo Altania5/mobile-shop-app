@@ -8,11 +8,11 @@ function LoginPage({ onLoginSuccess }) {
     <div className="modern-login-page">
       {/* Animated Background */}
       <div className="login-background">
-        <div className="login-shapes">
+        {/*<div className="login-shapes">
           <div className="login-shape login-shape-1"></div>
           <div className="login-shape login-shape-2"></div>
           <div className="login-shape login-shape-3"></div>
-        </div>
+        </div>*/}
       </div>
 
       {/* Main Content */}
