@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, Link, Outlet } from 'react-router-dom';
 import Footer from './Footer';
+import { Link } from 'react-router-dom';
 import logo from './/client//public//images//the_signet_ring.png';
 
 export default function AppLayout({ user, onLogout }) {
