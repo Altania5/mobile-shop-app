@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, Link, Outlet } from 'react-router-dom';
 import Footer from './Footer';
-import logo from './client//public//images//the_signet_ring.png';
+import logo from './/client/public/images/the_signet_ring.png';
 
 export default function AppLayout({ user, onLogout }) {
   const navigate = useNavigate();
@@ -20,9 +20,7 @@ export default function AppLayout({ user, onLogout }) {
   return (
     <div className="site-wrapper">
       <nav className="dashboard-nav">
-          <NavLink to="/" className="nav-brand">Hard Work</NavLink>
-
-          //img src={logo} alt="Logo"
+          <NavLink to="/" className="nav-brand" img src={logo} alt="Logo"></NavLink>
 
         <button className="mobile-nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           &#9776;
