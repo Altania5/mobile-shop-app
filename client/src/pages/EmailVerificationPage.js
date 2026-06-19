@@ -83,7 +83,7 @@ function EmailVerificationPage() {
 
           {status === 'error' && (
             <div className="verification-content error">
-              <div className="error-icon">⚠</div>
+              <div className="error-icon"><i className="fa-solid fa-triangle-exclamation"></i></div>
               <h2>Verification Failed</h2>
               <p className="error-message">{message}</p>
               

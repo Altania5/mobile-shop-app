@@ -1,152 +1,146 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import ChangePasswordForm from '../components/ChangePasswordForm';
-import SquarePaymentForm from '../components/SquarePaymentForm';
-import EditBookingModal from '../components/EditBookingModal';
 import './DashboardPage.css';
 
-const AccountSettings = () => (
-  <div className="settings-container">
-    <div className="settings-section">
-      <ChangePasswordForm />
-    </div>
-    <div className="settings-section">
-      <SquarePaymentForm />
-    </div>
-  </div>
-);
+const STATUS_LABELS = {
+  new:       'Submitted',
+  contacted: 'Contacted',
+  scheduled: 'Scheduled',
+  completed: 'Completed',
+  converted: 'Confirmed',
+  declined:  'Declined',
+  cancelled: 'Cancelled',
+};
 
-const ServiceHistory = () => {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [editingBooking, setEditingBooking] = useState(null);
+const STATUS_COLORS = {
+  new:       { background: 'rgba(59,130,246,0.1)', color: '#1d4ed8', border: '#93c5fd' },
+  contacted: { background: 'rgba(234,179,8,0.1)',  color: '#854d0e', border: '#fde047' },
+  scheduled: { background: 'rgba(168,85,247,0.1)', color: '#7c3aed', border: '#c4b5fd' },
+  completed: { background: 'rgba(34,197,94,0.1)',  color: '#166534', border: '#86efac'  },
+  converted: { background: 'rgba(34,197,94,0.1)',  color: '#166534', border: '#86efac'  },
+  declined:  { background: 'rgba(239,68,68,0.1)',  color: '#991b1b', border: '#fca5a5'  },
+  cancelled: { background: 'rgba(107,114,128,0.1)',color: '#374151', border: '#d1d5db'  },
+};
 
-  const fetchBookings = async () => {
+const TIME_SLOT_LABELS = {
+  morning:   'Morning (8 AM – 12 PM)',
+  afternoon: 'Afternoon (12 PM – 5 PM)',
+  evening:   'Evening (5 PM – 7 PM)',
+};
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+  });
+}
+
+function StatusBadge({ status }) {
+  const s = STATUS_COLORS[status] || STATUS_COLORS.new;
+  return (
+    <span style={{
+      display: 'inline-block',
+      padding: '3px 10px',
+      borderRadius: 20,
+      fontSize: '0.8rem',
+      fontWeight: 700,
+      border: `1px solid ${s.border}`,
+      background: s.background,
+      color: s.color,
+    }}>
+      {STATUS_LABELS[status] || status}
+    </span>
+  );
+}
+
+const BookingRequests = () => {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState('');
+
+  const fetchRequests = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers = { 'x-auth-token': token };
-      const response = await axios.get('/api/bookings/', { headers });
-      setBookings(response.data);
-    } catch (err) {
-      setError('Could not fetch your booking history.');
+      const res = await axios.get('/api/booking-requests/mine');
+      setRequests(res.data);
+    } catch {
+      setError('Could not load your booking requests.');
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchBookings();
   }, []);
 
-  const handleCancelBooking = async (bookingId) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      try {
-        await axios.patch(`/api/bookings/${bookingId}/cancel`);
-        setBookings(bookings.map(b =>
-          b._id === bookingId ? { ...b, status: 'Cancelled' } : b
-        ));
-        alert('Booking cancelled successfully.');
-      } catch (err) {
-        console.error('Failed to cancel booking:', err);
-        alert('Failed to cancel booking. Please try again.');
-      }
-    }
-  };
+  useEffect(() => { fetchRequests(); }, [fetchRequests]);
 
-  if (loading) {
-    return <div className="loader">Loading...</div>;
-  }
-  if (error) return <p style={{ color: 'var(--error-color)' }}>{error}</p>;
+  if (loading) return <div className="loader">Loading…</div>;
+  if (error)   return <p style={{ color: 'var(--error-color)' }}>{error}</p>;
 
   return (
     <div className="page-container">
-      {editingBooking &&
-        <EditBookingModal
-          booking={editingBooking}
-          onClose={() => setEditingBooking(null)}
-          onUpdate={fetchBookings}
-        />}
-      <h2>My Service History</h2>
-      {bookings.length === 0 ? (
-        <p>You have no past or upcoming appointments.</p>
+      <h2 style={{ marginTop: 0 }}>My Booking Requests</h2>
+      {requests.length === 0 ? (
+        <p style={{ color: 'var(--text-light-color)' }}>
+          You haven't submitted any booking requests yet.
+        </p>
       ) : (
         <div className="bookings-list">
-          {bookings.map(booking => (
-            <div key={booking._id} className="booking-card">
-              <div className="booking-card-header">
-                <h3>
-                  {booking.isCustomService 
-                    ? `${booking.customServiceName} (Professional Service)` 
-                    : (booking.service?.name || 'Service Removed')
-                  }
-                </h3>
-                <span className={`booking-status status-${booking.status.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {booking.status}
-                </span>
+          {requests.map(r => {
+            const serviceLabel = r.service === 'Other'
+              ? `Other — ${r.serviceOther || ''}`
+              : r.service;
+            return (
+              <div key={r._id} className="booking-card">
+                <div className="booking-card-header">
+                  <h3>{serviceLabel}</h3>
+                  <StatusBadge status={r.status} />
+                </div>
+                <div className="booking-card-body">
+                  <p>
+                    <strong>Vehicle:</strong>{' '}
+                    {r.vehicleYear} {r.vehicleMake} {r.vehicleModel}
+                  </p>
+                  <p>
+                    <strong>Preferred Date:</strong> {formatDate(r.preferredDate)}
+                    {r.preferredTimeSlot && (
+                      <> &mdash; {TIME_SLOT_LABELS[r.preferredTimeSlot] || r.preferredTimeSlot}</>
+                    )}
+                  </p>
+                  <p><strong>Address:</strong> {r.serviceAddress}</p>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-light-color)' }}>
+                    Submitted {new Date(r.createdAt).toLocaleDateString('en-US', {
+                      month: 'short', day: 'numeric', year: 'numeric',
+                    })}
+                  </p>
+                </div>
               </div>
-              <div className="booking-card-body">
-                <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
-                <p><strong>Vehicle:</strong> {booking.vehicleYear} {booking.vehicleMake} {booking.vehicleModel} ({booking.vehicleColor})</p>
-                <p><strong>Price:</strong> 
-                  {booking.isCustomService && booking.customServicePrice 
-                    ? `$${booking.customServicePrice}` 
-                    : (booking.service && typeof booking.service.price === 'number'
-                      ? `$${booking.service.price.toFixed(2)}`
-                      : 'N/A')
-                  }
-                </p>
-                {booking.duration && (
-                  <p><strong>Duration:</strong> {booking.duration} minutes</p>
-                )}
-                {booking.createdByAdmin && (
-                  <p><strong>Type:</strong> <span className="admin-created-badge">Professional Service</span></p>
-                )}
-              </div>
-              <div className="booking-card-footer">
-                {booking.status === 'Pending' && (
-                  <>
-                    <button onClick={() => setEditingBooking(booking)}>Edit Details</button>
-                    <button onClick={() => handleCancelBooking(booking._id)}>Cancel</button>
-                  </>
-                )}
-                {booking.status === 'Confirmed' && (
-                  <button onClick={() => handleCancelBooking(booking._id)}>Cancel</button>
-                )}
-                {booking.status === 'Completed' && (
-                  booking.service ? (
-                    <Link to="/leave-review" state={{ booking: booking }} className="review-button-link">
-                      <button>Leave a Review</button>
-                    </Link>
-                  ) : (
-                    <button disabled>Service No Longer Available</button>
-                  )
-                )}
-                {booking.serviceStatus && booking.serviceStatus.trim() !== '' && (booking.status === 'Pending' || booking.status === 'Confirmed') && (
-                  <p className="service-progress"><strong>Progress:</strong> {booking.serviceStatus}</p>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
   );
 };
 
+const AccountSettings = () => (
+  <div className="settings-container">
+    <div className="settings-section">
+      <ChangePasswordForm />
+    </div>
+  </div>
+);
+
 const DashboardPage = ({ user }) => {
-  const [activeTab, setActiveTab] = useState('history');
+  const [activeTab, setActiveTab] = useState('requests');
 
   return (
     <div className="dashboard-container">
       <h1>My Account</h1>
       <div className="dashboard-tabs">
         <button
-          className={`dashboard-tab-button ${activeTab === 'history' ? 'active' : ''}`}
-          onClick={() => setActiveTab('history')}
+          className={`dashboard-tab-button ${activeTab === 'requests' ? 'active' : ''}`}
+          onClick={() => setActiveTab('requests')}
         >
-          Service History
+          Booking Requests
         </button>
         <button
           className={`dashboard-tab-button ${activeTab === 'settings' ? 'active' : ''}`}
@@ -156,8 +150,8 @@ const DashboardPage = ({ user }) => {
         </button>
       </div>
       <div className="dashboard-content">
-        {activeTab === 'history' && <ServiceHistory user={user} />}
-        {activeTab === 'settings' && <AccountSettings user={user} />}
+        {activeTab === 'requests'  && <BookingRequests />}
+        {activeTab === 'settings'  && <AccountSettings user={user} />}
       </div>
     </div>
   );

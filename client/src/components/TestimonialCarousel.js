@@ -5,7 +5,7 @@ import axios from 'axios';
 const StarRating = ({ rating }) => {
     const stars = [];
     for (let i = 0; i < 5; i++) {
-      stars.push(<span key={i} className={i < rating ? 'star filled' : 'star'}>★</span>);
+      stars.push(<span key={i} className={i < rating ? 'star filled' : 'star'}><i className={i < rating ? 'fa-solid fa-star' : 'fa-regular fa-star'}></i></span>);
     }
     return <div className="star-rating">{stars}</div>;
 };

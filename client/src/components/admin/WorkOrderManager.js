@@ -356,7 +356,7 @@ const WorkOrderManager = () => {
                       <div className="email-status">
                         {workOrder.emailSent ? (
                           <span className="email-sent">
-                            ✓ Sent {workOrder.emailSentDate ? formatDate(workOrder.emailSentDate) : ''}
+                            <i className="fa-solid fa-check"></i> Sent {workOrder.emailSentDate ? formatDate(workOrder.emailSentDate) : ''}
                           </span>
                         ) : (
                           <span className="email-not-sent">Not sent</span>
@@ -367,16 +367,16 @@ const WorkOrderManager = () => {
                       <div className="acknowledgment-status">
                         {workOrder.acknowledgment?.isAcknowledged ? (
                           <span className="acknowledged">
-                            ✅ Acknowledged {workOrder.acknowledgment.acknowledgmentDate ? formatDate(workOrder.acknowledgment.acknowledgmentDate) : ''}
+                            <><i className="fa-solid fa-circle-check"></i> Acknowledged {workOrder.acknowledgment.acknowledgmentDate ? formatDate(workOrder.acknowledgment.acknowledgmentDate) : ''}</>
                           </span>
                         ) : workOrder.acknowledgment?.isRequired ? (
                           <span className="pending-acknowledgment">
-                            ⏳ Pending
+                            <><i className="fa-solid fa-hourglass-half"></i> Pending
                             {workOrder.acknowledgment.tokenExpiresAt && (
                               <div className="expires-info">
                                 Expires: {formatDate(workOrder.acknowledgment.tokenExpiresAt)}
                               </div>
-                            )}
+                            )}</>
                           </span>
                         ) : (
                           <span className="no-acknowledgment">Not required</span>
@@ -484,7 +484,7 @@ const WorkOrderManager = () => {
                     <div className="mobile-status-label">Email Status</div>
                     <div className={`mobile-status-value ${workOrder.emailSent ? 'email-sent' : 'email-not-sent'}`}>
                       {workOrder.emailSent ? (
-                        <>✓ Sent {workOrder.emailSentDate ? formatDate(workOrder.emailSentDate) : ''}</>
+                        <><i className="fa-solid fa-check"></i> Sent {workOrder.emailSentDate ? formatDate(workOrder.emailSentDate) : ''}</>
                       ) : (
                         'Not sent'
                       )}
@@ -497,9 +497,9 @@ const WorkOrderManager = () => {
                       workOrder.acknowledgment?.isRequired ? 'pending-acknowledgment' : 'no-acknowledgment'
                     }`}>
                       {workOrder.acknowledgment?.isAcknowledged ? (
-                        <>✅ Acknowledged {workOrder.acknowledgment.acknowledgmentDate ? formatDate(workOrder.acknowledgment.acknowledgmentDate) : ''}</>
+                        <><i className="fa-solid fa-circle-check"></i> Acknowledged {workOrder.acknowledgment.acknowledgmentDate ? formatDate(workOrder.acknowledgment.acknowledgmentDate) : ''}</>
                       ) : workOrder.acknowledgment?.isRequired ? (
-                        <>⏳ Pending {workOrder.acknowledgment.tokenExpiresAt && (
+                        <><i className="fa-solid fa-hourglass-half"></i> Pending {workOrder.acknowledgment.tokenExpiresAt && (
                           <div className="expires-info">
                             Expires: {formatDate(workOrder.acknowledgment.tokenExpiresAt)}
                           </div>

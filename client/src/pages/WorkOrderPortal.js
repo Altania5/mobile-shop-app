@@ -59,7 +59,7 @@ const WorkOrderPortal = () => {
     <div className="work-order-portal">
       <div className="portal-container">
         <div className="portal-header">
-          <h1>📄 Work Order Portal</h1>
+          <h1><i className="fa-solid fa-file-lines"></i> Work Order Portal</h1>
           <p>Download your work order PDF using your work order number and email address</p>
         </div>
 
@@ -97,7 +97,7 @@ const WorkOrderPortal = () => {
 
             {error && (
               <div className="error-message">
-                ⚠️ {error}
+                <><i className="fa-solid fa-triangle-exclamation"></i> {error}</>
               </div>
             )}
 
@@ -113,7 +113,7 @@ const WorkOrderPortal = () => {
                 </>
               ) : (
                 <>
-                  📥 Download Work Order PDF
+                  <><i className="fa-solid fa-download"></i> Download Work Order PDF</>
                 </>
               )}
             </button>
@@ -124,11 +124,11 @@ const WorkOrderPortal = () => {
             <p>If you're having trouble finding your work order, please contact me.:</p>
             <div className="contact-info">
               <div className="contact-item">
-                <span className="icon">📞</span>
+                <span className="icon"><i className="fa-solid fa-phone"></i></span>
                 <span>(484) 593-3875</span>
               </div>
               <div className="contact-item">
-                <span className="icon">📧</span>
+                <span className="icon"><i className="fa-solid fa-envelope"></i></span>
                 <span>JamesFerzanden@hardworkmobile.com</span>
               </div>
             </div>

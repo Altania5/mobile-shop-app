@@ -295,7 +295,7 @@ function CustomerAssignmentPage({ booking, onAssign, onCancel, onCreateNewCustom
                                                     {customer.phone && <p className="customer-phone">{customer.phone}</p>}
                                                 </div>
                                                 {selectedCustomer?._id === customer._id && (
-                                                    <div className="selection-indicator">✓</div>
+                                                    <div className="selection-indicator"><i className="fa-solid fa-check"></i></div>
                                                 )}
                                             </div>
                                         ))

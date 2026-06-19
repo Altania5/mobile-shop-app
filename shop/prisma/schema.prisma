@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Users ────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(TECHNICIAN)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  TECHNICIAN
+}
+
+// ─── Customers ────────────────────────────────────────────────────────────────
+
+model Customer {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String?
+  phone       String
+  address     String?
+  city        String?
+  state       String?
+  zip         String?
+  notes       String?
+  squareId    String?  // Square customer ID for syncing
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vehicles   Vehicle[]
+  workOrders WorkOrder[]
+  invoices   Invoice[]
+
+  @@index([lastName, firstName])
+  @@index([email])
+  @@index([phone])
+}
+
+// ─── Vehicles ─────────────────────────────────────────────────────────────────
+
+model Vehicle {
+  id           String   @id @default(cuid())
+  customerId   String
+  year         Int
+  make         String
+  model        String
+  trim         String?
+  vin          String?
+  licensePlate String?
+  color        String?
+  mileage      Int?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  workOrders WorkOrder[]
+
+  @@index([customerId])
+  @@index([vin])
+}
+
+// ─── Work Orders ──────────────────────────────────────────────────────────────
+
+model WorkOrder {
+  id              String          @id @default(cuid())
+  number          String          @unique // e.g. WO-202506-0001
+  customerId      String
+  vehicleId       String
+  status          WorkOrderStatus @default(PENDING)
+  description     String          // Customer complaint / reason for visit
+  diagnosis       String?
+  workPerformed   String?
+  recommendations String?
+  technician      String?
+  serviceLocation String?         // Address where mobile service is performed
+  scheduledAt     DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  mileageIn       Int?
+  mileageOut      Int?
+  internalNotes   String?
+  customerNotes   String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  vehicle    Vehicle     @relation(fields: [vehicleId], references: [id])
+  lineItems  LineItem[]
+  invoice    Invoice?
+  inspection Inspection?
+
+  @@index([customerId])
+  @@index([vehicleId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+enum WorkOrderStatus {
+  PENDING
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  INVOICED
+  PAID
+  CANCELLED
+}
+
+// ─── Line Items ───────────────────────────────────────────────────────────────
+
+model LineItem {
+  id          String       @id @default(cuid())
+  workOrderId String
+  type        LineItemType
+  description String
+  partNumber  String?
+  quantity    Float        @default(1)
+  unitPrice   Float        // in dollars
+  total       Float        // quantity * unitPrice
+  createdAt   DateTime     @default(now())
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+}
+
+enum LineItemType {
+  LABOR
+  PART
+  FLUID
+  SUBLET
+  FEE
+}
+
+// ─── Invoices ─────────────────────────────────────────────────────────────────
+
+model Invoice {
+  id              String        @id @default(cuid())
+  number          String        @unique // e.g. INV-202506-0001
+  workOrderId     String        @unique
+  customerId      String
+  squareInvoiceId  String?       // Square payment link ID after sending
+  squareInvoiceUrl String?      // Public payment link URL from Square
+  squareOrderId    String?       // Square order ID tied to the payment link
+  status          InvoiceStatus @default(DRAFT)
+  subtotal        Float
+  taxRate         Float         @default(0.08)
+  taxAmount       Float
+  total           Float
+  dueDate         DateTime?
+  sentAt          DateTime?
+  paidAt          DateTime?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id])
+  customer  Customer  @relation(fields: [customerId], references: [id])
+  payments  Payment[]
+
+  @@index([customerId])
+  @@index([status])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIAL
+  PAID
+  OVERDUE
+  VOID
+}
+
+// ─── Inspections ──────────────────────────────────────────────────────────────
+
+model Inspection {
+  id          String   @id @default(cuid())
+  workOrderId String   @unique
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workOrder WorkOrder        @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  items     InspectionItem[]
+}
+
+model InspectionItem {
+  id           String        @id @default(cuid())
+  inspectionId String
+  category     String
+  name         String
+  condition    ItemCondition @default(NOT_INSPECTED)
+  notes        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  inspection Inspection       @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  photos     InspectionPhoto[]
+
+  @@unique([inspectionId, category, name])
+  @@index([inspectionId])
+}
+
+enum ItemCondition {
+  NOT_INSPECTED
+  GOOD
+  FAIR
+  NEEDS_SERVICE
+}
+
+model InspectionPhoto {
+  id               String   @id @default(cuid())
+  inspectionItemId String
+  url              String
+  storageKey       String
+  createdAt        DateTime @default(now())
+
+  item InspectionItem @relation(fields: [inspectionItemId], references: [id], onDelete: Cascade)
+
+  @@index([inspectionItemId])
+}
+
+// ─── Payments ─────────────────────────────────────────────────────────────────
+
+model Payment {
+  id              String        @id @default(cuid())
+  invoiceId       String
+  squarePaymentId String?       @unique
+  amount          Float         // in dollars
+  method          PaymentMethod
+  status          PaymentStatus @default(COMPLETED)
+  note            String?
+  processedAt     DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@index([invoiceId])
+}
+
+enum PaymentMethod {
+  CASH
+  CHECK
+  CARD
+  SQUARE
+  VENMO
+  ZELLE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}

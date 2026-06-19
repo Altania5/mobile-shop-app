@@ -33,7 +33,7 @@ const AdminBookingCard = ({ booking, onStatusChange, serviceStatus, onStatusText
                     onClick={() => onCreateWorkOrder(booking)}
                     title="Create Work Order for this booking"
                 >
-                    📋 Work Order
+                    <i className="fa-solid fa-clipboard"></i> Work Order
                 </button>
             </div>
         </div>
@@ -350,7 +350,7 @@ function BookingManager() {
                 <h3>Manage Bookings</h3>
                 <div className="header-buttons">
                     <button onClick={handleCreateCustomBooking} className="custom-booking-btn">
-                        ➕ Create Custom Booking
+                        <i className="fa-solid fa-plus"></i> Create Custom Booking
                     </button>
                 </div>
             </div>

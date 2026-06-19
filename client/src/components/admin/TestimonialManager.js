@@ -182,7 +182,7 @@ const TestimonialManager = () => {
                 ) : (
                   <p><strong>Author:</strong> {authorDisplayName}</p>
                 )}
-                <p><strong>Rating:</strong> {'⭐'.repeat(testimonial.rating)}</p>
+                <p><strong>Rating:</strong> {[...Array(testimonial.rating)].map((_, i) => <i key={i} className="fa-solid fa-star" style={{color: 'var(--accent-color)'}}></i>)}</p>
                 <blockquote>"{testimonial.quote}"</blockquote>
               </div>
               <div className="testimonial-actions">

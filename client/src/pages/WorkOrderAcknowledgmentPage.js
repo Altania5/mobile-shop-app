@@ -142,7 +142,7 @@ const WorkOrderAcknowledgmentPage = () => {
     return (
       <div className="acknowledgment-page">
         <div className="error-container">
-          <div className="error-icon">⚠️</div>
+          <div className="error-icon"><i className="fa-solid fa-triangle-exclamation"></i></div>
           <h2>Unable to Load Work Order</h2>
           <p>{error}</p>
           <button onClick={() => navigate('/')} className="btn-primary">
@@ -157,7 +157,7 @@ const WorkOrderAcknowledgmentPage = () => {
     return (
       <div className="acknowledgment-page">
         <div className="success-container">
-          <div className="success-icon">✅</div>
+          <div className="success-icon"><i className="fa-solid fa-circle-check"></i></div>
           <h2>Work Order Acknowledged Successfully!</h2>
           <p>Thank you for acknowledging work order <strong>{workOrder.workOrderNumber}</strong>.</p>
           <p>You will receive a confirmation email shortly.</p>
@@ -193,7 +193,7 @@ const WorkOrderAcknowledgmentPage = () => {
 
           <div className="summary-grid">
             <div className="summary-section">
-              <h3>🚗 Vehicle Information</h3>
+              <h3><i className="fa-solid fa-car"></i> Vehicle Information</h3>
               <div className="detail-rows">
                 <div className="detail-row">
                   <span className="label">Vehicle:</span>
@@ -215,7 +215,7 @@ const WorkOrderAcknowledgmentPage = () => {
             </div>
 
             <div className="summary-section">
-              <h3>🔧 Service Details</h3>
+              <h3><i className="fa-solid fa-wrench"></i> Service Details</h3>
               <div className="detail-rows">
                 <div className="detail-row">
                   <span className="label">Service:</span>
@@ -242,7 +242,7 @@ const WorkOrderAcknowledgmentPage = () => {
             <div className="items-section">
               {workOrder.laborItems.length > 0 && (
                 <div className="items-group">
-                  <h3>🔨 Labor</h3>
+                  <h3><i className="fa-solid fa-hammer"></i> Labor</h3>
                   <div className="items-list">
                     {workOrder.laborItems.map((item, index) => (
                       <div key={index} className="item-row">
@@ -257,7 +257,7 @@ const WorkOrderAcknowledgmentPage = () => {
 
               {workOrder.partItems.length > 0 && (
                 <div className="items-group">
-                  <h3>🔩 Parts</h3>
+                  <h3><i className="fa-solid fa-screwdriver-wrench"></i> Parts</h3>
                   <div className="items-list">
                     {workOrder.partItems.map((item, index) => (
                       <div key={index} className="item-row">
@@ -298,7 +298,7 @@ const WorkOrderAcknowledgmentPage = () => {
 
           {error && (
             <div className="error-message">
-              <span className="error-icon">⚠️</span>
+              <span className="error-icon"><i className="fa-solid fa-triangle-exclamation"></i></span>
               {error}
             </div>
           )}
@@ -389,7 +389,7 @@ const WorkOrderAcknowledgmentPage = () => {
                   </>
                 ) : (
                   <>
-                    ✓ Acknowledge Work Order
+                    <i className="fa-solid fa-check"></i> Acknowledge Work Order
                   </>
                 )}
               </button>

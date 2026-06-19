@@ -5,7 +5,7 @@ const sendEmail = require('../utils/sendEmail');
 // @desc    Handle contact form submission and send emails
 // @access  Public
 router.post('/', async (req, res) => {
-  const { name, email, subject, message } = req.body;
+  const { name, email, phone, subject, message } = req.body;
 
   if (!name || !email || !subject || !message) {
     return res.status(400).json({ msg: 'Please fill out all fields.' });
@@ -22,6 +22,9 @@ router.post('/', async (req, res) => {
         <h2>You have a new message from your website!</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
+        ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+        <p><strong>Subject:</strong> ${subject}</p>
+        <hr>
         <p><strong>Message:</strong></p>
         <p>${message}</p>
       `
@@ -34,11 +37,11 @@ router.post('/', async (req, res) => {
         subject: 'We have received your message!',
         html: `
             <h2>Hello ${name},</h2>
-            <p>Thank you for contacting us. We have received your message and will get back to you as soon as possible.</p>
+            <p>Thank you for contacting Hard Work Mobile. We have received your message and will get back to you as soon as possible.</p>
             <p><strong>Your Message:</strong> "${message}"</p>
             <br/>
             <p>Best regards,</p>
-            <p>The Mobile Shop Team</p>
+            <p>Hard Work Mobile</p>
         `
     };
     await sendEmail(confirmationEmail);

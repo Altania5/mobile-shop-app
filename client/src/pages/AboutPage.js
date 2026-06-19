@@ -1,166 +1,174 @@
-import React, { useEffect, useRef } from 'react';
+// client/src/pages/AboutPage.js
+
+import React from 'react';
 import { Link } from 'react-router-dom';
 import TestimonialCarousel from '../components/TestimonialCarousel';
+import './AboutPage.css';
+import heroImage from './images/about-hero-image.jpg';
+import missionBg from './images/mission-bg.jpeg';
+import signature from './images/signature.png';
 
-// Import images (assuming you have these in your project)
-import heroImage from './/images/about-hero-image.jpg'; // Replace with your actual image path
-import missionBg from './/images/mission-bg.jpeg'; // Replace with your actual image path
-import signature from './/images/signature.png'; // Replace with your actual image path
+const VALUES = [
+  {
+    icon: 'fa-solid fa-check-circle',
+    title: 'Quality',
+    body: 'Every repair is done right or not at all. No shortcuts, no half-measures — just solid work you can count on.',
+  },
+  {
+    icon: 'fa-solid fa-handshake',
+    title: 'Integrity',
+    body: "You get an honest diagnosis and a straight answer. If it doesn't need fixing, I'll tell you.",
+  },
+  {
+    icon: 'fa-solid fa-star',
+    title: 'Excellence',
+    body: 'The bar is not "good enough." It is the standard a professional is proud to put their name on.',
+  },
+];
 
+const SERVICES_LIST = [
+  { icon: 'fa-solid fa-microchip', label: 'Vehicle Diagnostics', slug: 'diagnostics' },
+  { icon: 'fa-solid fa-oil-can', label: 'Routine Maintenance', slug: 'maintenance' },
+  { icon: 'fa-solid fa-car-side', label: 'Suspension Work', slug: 'suspension' },
+  { icon: 'fa-solid fa-circle-dot', label: 'Brake Repair', slug: 'brakes' },
+  { icon: 'fa-solid fa-gear', label: 'Engine Repair', slug: 'engine-repair' },
+  { icon: 'fa-solid fa-bolt', label: 'Electrical Repair', slug: 'electrical' },
+];
 
 const AboutPage = () => {
-    const sectionsRef = useRef([]);
+  return (
+    <div>
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate');
-                    }
-                });
-            },
-            { threshold: 0.1 }
-        );
+      {/* ── Hero ── */}
+      <section className="ap-hero" style={{ backgroundImage: `url(${heroImage})` }}>
+        <div className="ap-hero-content">
+          <span className="ap-eyebrow">About Hard Work Mobile</span>
+          <h1 className="ap-hero-title">
+            When You Dive into the Tough World of Auto Repair, Less than Perfect is a No-No!
+          </h1>
+          <p className="ap-hero-sub">
+            How fortuitous, then, that I shall stop at nothing to deliver it for my clients.
+          </p>
+          <img src={signature} alt="James Ferzanden signature" className="ap-signature" />
+          <div className="ap-hero-ctas">
+            <Link to="/contact" className="ap-btn-primary">Get a Free Quote</Link>
+            <a href="tel:4845933875" className="ap-btn-outline">
+              <i className="fa-solid fa-phone" style={{ marginRight: 8 }}></i>
+              (484) 593-3875
+            </a>
+          </div>
+        </div>
+      </section>
 
-        sectionsRef.current.forEach((section) => {
-            if (section) {
-                observer.observe(section);
-            }
-        });
+      {/* ── Trust bar ── */}
+      <div className="ap-trust-bar">
+        <span className="ap-trust-item"><i className="fa-solid fa-wrench"></i> Mobile Auto Repair</span>
+        <span className="ap-trust-item"><i className="fa-solid fa-certificate"></i> Certified Technician</span>
+        <span className="ap-trust-item"><i className="fa-solid fa-comment-dollar"></i> Honest Pricing</span>
+        <span className="ap-trust-item"><i className="fa-solid fa-map-location-dot"></i> Chester, Delaware &amp; Montgomery Co.</span>
+      </div>
 
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            sectionsRef.current.forEach((section) => {
-                if (section) {
-                    observer.unobserve(section);
-                }
-            });
-        };
-    }, []);
+      {/* ── Core Values ── */}
+      <section className="ap-section ap-section--light">
+        <div className="ap-container">
+          <h2 className="ap-section-title">What I Stand For</h2>
+          <p className="ap-section-sub">
+            Three principles that guide every job — from a simple oil change to a full engine repair.
+          </p>
+          <div className="ap-values-grid">
+            {VALUES.map(v => (
+              <div key={v.title} className="ap-value-card">
+                <i className={v.icon}></i>
+                <h3>{v.title}</h3>
+                <p>{v.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-    const addToRefs = (el) => {
-        if (el && !sectionsRef.current.includes(el)) {
-            sectionsRef.current.push(el);
-        }
-    };
+      {/* ── Mission (preserved exact text) ── */}
+      <section className="ap-mission" style={{ backgroundImage: `url(${missionBg})` }}>
+        <div className="ap-mission-overlay">
+          <div className="ap-mission-inner">
+            <span className="ap-eyebrow ap-eyebrow--dark">The Mission</span>
+            <h2 className="ap-mission-title">My Crusade</h2>
+            <p className="ap-mission-body">
+              To shatter the corrupt price gouging and degenerate upselling that robs good people blind.
+              A business model which plunders its clients and technicians has not the right to exist at all.
+            </p>
+          </div>
+        </div>
+      </section>
 
-    return (
-        <div className="about-page-wrapper">
+      {/* ── Testimonials ── */}
+      <section className="ap-section ap-section--light">
+        <div className="ap-container">
+          <h2 className="ap-section-title">What My Clients Say</h2>
+          <p className="ap-section-sub">
+            Real feedback from drivers across Chester, Delaware &amp; Montgomery Counties.
+          </p>
+          <TestimonialCarousel />
+        </div>
+      </section>
 
-            {/* HERO SECTION */}
-            <section ref={addToRefs} className="about-hero-section">
-                <div className="about-hero-content">
-                    <h1 className="fade-in-down"> When You Dive into the Tough World of Auto Repair, Less than Perfect is a No-No!</h1>
-                    <p className="fade-in-up">
-                       How fortuitous, then, that I shall stop at nothing to deliver it for my clients.
-                    </p>
-                    <img src={signature} alt="Signature" className="signature-image fade-in-up delay-1" />
-                </div>
-                <div className="about-hero-image-container fade-in-right">
-                    <img src={heroImage} alt="Professional detailing a car" />
-                </div>
-            </section>
+      {/* ── Contact + Services info ── */}
+      <section className="ap-info-bg">
+        <div className="ap-container">
+          <div className="ap-info-grid">
 
-            {/*<section className="stats-section">
-                <div className="stat-item">
-                    <i className="fas fa-award"></i>
-                    <h3>10+</h3>
-                    <p>Years Experience</p>
-                </div>
-                <div className="stat-item">
-                    <i className="fas fa-car-on"></i>
-                    <h3>5,000+</h3>
-                    <p>Vehicles Detailed</p>
-                </div>
-                <div className="stat-item">
-                    <i className="fas fa-smile"></i>
-                    <h3>99%</h3>
-                    <p>Client Satisfaction</p>
-                </div>
-                <div className="stat-item">
-                    <i className="fas fa-leaf"></i>
-                    <h3>Eco-Friendly</h3>
-                    <p>Products Used</p>
-                </div>
-            </section>*/}
-
-            <div className="about-page-grid">
-                {/* LEFT SIDEBAR */}
-                <aside className="about-sidebar left-sidebar">
-                    <div className="sidebar-widget">
-                        <h3><i className="fas fa-bolt"></i> Quick Contact</h3>
-                        <p><i className="fas fa-phone"></i> <strong>Phone:</strong> (484) 593-3875</p>
-                        <p><i className="fas fa-envelope"></i> <strong>Email:</strong> JamesFerzanden@hardworkmobile.com</p>
-                        <p><i className="fas fa-clock"></i> <strong>Hours:</strong> Mon-Fri, 8:00am - 4:00pm</p>
-                        <Link to="/contact" className="cta-button">
-                            <i className="fas fa-paper-plane"></i> Send a Message
-                        </Link>
-                    </div>
-                </aside>
-
-                {/* MAIN CONTENT AREA */}
-                <main className="about-main-content">
-                    {/* CORE VALUES */}
-                    <section ref={addToRefs} className="core-values-section">
-                        <div className="value-card hover-lift">
-                            <h3><i className="fas fa-check-circle"></i></h3>
-                            <h4>Quality</h4>
-                        </div>
-                        <div className="value-card hover-lift">
-                            <h3><i className="fas fa-handshake"></i></h3>
-                            <h4>Integrity</h4>
-                        </div>
-                        <div className="value-card hover-lift">
-                            <h3><i className="fas fa-star"></i></h3>
-                            <h4>Excellence</h4>
-                        </div>
-                    </section>
-                    
-                    {/* TESTIMONIAL CAROUSEL */}
-                    <section className="testimonial-container">
-                        <h2>What My Clients Say</h2>
-                        <TestimonialCarousel />
-                    </section>
-                </main>
-                
-                {/* RIGHT SIDEBAR */}
-                <aside className="about-sidebar right-sidebar">
-                    <div className="sidebar-widget">
-                        <h3><i className="fas fa-concierge-bell"></i> My Services</h3>
-                        <ul>
-                            <li><Link to="/services"><i className="fas fa-car-side"></i> Vehicle Diagnosis</Link></li>
-                            <li><Link to="/services"><i className="fas fa-couch"></i> Routine Maintenance</Link></li>
-                            <li><Link to="/services"><i className="fas fa-paint-roller"></i> Suspension Work</Link></li>
-                            <li><Link to="/services"><i className="fas fa-shield-alt"></i> Brakes</Link></li>
-                        </ul>
-                    </div>
-                </aside>
+            <div className="ap-info-card">
+              <i className="fa-solid fa-phone ap-info-icon"></i>
+              <h3>Call or Text</h3>
+              <p>(484) 593-3875</p>
+              <a href="tel:4845933875" className="ap-info-link">Call now</a>
             </div>
 
+            <div className="ap-info-card">
+              <i className="fa-solid fa-envelope ap-info-icon"></i>
+              <h3>Email</h3>
+              <p>JamesFerzanden@hardworkmobile.com</p>
+              <a href="mailto:JamesFerzanden@hardworkmobile.com" className="ap-info-link">Send email</a>
+            </div>
 
-            {/* MISSION SECTION (Full Width) */}
-            <section
-                ref={addToRefs}
-                className="mission-section"
-                style={{ backgroundImage: `url(${missionBg})` }}
-            >
-                <div className="mission-overlay">
-                    <h2>My Crusade</h2>
-                    <p>
-                        To shatter the corrupt price gouging and degenerate upselling that robs good people blind. A business model which plunders its clients and technicians has not the right to exist at all.
-                    </p>
-                </div>
-            </section>
+            <div className="ap-info-card">
+              <i className="fa-solid fa-clock ap-info-icon"></i>
+              <h3>Hours</h3>
+              <p>Monday – Friday</p>
+              <p>8:00 AM – 4:00 PM</p>
+            </div>
 
-            {/* CTA SECTION (Full Width) */}
-            <section ref={addToRefs} className="cta-section">
-                <h2>In need of Hard Work?</h2>
-                <p>Contact me, and well go from there. Fair Enough?</p>
-                <Link to="/services" className="cta-button hover-glow">View my Services</Link>
-            </section>
+            <div className="ap-info-card ap-services-card">
+              <i className="fa-solid fa-list-check ap-info-icon"></i>
+              <h3>Services Offered</h3>
+              <ul className="ap-services-list">
+                {SERVICES_LIST.map(s => (
+                  <li key={s.slug}>
+                    <Link to={`/services/${s.slug}`}>
+                      <i className={s.icon}></i>
+                      {s.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
         </div>
-    );
+      </section>
+
+      {/* ── CTA ── */}
+      <div className="ap-cta-bg">
+        <h2>In Need of Hard Work?</h2>
+        <p>Contact me and we will go from there. Fair enough?</p>
+        <div className="ap-cta-actions">
+          <Link to="/contact" className="ap-btn-dark">Get in Touch</Link>
+          <Link to="/" className="ap-btn-dark-outline">View Services</Link>
+        </div>
+      </div>
+
+    </div>
+  );
 };
 
 export default AboutPage;

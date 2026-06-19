@@ -250,14 +250,14 @@ const TimeSlotManager = () => {
             onClick={() => setShowBulkForm(true)}
             className="btn-secondary"
           >
-            📅 Bulk Create
+            <i className="fa-solid fa-calendar-plus"></i> Bulk Create
           </button>
           {selectedSlots.size > 0 && (
             <button 
               onClick={handleBulkDelete}
               className="btn-danger"
             >
-              🗑 Delete Selected ({selectedSlots.size})
+              <i className="fa-solid fa-trash"></i> Delete Selected ({selectedSlots.size})
             </button>
           )}
         </div>
@@ -426,7 +426,7 @@ const TimeSlotManager = () => {
                                 className={`btn-toggle ${slot.isAvailable ? 'available' : 'unavailable'}`}
                                 title={slot.isAvailable ? 'Make Unavailable' : 'Make Available'}
                               >
-                                {slot.isAvailable ? '🔒' : '🔓'}
+                                {slot.isAvailable ? <i className="fa-solid fa-lock"></i> : <i className="fa-solid fa-lock-open"></i>}
                               </button>
                             )}
                             
@@ -436,7 +436,7 @@ const TimeSlotManager = () => {
                                 className="btn-delete"
                                 title="Delete Slot"
                               >
-                                🗑
+                                <i className="fa-solid fa-trash"></i>
                               </button>
                             )}
                           </div>
@@ -536,7 +536,7 @@ const TimeSlotManager = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h3>Create Time Slot</h3>
-              <button onClick={() => setShowCreateForm(false)}>✖</button>
+              <button onClick={() => setShowCreateForm(false)}><i className="fa-solid fa-xmark"></i></button>
             </div>
             
             <form onSubmit={handleCreateSlot}>
@@ -654,7 +654,7 @@ const TimeSlotManager = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h3>Bulk Create Time Slots</h3>
-              <button onClick={() => setShowBulkForm(false)}>✖</button>
+              <button onClick={() => setShowBulkForm(false)}><i className="fa-solid fa-xmark"></i></button>
             </div>
             
             <form onSubmit={handleBulkCreate}>

@@ -19,9 +19,12 @@ function BlogPostCard({ post }) {
     ? (post.heroImage.startsWith('http') ? post.heroImage : `${window.location.origin}${post.heroImage}`)
     : null;
 
+  const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+
   return (
-    <div className="blog-post-card">
-      {/* ADDED: Display the image if it exists */}
+    <div className={`blog-post-card${imageUrl ? '' : ' no-image'}`}>
       {imageUrl && (
         <Link to={`/blog/${post.slug}`}>
           <img src={imageUrl} alt={post.title} className="card-hero-image" />
@@ -32,7 +35,7 @@ function BlogPostCard({ post }) {
           <Link to={`/blog/${post.slug}`}>{post.title}</Link>
         </h2>
         <p className="post-meta">
-          By {authorName} on {new Date(post.createdAt).toLocaleDateString()}
+          {formattedDate} &nbsp;&middot;&nbsp; {authorName}
         </p>
         <p className="post-summary">{truncateText(post.summary, 150)}</p>
         <Link to={`/blog/${post.slug}`} className="read-more-link">

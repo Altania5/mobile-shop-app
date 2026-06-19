@@ -5,18 +5,53 @@ const sendEmail = require('../utils/sendEmail');
 // @desc    Handle service request form submission and send emails
 // @access  Public
 router.post('/', async (req, res) => {
-  const { name, email, generalIssue, detailedDescription, carMake, carModel, carTrim, vin } = req.body;
+  // Support both the legacy service-help form fields and the new landing page form fields
+  const {
+    // Landing page form fields
+    year, make, model, serviceType, urgency, phone,
+    // Legacy service-help form fields
+    generalIssue, detailedDescription, carMake, carModel, carTrim, vin,
+    // Shared
+    name, email,
+  } = req.body;
 
-  // Basic validation
-  if (!name || !email || !generalIssue || !detailedDescription || !carMake || !carModel || !vin) {
-    return res.status(400).json({ msg: 'Please fill out all required fields.' });
+  // Determine which form submitted and validate accordingly
+  const isLandingPageForm = !!(year || make || model || serviceType || urgency || phone);
+
+  if (isLandingPageForm) {
+    if (!name || !email || !phone || !year || !make || !model || !serviceType || !urgency) {
+      return res.status(400).json({ msg: 'Please fill out all required fields.' });
+    }
+  } else {
+    if (!name || !email || !generalIssue || !detailedDescription || !carMake || !carModel || !vin) {
+      return res.status(400).json({ msg: 'Please fill out all required fields.' });
+    }
   }
 
   try {
     const ownerEmail = process.env.SITE_OWNER_EMAIL;
 
     // 1. Email to the Site Owner
-    const emailToOwner = {
+    const emailToOwner = isLandingPageForm ? {
+      to: ownerEmail,
+      subject: `New Service Request: ${serviceType}`,
+      html: `
+        <h2>New service request from a landing page!</h2>
+        <h3>Contact Information</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <hr>
+        <h3>Vehicle Information</h3>
+        <p><strong>Year:</strong> ${year}</p>
+        <p><strong>Make:</strong> ${make}</p>
+        <p><strong>Model:</strong> ${model}</p>
+        <hr>
+        <h3>Service Details</h3>
+        <p><strong>Service Requested:</strong> ${serviceType}</p>
+        <p><strong>How Soon Needed:</strong> ${urgency}</p>
+      `
+    } : {
       to: ownerEmail,
       subject: `New Service Request: ${generalIssue}`,
       html: `
@@ -40,20 +75,20 @@ router.post('/', async (req, res) => {
 
     // 2. Confirmation Email to the User
     const confirmationEmail = {
-        to: email,
-        subject: 'We have received your service request!',
-        html: `
-            <h2>Hello ${name},</h2>
-            <p>Thank you for your service request. We have received the details and will get back to you as soon as possible to confirm your details and discuss the next steps.</p>
-            <p><strong>Your General Issue:</strong> "${generalIssue}"</p>
-            <br/>
-            <p>Best regards,</p>
-            <p>The Mobile Shop Team</p>
-        `
+      to: email,
+      subject: 'We have received your service request!',
+      html: `
+        <h2>Hello ${name},</h2>
+        <p>Thank you for reaching out to Hard Work Mobile. We have received your request and will get back to you as soon as possible to discuss next steps.</p>
+        <p><strong>Service Requested:</strong> ${serviceType || generalIssue}</p>
+        <br/>
+        <p>Best regards,</p>
+        <p>Hard Work Mobile</p>
+      `
     };
     await sendEmail(confirmationEmail);
 
-    res.status(200).json({ msg: 'Your service request has been sent! We will get back to you shortly.' });
+    res.status(200).json({ msg: 'Your request has been sent! We will be in touch shortly.' });
 
   } catch (error) {
     console.error("Email sending error:", error);

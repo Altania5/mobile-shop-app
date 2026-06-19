@@ -187,7 +187,7 @@ function ServiceManager() {
         <div className="manager-list-section">
           <h4>Existing Services</h4>
           <div className="timeslot-notice">
-            <p><strong>📅 New Time Slot System Active:</strong> For better booking management, use the TimeSlot Manager to create specific time slots. The old availability system below is for backup only.</p>
+            <p><strong><i className="fa-solid fa-calendar-days"></i> New Time Slot System Active:</strong> For better booking management, use the TimeSlot Manager to create specific time slots. The old availability system below is for backup only.</p>
           </div>
           <div className="manager-list">
             {services.map(service => {
@@ -201,12 +201,12 @@ function ServiceManager() {
                     <div className="service-scheduling-info">
                       {hasTimeSlots ? (
                         <div className="timeslot-stats">
-                          <span className="stat-badge active">⏰ TimeSlots Active</span>
+                          <span className="stat-badge active"><i className="fa-solid fa-clock"></i> TimeSlots Active</span>
                           <span className="stat-detail">{stats.available} available | {stats.booked} booked | {stats.total} total</span>
                         </div>
                       ) : (
                         <div className="legacy-availability">
-                          <span className="stat-badge legacy">📝 Legacy Times</span>
+                          <span className="stat-badge legacy"><i className="fa-solid fa-pen-to-square"></i> Legacy Times</span>
                           <span className="stat-detail">
                             {service.availableTimes?.length || 0} times set | 
                             {service.availableDays?.length || 0} days set

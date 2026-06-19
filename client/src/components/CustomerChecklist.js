@@ -12,26 +12,10 @@ const CustomerChecklist = ({ user }) => {
                 id: 1,
                 title: "Create Account",
                 description: "Sign up for a free account to get started",
-                icon: "👤",
+                icon: "fa-solid fa-user",
                 completed: user ? true : false,
                 action: user ? { text: "Account Manager", link: "/dashboard" } : { text: "Sign Up", link: "/register" },
-                note: user ? `✅ Account created successfully! Welcome back, ${user.name || 'valued customer'}!` : "Create your account to track service history"
-            },
-            {
-                id: 2,
-                title: "Add Payment Method",
-                description: serviceType === 'quick' 
-                    ? "Required for Professional Automotive Services" 
-                    : "May be required for custom service requests",
-                icon: "💳",
-                completed: user && user.hasCardOnFile,
-                action: user && !user.hasCardOnFile ? { text: "Add Card", link: "/dashboard?tab=account" } : null,
-                note: user && user.hasCardOnFile 
-                    ? "✅ Payment method on file - Ready for service!"
-                    : serviceType === 'quick' 
-                        ? "Secure payment processing • No charge until service complete"
-                        : "Some services may require upfront payment authorization",
-                required: serviceType === 'quick'
+                note: user ? `Account created successfully! Welcome back, ${user.name || 'valued customer'}!` : "Create your account to track service history"
             }
         ];
 
@@ -42,7 +26,7 @@ const CustomerChecklist = ({ user }) => {
                     id: 3,
                     title: "Choose Your Service",
                     description: "Select from our professional automotive services",
-                    icon: "🔧",
+                    icon: "fa-solid fa-wrench",
                     completed: false,
                     action: { text: "Browse Services", link: "#services" },
                     note: "All services include warranty and satisfaction guarantee"
@@ -51,7 +35,7 @@ const CustomerChecklist = ({ user }) => {
                     id: 4,
                     title: "Schedule Appointment",
                     description: "Pick a convenient date and time for your service",
-                    icon: "📅",
+                    icon: "fa-solid fa-calendar-days",
                     completed: false,
                     action: { text: "Book Now", link: "/booking" },
                     note: "Flexible scheduling including evenings and weekends"
@@ -63,7 +47,7 @@ const CustomerChecklist = ({ user }) => {
                 id: 3,
                 title: "Submit Custom Request",
                 description: "Tell us about your vehicle issue and we'll create a custom service plan",
-                icon: "📝",
+                icon: "fa-solid fa-pen-to-square",
                 completed: false,
                 action: { text: "Submit Request", link: "#help-form" },
                 note: "We'll contact you within 24 hours to discuss your request and schedule service"
@@ -75,7 +59,7 @@ const CustomerChecklist = ({ user }) => {
             id: baseSteps.length + 1,
             title: "Service Complete",
             description: "Our expert technician arrives and completes your service",
-            icon: "✅",
+            icon: "fa-solid fa-circle-check",
             completed: false,
             action: null,
             note: "Real-time updates and progress notifications"
@@ -106,7 +90,7 @@ const CustomerChecklist = ({ user }) => {
                         className={`service-type-btn ${serviceType === 'quick' ? 'active' : ''}`}
                         onClick={() => handleServiceTypeChange('quick')}
                     >
-                        <div className="service-type-icon">🔧</div>
+                        <div className="service-type-icon"><i className="fa-solid fa-wrench"></i></div>
                         <div className="service-type-content">
                             <h4>Professional Services</h4>
                             <p>Oil changes, brake repair, diagnostics, etc.</p>
@@ -116,7 +100,7 @@ const CustomerChecklist = ({ user }) => {
                         className={`service-type-btn ${serviceType === 'custom' ? 'active' : ''}`}
                         onClick={() => handleServiceTypeChange('custom')}
                     >
-                        <div className="service-type-icon">📝</div>
+                        <div className="service-type-icon"><i className="fa-solid fa-pen-to-square"></i></div>
                         <div className="service-type-content">
                             <h4>Custom Request</h4>
                             <p>Describe your vehicle issue for a quote</p>
@@ -134,9 +118,9 @@ const CustomerChecklist = ({ user }) => {
                     >
                         <div className="step-number">
                             {step.completed ? (
-                                <span className="step-check">✓</span>
+                                <span className="step-check"><i className="fa-solid fa-check"></i></span>
                             ) : (
-                                <span className="step-icon">{step.icon}</span>
+                                <span className="step-icon"><i className={step.icon}></i></span>
                             )}
                         </div>
                         
@@ -153,7 +137,7 @@ const CustomerChecklist = ({ user }) => {
                             
                             {step.note && (
                                 <div className="step-note">
-                                    <span className="note-icon">ℹ️</span>
+                                    <span className="note-icon"><i className="fa-solid fa-circle-info"></i></span>
                                     {step.note}
                                 </div>
                             )}
@@ -188,18 +172,18 @@ const CustomerChecklist = ({ user }) => {
                 <div className="action-buttons">
                     {serviceType === 'quick' ? (
                         <a href="#services" className="primary-action-btn">
-                            <span className="btn-icon">🔧</span>
+                            <span className="btn-icon"><i className="fa-solid fa-wrench"></i></span>
                             Browse Professional Services
                         </a>
                     ) : (
                         <Link to="/contact" className="primary-action-btn">
-                            <span className="btn-icon">📝</span>
+                            <span className="btn-icon"><i className="fa-solid fa-pen-to-square"></i></span>
                             Request Custom Quote
                         </Link>
                     )}
                     
                     <Link to="/about" className="secondary-action-btn">
-                        <span className="btn-icon">📖</span>
+                        <span className="btn-icon"><i className="fa-solid fa-book-open"></i></span>
                         Learn More About Us
                     </Link>
                 </div>

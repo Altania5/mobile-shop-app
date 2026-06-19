@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './TestimonialCard.css';
 
 // A simple component to render star ratings (display only)
 const StarRating = ({ rating }) => {
   const stars = [];
   for (let i = 0; i < 5; i++) {
-    stars.push(<span key={i} className={i < rating ? 'star filled' : 'star'}>★</span>);
+    stars.push(<span key={i} className={i < rating ? 'star filled' : 'star'}><i className={i < rating ? 'fa-solid fa-star' : 'fa-regular fa-star'}></i></span>);
   }
   return <div className="star-rating">{stars}</div>;
 };
@@ -43,8 +44,8 @@ function TestimonialCard({ testimonial, user }) {
       <StarRating rating={testimonial.rating} />
       <p className="testimonial-quote">"{testimonial.quote}"</p>
       <div className="vote-buttons">
-        <button onClick={() => handleVote('like')}>👍 Like ({likes})</button>
-        <button onClick={() => handleVote('dislike')}>👎 Dislike ({dislikes})</button>
+        <button onClick={() => handleVote('like')}><i className="fa-solid fa-thumbs-up"></i> Like ({likes})</button>
+        <button onClick={() => handleVote('dislike')}><i className="fa-solid fa-thumbs-down"></i> Dislike ({dislikes})</button>
       </div>
       {testimonial.comments && testimonial.comments.length > 0 && (
         <div className="admin-comment">
