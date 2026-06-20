@@ -11,7 +11,7 @@ const ServicesList = ({ services, user, timeSlotSystemStats }) => {
       {user && user.role === 'admin' && timeSlotSystemStats && (
         <div className="admin-timeslot-overview">
           <div className="overview-header">
-            <h4>📅 TimeSlot System Overview</h4>
+            <h4><i className="fa-solid fa-calendar-days"></i> TimeSlot System Overview</h4>
             <Link to="/admin" className="manage-link">
               Manage TimeSlots →
             </Link>

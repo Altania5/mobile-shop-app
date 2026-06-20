@@ -110,7 +110,7 @@ function CustomBookingVerificationPage() {
         return (
             <div className="verification-page">
                 <div className="error-container">
-                    <div className="error-icon">❌</div>
+                    <div className="error-icon"><i className="fa-solid fa-circle-xmark"></i></div>
                     <h2>Unable to Load Booking</h2>
                     <p>{error}</p>
                     <button onClick={() => navigate('/')} className="btn-primary">
@@ -125,7 +125,7 @@ function CustomBookingVerificationPage() {
         return (
             <div className="verification-page">
                 <div className="success-container">
-                    <div className="success-icon">✅</div>
+                    <div className="success-icon"><i className="fa-solid fa-circle-check"></i></div>
                     <h2>Booking Confirmed!</h2>
                     <p>Thank you for confirming your service appointment. You will receive a confirmation email shortly.</p>
                     <div className="success-details">
@@ -147,7 +147,7 @@ function CustomBookingVerificationPage() {
         <div className="verification-page">
             <div className="verification-container">
                 <div className="verification-header">
-                    <div className="header-icon">📋</div>
+                    <div className="header-icon"><i className="fa-solid fa-clipboard"></i></div>
                     <h1>Service Booking Confirmation</h1>
                     <p>Please review and confirm your professional service appointment</p>
                 </div>
@@ -158,7 +158,7 @@ function CustomBookingVerificationPage() {
                 </div>
 
                 <div className="booking-details-card">
-                    <h3>📝 Booking Details</h3>
+                    <h3><i className="fa-solid fa-pen-to-square"></i> Booking Details</h3>
                     <div className="details-grid">
                         <div className="detail-item">
                             <span className="detail-label">Service:</span>
@@ -199,7 +199,7 @@ function CustomBookingVerificationPage() {
                 </div>
 
                 <div className="important-notice">
-                    <div className="notice-icon">⚠️</div>
+                    <div className="notice-icon"><i className="fa-solid fa-triangle-exclamation"></i></div>
                     <div className="notice-content">
                         <h4>Action Required</h4>
                         <p>Please confirm or decline this booking. If you have any questions, please contact us before making your decision.</p>

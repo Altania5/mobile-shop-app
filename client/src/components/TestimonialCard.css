@@ -1,0 +1,181 @@
+/* ── Testimonial Card ────────────────────────────────────────────────────────── */
+
+.testimonial-card-v2 {
+  background: #fff;
+  border-radius: var(--border-radius);
+  padding: 28px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.testimonial-card-v2::before {
+  content: '\201C';
+  position: absolute;
+  top: 16px;
+  right: 22px;
+  font-size: 4rem;
+  color: var(--accent-color);
+  opacity: 0.18;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.testimonial-card-v2:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* Author row */
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-pic {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+  flex-shrink: 0;
+}
+
+.author-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.author-name.google:hover {
+  color: var(--accent-color);
+}
+
+.testimonial-date {
+  font-size: 0.8rem;
+  color: var(--text-light-color);
+}
+
+/* Stars */
+.testimonial-card-v2 .star-rating {
+  display: flex;
+  gap: 3px;
+  font-size: 1rem;
+}
+
+.testimonial-card-v2 .star-rating .star {
+  color: #d1d5db;
+}
+
+.testimonial-card-v2 .star-rating .star.filled {
+  color: var(--accent-color);
+}
+
+/* Quote */
+.testimonial-quote {
+  font-style: italic;
+  color: var(--text-color);
+  line-height: 1.75;
+  flex: 1;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Vote buttons */
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  padding-top: 14px;
+  margin-top: auto;
+}
+
+.vote-buttons button {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  width: auto;
+}
+
+.vote-buttons button:hover {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #000;
+}
+
+/* Owner response */
+.admin-comment {
+  background-color: var(--background-color);
+  border-radius: 6px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent-color);
+}
+
+.admin-comment strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-comment p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Google Reviews section sits inside the dark tp-google-bg,
+   so override card background for contrast */
+.tp-google-bg .testimonial-card-v2 {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.tp-google-bg .testimonial-card-v2::before {
+  color: var(--accent-color);
+  opacity: 0.25;
+}
+
+.tp-google-bg .author-name {
+  color: #fff;
+}
+
+.tp-google-bg .testimonial-quote {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tp-google-bg .testimonial-date {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tp-google-bg .testimonial-card-v2:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Google Reviews container inherits tp-grid from page CSS */
+.google-reviews-container .testimonials-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}

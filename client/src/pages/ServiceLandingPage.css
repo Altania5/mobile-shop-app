@@ -1,0 +1,520 @@
+/* ── Service Landing Pages ─────────────────────────────────────────────────── */
+
+/* Hero */
+.slp-hero {
+  background-color: var(--primary-color);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 90px 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.slp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 24, 32, 0.78);
+}
+
+.slp-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.slp-hero-eyebrow {
+  display: inline-block;
+  background-color: var(--accent-color);
+  color: #000;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+
+.slp-hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  margin: 0 0 16px;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.slp-hero h1 span {
+  color: var(--accent-color);
+}
+
+.slp-hero p {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 32px;
+  line-height: 1.7;
+}
+
+.slp-hero-ctas {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.slp-btn-primary {
+  background-color: var(--accent-color);
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 30px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  display: inline-block;
+  width: auto;
+  border: none;
+  cursor: pointer;
+}
+
+.slp-btn-primary:hover {
+  background-color: #b8972e;
+  transform: translateY(-2px);
+  color: #000;
+}
+
+.slp-btn-outline {
+  background-color: transparent;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 13px 30px;
+  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  display: inline-block;
+  width: auto;
+  cursor: pointer;
+}
+
+.slp-btn-outline:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  transform: translateY(-2px);
+  background-color: transparent;
+}
+
+/* Trust bar */
+.slp-trust-bar {
+  background-color: var(--accent-color);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.slp-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #000;
+}
+
+.slp-trust-item i {
+  font-size: 1rem;
+}
+
+/* Section wrapper */
+.slp-section {
+  padding: 64px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.slp-section-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--primary-color);
+}
+
+.slp-section-subtitle {
+  text-align: center;
+  color: var(--text-light-color);
+  margin-bottom: 44px;
+  font-size: 1rem;
+}
+
+/* Included services grid */
+.slp-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.slp-service-card {
+  background: #fff;
+  border-radius: var(--border-radius);
+  padding: 28px 22px;
+  box-shadow: var(--box-shadow);
+  border-left: 4px solid var(--accent-color);
+  transition: var(--transition-smooth);
+}
+
+.slp-service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.slp-service-card i {
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.slp-service-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--primary-color);
+}
+
+.slp-service-card p {
+  font-size: 0.88rem;
+  color: var(--text-light-color);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Why us */
+.slp-why-bg {
+  background-color: var(--primary-color);
+  padding: 64px 24px;
+}
+
+.slp-why-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.slp-why-bg .slp-section-title {
+  color: #fff;
+}
+
+.slp-why-bg .slp-section-subtitle {
+  color: rgba(255,255,255,0.7);
+}
+
+.slp-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.slp-why-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--border-radius);
+  padding: 30px 22px;
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.slp-why-card:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-3px);
+}
+
+.slp-why-card i {
+  font-size: 2rem;
+  color: var(--accent-color);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.slp-why-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.slp-why-card p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Service area */
+.slp-area-bg {
+  background-color: var(--background-color);
+  padding: 64px 24px;
+}
+
+.slp-area-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.slp-area-inner .slp-section-title {
+  margin-bottom: 10px;
+}
+
+.slp-county-list {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 28px 0;
+}
+
+.slp-county-badge {
+  background: #fff;
+  border: 2px solid var(--accent-color);
+  border-radius: 24px;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.slp-area-note {
+  color: var(--text-light-color);
+  font-size: 0.9rem;
+}
+
+/* Bottom CTA */
+.slp-cta-bg {
+  background-color: var(--accent-color);
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.slp-cta-bg h2 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 12px;
+}
+
+.slp-cta-bg p {
+  color: rgba(0,0,0,0.7);
+  font-size: 1rem;
+  margin: 0 0 30px;
+}
+
+.slp-cta-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.slp-btn-dark {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 30px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  display: inline-block;
+  width: auto;
+  border: none;
+  cursor: pointer;
+}
+
+.slp-btn-dark:hover {
+  background-color: #111b24;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.slp-btn-dark-outline {
+  background-color: transparent;
+  color: #000;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 13px 30px;
+  border-radius: var(--border-radius);
+  border: 2px solid #000;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  display: inline-block;
+  width: auto;
+  cursor: pointer;
+}
+
+.slp-btn-dark-outline:hover {
+  background-color: rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+/* Contact Form — matches ContactPage style */
+.slp-form-bg {
+  background-color: var(--background-color);
+  padding: 64px 24px;
+}
+
+.slp-form-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  padding: 40px;
+  box-shadow: var(--box-shadow);
+}
+
+.slp-form-bg .slp-section-title {
+  color: var(--primary-color);
+}
+
+.slp-form-bg .slp-section-subtitle {
+  color: var(--text-light-color);
+  margin-bottom: 36px;
+}
+
+.slp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slp-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+.slp-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.slp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slp-form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.slp-form-group input,
+.slp-form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+.slp-form-group select option {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.slp-form-group select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.slp-form-group input::placeholder {
+  color: #999;
+}
+
+.slp-form-group input:focus,
+.slp-form-group select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+}
+
+.slp-form-submit {
+  background-color: var(--accent-color);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.slp-form-submit:hover {
+  background-color: #b8972e;
+  transform: translateY(-1px);
+}
+
+.slp-form-submit:active {
+  transform: translateY(1px);
+}
+
+.slp-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.slp-form-success {
+  background: rgba(72, 187, 120, 0.1);
+  border: 1px solid #48bb78;
+  border-radius: var(--border-radius);
+  padding: 14px 18px;
+  color: #276749;
+  font-weight: 600;
+  text-align: center;
+}
+
+.slp-form-error {
+  background: rgba(245, 101, 101, 0.1);
+  border: 1px solid #f56565;
+  border-radius: var(--border-radius);
+  padding: 14px 18px;
+  color: #c53030;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .slp-form-row {
+    grid-template-columns: 1fr;
+  }
+  .slp-form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .slp-trust-bar {
+    gap: 18px;
+  }
+  .slp-hero {
+    padding: 60px 16px;
+  }
+}

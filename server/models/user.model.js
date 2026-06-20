@@ -75,6 +75,14 @@ const userSchema = new Schema({
     createdByAdmin: {
         type: Boolean,
         default: false
+    },
+    passwordResetToken: {
+        type: String,
+        default: null
+    },
+    passwordResetExpires: {
+        type: Date,
+        default: null
     }
 }, {
     timestamps: true,
@@ -109,6 +117,15 @@ userSchema.pre('save', async function(next) {
 // This method is used by the login route to compare passwords
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate a password-reset token (plain token returned, hashed stored in DB)
+userSchema.methods.generatePasswordResetToken = function() {
+    const crypto = require('crypto');
+    const plainToken = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = crypto.createHash('sha256').update(plainToken).digest('hex');
+    this.passwordResetExpires = Date.now() + 60 * 60 * 1000; // 1 hour
+    return plainToken;
 };
 
 // Method to generate email verification token

@@ -111,7 +111,7 @@ function PostPage({ user }) {
         {post.allowLikes && (
           <div className="likes-section">
             <button onClick={handleLike} className={`like-button ${hasLiked ? 'liked' : ''}`}>
-              ❤️ {hasLiked ? 'Liked' : 'Like'}
+              <i className="fa-solid fa-heart"></i> {hasLiked ? 'Liked' : 'Like'}
             </button>
             <span>{likes.length} {likes.length === 1 ? 'like' : 'likes'}</span>
           </div>

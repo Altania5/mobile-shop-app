@@ -128,6 +128,20 @@ const workOrderSchema = new mongoose.Schema({
   scheduledDate: Date,
   completedDate: Date,
   
+  // Invoice / Payment
+  invoice: {
+    status: {
+      type: String,
+      enum: ['none', 'sent', 'paid', 'overdue', 'void'],
+      default: 'none'
+    },
+    number: String,
+    squareInvoiceUrl: String,
+    total: Number,
+    sentAt: Date,
+    paidAt: Date
+  },
+
   // Notes
   internalNotes: String,
   customerNotes: String

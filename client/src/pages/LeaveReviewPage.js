@@ -18,7 +18,7 @@ const StarRatingInput = ({ rating, setRating }) => {
               onClick={() => setRating(ratingValue)}
               style={{ display: 'none' }}
             />
-            <span className={ratingValue <= rating ? 'star filled' : 'star'}>★</span>
+            <span className={ratingValue <= rating ? 'star filled' : 'star'}><i className={ratingValue <= rating ? 'fa-solid fa-star' : 'fa-regular fa-star'}></i></span>
           </label>
         );
       })}

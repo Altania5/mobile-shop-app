@@ -97,12 +97,11 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px !important;
+  padding: 0px 30px !important;
   background-color: var(--surface-color);
   box-shadow: var(--box-shadow);
   border-radius: 0;
-  margin-bottom: 30px;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -117,8 +116,9 @@ button:active {
 }
 
 img.nav-logo {
-  height: auto;
-  max-width: 150px;
+  max-height: 125px;
+  width: auto;
+  height: 23vw;
 }
 
 .dashboard-nav button {
@@ -256,14 +256,16 @@ img.nav-logo {
 }
 
 /* Layout and Nav */
+
+/* overflow-x: clip stops overflow without creating a scroll container,
+   so position:sticky on the nav still works correctly */
 .site-wrapper {
-  padding-top: 80px; /* Account for fixed navbar height */
+  overflow-x: clip;
 }
 
 .app-main {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Admin page override - strict width control */
@@ -1757,12 +1759,13 @@ html.admin-page-active {
     z-index: 1001;
   }
 
-  /* On mobile, hide the original nav-links container... */
+  /* On mobile, slide the nav off-screen via transform (not right:-100%)
+     so it never creates a scrollable overflow region */
   .nav-links {
-    display: none;
+    display: flex;
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 80%;
     height: 100vh;
     background-color: var(--surface-color);
@@ -1770,15 +1773,18 @@ html.admin-page-active {
     align-items: center;
     justify-content: center;
     gap: 25px;
-    transition: right 0.4s ease-in-out;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.4s ease-in-out, visibility 0s linear 0.4s;
     box-shadow: -5px 0 15px rgba(0,0,0,0.1);
     z-index: 1000;
   }
 
-  /* ...and only show it as a slide-out menu when it has the 'open' class */
+  /* Slide in and make interactive when open */
   .nav-links.open {
-    display: flex;
-    right: 0;
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.4s ease-in-out, visibility 0s linear 0s;
   }
   
   .nav-link, .nav-login-button, .dashboard-nav button {
@@ -2645,7 +2651,7 @@ html.admin-page-active {
 /* Modern Variables */
 :root {
   --gradient-primary: linear-gradient(135deg, #D4AF37 0%, #D4AF37 100%);
-  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-secondary: linear-gradient(135deg, #DC143C 0%, #DC143C 100%);
   --gradient-accent: linear-gradient(135deg, #D4AF37 0%, #D4AF37 100%);
   --shadow-modern: 0 10px 40px rgba(0,0,0,0.1);
   --shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
